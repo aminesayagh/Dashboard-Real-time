@@ -1,10 +1,14 @@
 import type { Config } from "tailwindcss";
+const {nextui} = require("@nextui-org/react");
+
+const defaultTheme = require("tailwindcss/defaultTheme");
 
 const config: Config = {
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
   ],
   darkMode: "class",
   theme: {
@@ -37,7 +41,45 @@ const config: Config = {
       "15xl": "4.2rem",
       "16xl": "5rem",
     },
+    zIndex: {
+      bg: "-1",
+      "0": "0",
+      "10": "10",
+      "20": "20",
+      "30": "30",
+      "40": "40",
+      "50": "50",
+      "container": "100",
+      "auto": "auto",
+      "scrollbar": "1000",
+      "dropdown": "2000",
+      "sticky": "3000",
+      "overlay": "4000",
+      "modal": "4010",
+      "header": "5000",
+      "loading": "7000",
+      "toast": "6500",
+      "tooltip": "6300",
+      "cursor": "9000",
+      "preload_bg": "9998",
+      "preload": "9999"
+    },
+    screens: {
+      "xxs": "390px",
+      "xs": "475px",
+      "sm": "640px",
+      "md": "768px",
+      "mdl": "900px",
+      "lg": "1024px",
+      "xl": "1280px",
+      "2xl": "1536px",
+      "3xl": "1600px",
+      "4xl": "2100px",
+    },
     extend: {
+      fontFamily: {
+        'sans': ['var(--font-montserrat)', 'Montserrat', ...defaultTheme.fontFamily.sans], 
+      },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
@@ -45,6 +87,6 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [nextui()],
 };
 export default config;
