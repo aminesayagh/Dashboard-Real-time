@@ -24,6 +24,7 @@
     "react-hook-form": "^7.51.5",
     "sass": "^1.77.4",
     "tabler-icons-react": "^1.56.0",
+    "tailwind-merge": "^2.3.0",
     "tailwind-styled-components": "^2.2.0",
     "zod": "^3.23.8"
   },
