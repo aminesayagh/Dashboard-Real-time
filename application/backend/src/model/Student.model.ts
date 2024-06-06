@@ -5,9 +5,9 @@ import { ERRORS } from 'src/constants/ERRORS';
 
 interface IStudent {
     user_id: Types.ObjectId;
-    cne: string;
+    student_cne: string;
     student_number: string;
-    state_student: TStateStudent;
+    student_state: TStateStudent;
 }
 
 export interface IStudentModel extends PaginateModel<IStudentDocument> {}
@@ -25,7 +25,7 @@ const studentSchema = new Schema<IStudentDocument, IStudentModel>({
         required: true,
         ref: MODEL_NAME.USER,
     },
-    cne: {
+    student_cne: {
         type: String,
         required: true,
         trim: true,
@@ -41,7 +41,7 @@ const studentSchema = new Schema<IStudentDocument, IStudentModel>({
         minlength: 10,
         maxlength: 10,
     },
-    state_student: {
+    student_state: {
         type: String,
         required: true,
         enum: STATE_STUDENT_ARRAY,
@@ -68,10 +68,10 @@ studentSchema.statics.findByStudentNumber = async function (student_number: stri
 };
 
 studentSchema.method('updateStudentRole', async function (this: IStudentDocument, state_student: TStateStudent) {
-    if (!stateStudentRole.translateState(this.state_student, state_student)) {
+    if (!stateStudentRole.translateState(this.student_state, state_student)) {
         throw new Error(ERRORS.INVALID_STATE_TRANSITION_STUDENT);
     }
-    this.state_student = state_student;
+    this.student_state = state_student;
 
     return this.save();
 });

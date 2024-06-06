@@ -5,8 +5,8 @@ import { DefaultDocument } from 'types/Mongoose';
 
 interface IProfessor {
     user_id: Schema.Types.ObjectId;
-    office_location: string;
-    state_professor: TStateProfessor;
+    professor_office_location: string;
+    professor_state: TStateProfessor;
 }
 
 export interface IProfessorDocument extends DefaultDocument<IProfessor> {}
@@ -19,14 +19,14 @@ const professorSchema = new Schema<IProfessorDocument, IProfessorModel>({
         required: true,
         ref: MODEL_NAME.USER,
     },
-    office_location: {
+    professor_office_location: {
         type: String,
         required: true,
         trim: true,
         minlength: 3,
         maxlength: 50,
     },
-    state_professor: {
+    professor_state: {
         type: String,
         required: true,
         enum: STATE_PROFESSOR_ARRAY,

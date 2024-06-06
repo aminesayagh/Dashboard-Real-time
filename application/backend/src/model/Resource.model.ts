@@ -1,25 +1,59 @@
 import { Types, PaginateModel, Schema, model, Model } from 'mongoose';
-import { MODEL_NAME, STATE_RESOURCE_ARRAY, STATE_RESOURCE, TStateResource } from 'constants/DB';
+import { MODEL_NAME, STATE_RESOURCE_ARRAY, STATE_RESOURCE, TStateResource, TStateAttachment, STATE_ATTACHMENT_ARRAY, STATE_ATTACHMENT, TModelName, MODEL_NAME_ARRAY } from 'constants/DB';
 import { DefaultDocument } from 'types/Mongoose';
 
 interface IMedia {
-    source: string;
-    public_id: string;
-    signature: string;
-    url: string;
+    media_source: string;
+    media_public_id: string;
+    media_signature: string;
+    media_url: string;
 }
 
 interface IMediaDocument extends DefaultDocument<IMedia> {};
 
 export interface IMediaModel extends Model<IMediaDocument> {};
 
+interface IAttachment {
+    attachment_reference: Types.ObjectId;
+    attachment_collection: TModelName;
+    attachment_state: TStateAttachment;
+}
+
+export interface IAttachmentDocument extends DefaultDocument<IAttachment> {};
+
+export interface IAttachmentModel extends Model<IAttachmentDocument> {};
+
+const attachmentSchema = new Schema<IAttachment, IAttachmentModel>({
+    attachment_reference: {
+        type: Schema.Types.ObjectId,
+        required: true,
+    },
+    attachment_collection: {
+        type: String,
+        enum: MODEL_NAME_ARRAY,
+        required: true,
+    },
+    attachment_state: {
+        type: String,
+        required: true,
+        enum: STATE_ATTACHMENT_ARRAY,
+        default: STATE_ATTACHMENT.ATTACHED,
+    },
+}, {
+    strict: true,
+    timestamps: {
+        createdAt: 'created_at',
+        updatedAt: 'updated_at',
+    }
+});
+
 interface IResource {
-    name: string;
-    media: []
-    owner: Types.ObjectId;
-    type: string;
-    state_resource: TStateResource;
-    number_of_use: number; 
+    resource_name: string;
+    resource_media: IMediaDocument[]
+    resource_owner: Types.ObjectId;
+    resource_type: string;
+    resource_state: TStateResource;
+    resource_attachments: IAttachment[];
 }
 
 export interface IResourceDocument extends DefaultDocument<IResource> {};
@@ -27,22 +61,22 @@ export interface IResourceDocument extends DefaultDocument<IResource> {};
 export interface IResourceModel extends PaginateModel<IResourceDocument> {};
 
 const mediaSchema = new Schema<IMediaDocument, IMediaModel>({
-    source: {
+    media_source: {
         type: String,
         required: true,
         trim: true,
     },
-    public_id: {
+    media_public_id: {
         type: String,
         required: true,
         trim: true,
     },
-    signature: {
+    media_signature: {
         type: String,
         required: true,
         trim: true,
     },
-    url: {
+    media_url: {
         type: String,
         required: true,
         trim: true,
@@ -56,33 +90,29 @@ const mediaSchema = new Schema<IMediaDocument, IMediaModel>({
 });
 
 const resourceSchema = new Schema<IResourceDocument, IResourceModel>({
-    name: {
+    resource_name: {
         type: String,
         required: true,
         trim: true,
     },
-    media: [mediaSchema],
-    owner: {
+    resource_media: [mediaSchema],
+    resource_owner: {
         type: Schema.Types.ObjectId,
         required: true,
         ref: MODEL_NAME.USER,
     },
-    type: {
+    resource_type: {
         type: String,
         required: true,
         trim: true,
     },
-    state_resource: {
+    resource_state: {
         type: String,
         required: true,
         enum: STATE_RESOURCE_ARRAY,
         default: STATE_RESOURCE.AVAILABLE,
     },
-    number_of_use: {
-        type: Number,
-        required: true,
-        default: 0,
-    },
+    resource_attachments: [attachmentSchema],
 }, {
     strict: true,
     timestamps: {

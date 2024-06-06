@@ -8,7 +8,6 @@ export const STATE_USER_ROLE = {
     PROFESSOR: "Professor",
 } as const;
 
-
 export type TStateUserRole = (typeof STATE_USER_ROLE)[keyof typeof STATE_USER_ROLE];
 export const STATE_USER_ROLE_ARRAY = Object.values(STATE_USER_ROLE);
 
@@ -30,15 +29,17 @@ export const GENDER_ARRAY = Object.values(GENDER);
 export const MODEL_NAME = {
     USER: "Users",
     STUDENT: "Students",
-    SEMESTER: "Semesters",
     PROFESSOR: "Professors",
-    OPTION: "Options",
+    LOCATION: "Locations",
+    DEPARTMENT: "Departments",
+    RESET_PASSWORD: "ResetPasswords",
     RESOURCE: "Resources",
+    ATTACHMENT: "Attachments",
+    MEDIA: "Media",
     POSTULATION: "Postulations",
-    SECTOR: "Sectors",
-    CONFIG: "Configs",
-    CONFIG_HISTORY: "ConfigHistories",
-    MEDIA: "Medias",
+    INSCRIPTION_TYPE: "InscriptionTypes",
+    TAXONOMY: "Taxonomies",
+    UNIVERSITY_PERIOD: "UniversityPeriods",
 } as const;
 
 
@@ -72,18 +73,14 @@ stateStudentRole.addState(STATE_STUDENT.REFUSED, []);
 export const STATE_RESOURCE = {
     ON_HOLD: "OnHold",
     AVAILABLE: "Available",
-    ATTACHED: "Attached",
-    UNAVAILABLE: "Unavailable",
 } as const;
 
 export type TStateResource = (typeof STATE_RESOURCE)[keyof typeof STATE_RESOURCE];
 export const STATE_RESOURCE_ARRAY = Object.values(STATE_RESOURCE);
 
 export const stateResourceRole = new StateController<TStateResource>();
-stateResourceRole.addState(STATE_RESOURCE.ON_HOLD, [STATE_RESOURCE.AVAILABLE, STATE_RESOURCE.UNAVAILABLE]);
-stateResourceRole.addState(STATE_RESOURCE.AVAILABLE, [STATE_RESOURCE.ATTACHED, STATE_RESOURCE.UNAVAILABLE]);
-stateResourceRole.addState(STATE_RESOURCE.ATTACHED, [STATE_RESOURCE.UNAVAILABLE]);
-stateResourceRole.addState(STATE_RESOURCE.UNAVAILABLE, []);
+stateResourceRole.addState(STATE_RESOURCE.ON_HOLD, [STATE_RESOURCE.AVAILABLE]);
+stateResourceRole.addState(STATE_RESOURCE.AVAILABLE, [STATE_RESOURCE.ON_HOLD]);
 
 export const STATE_PROFESSOR = {
     ON_HOLD: "OnHold",
@@ -98,3 +95,25 @@ export const stateProfessorRole = new StateController<TStateProfessor>();
 stateProfessorRole.addState(STATE_PROFESSOR.ON_HOLD, [STATE_PROFESSOR.ACCEPTED, STATE_PROFESSOR.REFUSED]);
 stateProfessorRole.addState(STATE_PROFESSOR.ACCEPTED, []);
 stateProfessorRole.addState(STATE_PROFESSOR.REFUSED, []);
+
+export const STATE_ATTACHMENT = {
+    ATTACHED: "Attached",
+    UNATTACHED: "Unattached",
+} as const;
+
+export type TStateAttachment = (typeof STATE_ATTACHMENT)[keyof typeof STATE_ATTACHMENT];
+export const STATE_ATTACHMENT_ARRAY = Object.values(STATE_ATTACHMENT);
+
+export const stateAttachmentRole = new StateController<TStateAttachment>();
+stateAttachmentRole.addState(STATE_ATTACHMENT.ATTACHED, [STATE_ATTACHMENT.UNATTACHED]);
+stateAttachmentRole.addState(STATE_ATTACHMENT.UNATTACHED, [STATE_ATTACHMENT.ATTACHED]);
+
+export const STATE_POSTULATION = {
+    ON_HOLD: "OnHold",
+    ACCEPTED: "Accepted",
+    REFUSED: "Refused",
+} as const;
+
+export type TStatePostulation = (typeof STATE_POSTULATION)[keyof typeof STATE_POSTULATION];
+export const STATE_POSTULATION_ARRAY = Object.values(STATE_POSTULATION);
+

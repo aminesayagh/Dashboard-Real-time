@@ -6,11 +6,13 @@ import resource from './resource.route';
 import student from './student.route';
 import professor from './professor.route';
 import auth from './auth.route';
+import email from './notification/email.route';
 
 router.use('/v1/users', user);
 router.use('/v1/resources', resource);
 router.use('/v1/students', student);
 router.use('/v1/professors', professor);
+router.use('/v1/notification/email', email);
 
 router.use('/v1/auth', auth);
 
