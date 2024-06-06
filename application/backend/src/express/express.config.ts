@@ -10,6 +10,7 @@ import rateLimit from "express-rate-limit"; // rate limiting middleware
 import logger from 'logger'; // Adjust the path as necessary
 
 const handlerError = (error: any, req: ApiRequest, res: ApiResponse) => {
+  console.error(error);
   logger.error({
     message: error.message,
     stack: error.stack,

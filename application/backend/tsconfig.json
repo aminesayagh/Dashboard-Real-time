@@ -27,7 +27,7 @@
 
     /* Modules */
     "module": "commonjs",                                /* Specify what module code is generated. */
-    "rootDir": ".",                                  /* Specify the root folder within your source files. */
+    "rootDir": "./src",                                  /* Specify the root folder within your source files. */
     "moduleResolution": "node",                     /* Specify how TypeScript looks up a file from a given module specifier. */
     // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */
     // "types": [],                                      /* Specify type package names to be included without being referenced in a source file. */
@@ -103,17 +103,17 @@
     /* Completeness */
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
     "skipLibCheck": true,                                /* Skip type checking all .d.ts files. */
-    "baseUrl": ".",                                  /* Specify the base directory to resolve non-relative module names. */
+    "baseUrl": "./src",                                  /* Specify the base directory to resolve non-relative module names. */
     "paths": { 
-      "types/*": ["src/types/*"],
-      "src/*": ["src/*"],
-      "test/*": ["test/*"],
-      "model/*": ["src/model/*"],
-      "service/*": ["src/service/*"],
-      "route/*": ["src/route/*"],
-      "helper/*": ["src/helper/*"],
-      "constants/*": ["src/constants/*"],
-      "env": ["src/env.ts"],
+      "types/*": ["types/*"],
+      "src/*": ["*"],
+      "test/*": ["../test/*"],
+      "model/*": ["model/*"],
+      "service/*": ["service/*"],
+      "route/*": ["route/*"],
+      "helper/*": ["helper/*"],
+      "constants/*": ["constants/*"],
+      "env": ["env.ts"],
     },
     "typeRoots": ["./node_modules/@types", "./src/types"],                                  /* Specify multiple folders that act like './node_modules/@types'. */
   },

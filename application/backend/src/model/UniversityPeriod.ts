@@ -1,4 +1,4 @@
-import { Schema, model, Types } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import { PaginateModel } from 'mongoose';
 import { DefaultDocument } from 'types/Mongoose';
 import { MODEL_NAME, TStatePostulation, STATE_POSTULATION } from 'constants/DB';
