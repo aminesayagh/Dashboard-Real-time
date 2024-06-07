@@ -106,7 +106,7 @@ router.get('/:id/previous', async (req: ApiRequest<{}, {}, { id: string }>, res:
         data: result
     });
 });
-router.get('/current', async (req: ApiRequest, res: ApiResponse<IUniversityPeriodDocument>) => {
+router.get('/current', async (_: ApiRequest, res: ApiResponse<IUniversityPeriodDocument>) => {
     const result = await UniversityPeriodModel.findOne({ period_date_start: { $lte: new Date() }, period_date_end: { $gte: new Date() } }).catch((err) => {
         res.status(400).send({ status: 'error', message: err.message });
     });

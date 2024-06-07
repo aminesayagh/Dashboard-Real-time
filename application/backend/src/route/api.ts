@@ -8,11 +8,9 @@ import professor from './professor.route';
 import department from './department.route';
 import taxonomy from './taxonomy.route';
 import university_period from './university_period.route';
-import auth from './auth.route';
 import email from './notification/email.route';
 
 router.use('/v1/users', user);
-router.use('/v1/auth', auth);
 router.use('/v1/student', student); 
 router.use('/v1/professor', professor);
 router.use('/v1/departments', department);

@@ -10,7 +10,7 @@ const logFormat = printf(({ level, message, timestamp }) => {
     return `${timestamp} ${level}: ${message}`;
 });
 
-const logger = createLogger({
+export default createLogger({
     level: 'info',
     format: combine(
         timestamp(),
@@ -32,4 +32,3 @@ const logger = createLogger({
     ],
 });
 
-export default logger;

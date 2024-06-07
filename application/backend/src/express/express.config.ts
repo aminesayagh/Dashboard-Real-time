@@ -7,11 +7,9 @@ import helmet from "helmet" // sets HTTP headers to protect from well-known web 
 import morgan from "morgan" // HTTP request logger middleware for node.js
 import cors from 'cors';
 import rateLimit from "express-rate-limit"; // rate limiting middleware
-import logger from 'logger'; // Adjust the path as necessary
 
 const handlerError = (error: any, req: ApiRequest, res: ApiResponse) => {
-  console.error(error);
-  logger.error({
+  console.log({
     message: error.message,
     stack: error.stack,
     path: req.path,
@@ -28,7 +26,7 @@ const handlerError = (error: any, req: ApiRequest, res: ApiResponse) => {
 }
 
 const handlerInfoRoute = (req: ApiRequest, _: ApiResponse, next: NextFunction) => {
-  logger.info({
+  console.log({
     message: "Request received",
     path: req.path,
     method: req.method,
