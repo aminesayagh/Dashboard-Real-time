@@ -7,6 +7,9 @@ const envVariables = z.object({
     MONGO_DB: z.string(),
     USER_MAILER_USER: z.string(),
     USER_MAILER_PASSWORD: z.string(),
+    CLOUDINARY_CLOUD_NAME: z.string(),
+    CLOUDINARY_API_KEY: z.string(),
+    CLOUDINARY_API_SECRET: z.string(),
 });
 
 const myEnvVariables = envVariables.parse(process.env);
@@ -30,3 +33,6 @@ export const MONGO_URI = myEnvVariables.MONGO_URI;
 export const MONGO_DB = myEnvVariables.MONGO_DB;
 export const USER_MAILER_USER = myEnvVariables.USER_MAILER_USER;
 export const USER_MAILER_PASSWORD = myEnvVariables.USER_MAILER_PASSWORD;
+export const CLOUDINARY_CLOUD_NAME = myEnvVariables.CLOUDINARY_CLOUD_NAME;
+export const CLOUDINARY_API_KEY = myEnvVariables.CLOUDINARY_API_KEY;
+export const CLOUDINARY_API_SECRET = myEnvVariables.CLOUDINARY_API_SECRET;

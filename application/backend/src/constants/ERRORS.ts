@@ -16,4 +16,7 @@ export const ERRORS = {
     INTERNAL_SERVER_ERROR: 'Internal Server Error', // 500
     // user errors
     USER_NOT_FOUND: 'User not found',
+    MEDIA_NOT_FOUND: 'Media not found',
+    FAILED_TO_GENERATE_BASE64: 'Failed to generate base64',
+    FAILED_UPDATING_MEDIA: 'Failed to update media',
 } as const;
