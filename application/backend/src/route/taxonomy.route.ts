@@ -4,15 +4,26 @@ import { ApiResponse, ApiRequest } from "types/Api";
 
 router.get('/', async () => {});
 router.post('/', async () => {});
+
 router.get('/:id', async () => {});
 router.put('/:id', async () => {});
 router.delete('/:id', async () => {});
+
 router.get('/:id/inscription_types', async () => {});
 router.post('/:id/inscription_types', async () => {});
+
 router.get('/:id/inscription_types/:inscription_type_id', async () => {});
 router.put('/:id/inscription_types/:inscription_type_id', async () => {});
 router.delete('/:id/inscription_types/:inscription_type_id', async () => {});
-router.get('/types', async () => {});
+
+router.post('/:id/inscription_types/:inscription_type_id/postulation_type_content', async () => {});
+
+router.get('/:id/inscription_types/:inscription_type_id/postulation_type_content/:content_id', async () => {});
+router.put('/:id/inscription_types/:inscription_type_id/postulation_type_content/:content_id', async () => {});
+router.delete('/:id/inscription_types/:inscription_type_id/postulation_type_content/:content_id', async () => {});
+
+
+router.get('/types/:name', async () => {});
 router.put('/types/:name', async () => {});
 router.delete('/types/:name', async () => {});
 

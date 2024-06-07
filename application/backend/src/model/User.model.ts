@@ -228,7 +228,7 @@ userSchema.method('findByEmail', async function (this: IUserModel, email: string
 });
 
 userSchema.method('me', async function (this: IUserModel, id: string) {
-    const _id = Types.ObjectId(id);
+    const _id = new Types.ObjectId(id);
     const userAggregate = await this.aggregate<IUserMeAggregate>([
         { $match: { _id } },
         {
@@ -296,6 +296,8 @@ userSchema.method('me', async function (this: IUserModel, id: string) {
             }
         }
     ]);
+
+    return userAggregate[0];
 });
 
 
