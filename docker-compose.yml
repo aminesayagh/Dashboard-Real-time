@@ -1,0 +1,47 @@
+services:
+  frontend:
+    build: ./application/frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./application/frontend:/app
+    depends_on:
+      - backend
+
+  backend:
+    build: ./application/backend
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./application/backend:/app
+    environment:
+      - PORT=3001
+    depends_on:
+      - db
+      - redis
+      - kafka
+
+  db:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+
+  kafka:
+    image: landoop/fast-data-dev:latest
+    ports:
+      - "3030:3030" # Web UI
+      - "8081:8081" # Schema registry
+      - "8082:8082" # Kafka REST proxy
+      - "8083:8083" # Kafka connect distributed
+      - "9092:9092" # Kafka broker
+      - "2181:2181" # ZooKeeper
+    environment:
+      ADV_HOST: 127.0.0.1
+      RUNTESTS: 0
+      DEBUG: 1
+      SAMPLEDATA: 0
