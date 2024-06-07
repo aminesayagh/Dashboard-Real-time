@@ -10,11 +10,11 @@ export interface IPostulationTypeContent {
     postulation_type_content_options?: string[]; // for select type
 }
 
-export interface IPostulationTypeDocument extends DefaultDocument<IPostulationTypeContent> {};
+export interface IPostulationTypeContentDocument extends DefaultDocument<IPostulationTypeContent> {};
 
-export interface IPostulationTypeModel extends PaginateModel<IPostulationTypeDocument> {};
+export interface IPostulationTypeModel extends PaginateModel<IPostulationTypeContentDocument> {};
 
-const PostulationTypeContentSchema = new Schema<IPostulationTypeDocument>({
+const PostulationTypeContentSchema = new Schema<IPostulationTypeContentDocument>({
     postulation_type_content_name: {
         type: String,
         required: true,
@@ -46,4 +46,4 @@ const PostulationTypeContentSchema = new Schema<IPostulationTypeDocument>({
     }
 });
 
-export default model<IPostulationTypeDocument>(MODEL_NAME.POSTULATION_TYPE_CONTENT, PostulationTypeContentSchema);
+export default model<IPostulationTypeContentDocument>(MODEL_NAME.POSTULATION_TYPE_CONTENT, PostulationTypeContentSchema);

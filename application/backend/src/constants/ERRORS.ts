@@ -15,4 +15,5 @@ export const ERRORS = {
     FORBIDDEN: 'Forbidden', // 403
     INTERNAL_SERVER_ERROR: 'Internal Server Error', // 500
     // user errors
+    USER_NOT_FOUND: 'User not found',
 } as const;

@@ -1,5 +1,5 @@
 import express from 'express';
-import { ERRORS } from 'src/constants/ERRORS';
+import { ERRORS } from 'constants/ERRORS';
 import UniversityPeriodModel, { IUniversityPeriodDocument } from 'src/model/UniversityPeriod.model';
 import { ApiRequest, ApiResponse, ApiResponsePagination } from 'types/Api';
 import qs from 'qs';

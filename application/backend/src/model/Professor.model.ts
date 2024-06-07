@@ -2,6 +2,7 @@ import { Model, Schema, model } from 'mongoose';
 import mongoosePagination from 'mongoose-paginate-v2';
 import { MODEL_NAME, STATE_PROFESSOR_ARRAY, STATE_PROFESSOR, TStateProfessor } from 'constants/DB';
 import { DefaultDocument } from 'types/Mongoose';
+import { ERRORS } from 'src/constants/ERRORS';
 
 interface IProfessor {
     user_id: Schema.Types.ObjectId;
@@ -38,6 +39,14 @@ const professorSchema = new Schema<IProfessorDocument, IProfessorModel>({
         createdAt: 'created_at',
         updatedAt: 'updated_at',
     },
+});
+
+professorSchema.pre('save', async function (this: IProfessorDocument, next) {
+    const user = await this.model(MODEL_NAME.USER).findById(this.user_id);
+    if (!user) {
+        next(new Error(ERRORS.USER_NOT_FOUND));
+    }
+    next();
 });
 
 professorSchema.plugin(mongoosePagination);

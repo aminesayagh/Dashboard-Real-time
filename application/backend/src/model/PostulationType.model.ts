@@ -2,18 +2,18 @@ import { Schema, Types ,PaginateModel, model } from "mongoose";
 import { DefaultDocument } from "types/Mongoose";
 import { MODEL_NAME } from "constants/DB";
 
-export interface IInscriptionType {
+export interface IPostulationType {
     taxonomies_id: Types.ObjectId[];
     postulation_type_period: Types.ObjectId[];
     postulation_type_name: string;
     postulation_type_content: Types.ObjectId[];
 }
 
-export interface IInscriptionTypeDocument extends DefaultDocument<IInscriptionType> {};
+export interface IPostulationTypeDocument extends DefaultDocument<IPostulationType> {};
 
-export interface IInscriptionTypeModel extends PaginateModel<IInscriptionTypeDocument> {};
+export interface IPostulationTypeModel extends PaginateModel<IPostulationTypeDocument> {};
 
-const InscriptionTypeSchema = new Schema<IInscriptionTypeDocument, IInscriptionTypeModel>({
+const PostulationTypeSchema = new Schema<IPostulationTypeDocument, IPostulationTypeModel>({
     taxonomies_id: {
         type: [Schema.Types.ObjectId],
         required: true,
@@ -42,4 +42,4 @@ const InscriptionTypeSchema = new Schema<IInscriptionTypeDocument, IInscriptionT
     }
 });
 
-export default model<IInscriptionTypeDocument, IInscriptionTypeModel>(MODEL_NAME.POSTULATION_TYPE, InscriptionTypeSchema);
+export default model<IPostulationTypeDocument, IPostulationTypeModel>(MODEL_NAME.POSTULATION_TYPE, PostulationTypeSchema);

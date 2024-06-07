@@ -55,6 +55,15 @@ const studentSchema = new Schema<IStudentDocument, IStudentModel>({
     }
 });
 
+// override the default save method to check if the user_id exist in the database user before saving
+studentSchema.pre('save', async function (this: IStudentDocument, next) {
+    const user = await this.model(MODEL_NAME.USER).findById(this.user_id);
+    if (!user) {
+        throw new Error(ERRORS.USER_NOT_FOUND);
+    }
+    next();
+});
+
 studentSchema.statics.findByUserId = async function (user_id: Types.ObjectId) {
     return this.findOne({ user_id });
 };
