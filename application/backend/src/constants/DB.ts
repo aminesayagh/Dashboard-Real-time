@@ -37,7 +37,8 @@ export const MODEL_NAME = {
     ATTACHMENT: "Attachments",
     MEDIA: "Media",
     POSTULATION: "Postulations",
-    INSCRIPTION_TYPE: "InscriptionTypes",
+    POSTULATION_TYPE: "PostulationTypes",
+    POSTULATION_TYPE_CONTENT: "PostulationTypeContents",
     TAXONOMY: "Taxonomies",
     UNIVERSITY_PERIOD: "UniversityPeriods",
 } as const;

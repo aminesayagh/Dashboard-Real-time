@@ -4,8 +4,9 @@ import { MODEL_NAME } from "constants/DB";
 
 export interface IInscriptionType {
     taxonomies_id: Types.ObjectId[];
-    inscription_period: Types.ObjectId[];
-    inscription_name: string;
+    postulation_type_period: Types.ObjectId[];
+    postulation_type_name: string;
+    postulation_type_content: Types.ObjectId[];
 }
 
 export interface IInscriptionTypeDocument extends DefaultDocument<IInscriptionType> {};
@@ -18,15 +19,20 @@ const InscriptionTypeSchema = new Schema<IInscriptionTypeDocument, IInscriptionT
         required: true,
         ref: MODEL_NAME.TAXONOMY,
     },
-    inscription_period: {
+    postulation_type_period: {
         type: [Schema.Types.ObjectId],
         required: true,
         ref: MODEL_NAME.UNIVERSITY_PERIOD,
     },
-    inscription_name: {
+    postulation_type_name: {
         type: String,
         required: true,
         trim: true,
+    },
+    postulation_type_content: {
+        type: [Schema.Types.ObjectId],
+        required: true,
+        ref: MODEL_NAME.POSTULATION_TYPE_CONTENT,
     }
 }, {
     strict: true,
@@ -36,4 +42,4 @@ const InscriptionTypeSchema = new Schema<IInscriptionTypeDocument, IInscriptionT
     }
 });
 
-export default model<IInscriptionTypeDocument, IInscriptionTypeModel>(MODEL_NAME.INSCRIPTION_TYPE, InscriptionTypeSchema);
+export default model<IInscriptionTypeDocument, IInscriptionTypeModel>(MODEL_NAME.POSTULATION_TYPE, InscriptionTypeSchema);

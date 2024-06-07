@@ -1,13 +1,14 @@
-import { Schema, model } from 'mongoose';
-import { PaginateModel } from 'mongoose';
+import { Schema, model, PaginateModel, Types } from 'mongoose';
 import { DefaultDocument } from 'types/Mongoose';
 import { MODEL_NAME, TStatePostulation, STATE_POSTULATION } from 'constants/DB';
 
 export interface IUniversityPeriod {
     period_name: string;
-    period_start_date: Date;
-    period_end_date: Date;
+    period_date_start: Date;
+    period_date_end: Date;
     period_state: TStatePostulation;
+    period_next?: Types.ObjectId;
+    period_previous?: Types.ObjectId;
 }
 
 export interface IUniversityPeriodDocument extends DefaultDocument<IUniversityPeriod> {};
@@ -22,11 +23,11 @@ const UniversityPeriodSchema = new Schema<IUniversityPeriodDocument, IUniversity
         minlength: 3,
         maxlength: 50,
     },
-    period_start_date: {
+    period_date_start: {
         type: Date,
         required: true,
     },
-    period_end_date: {
+    period_date_end: {
         type: Date,
         required: true,
     },
@@ -35,7 +36,16 @@ const UniversityPeriodSchema = new Schema<IUniversityPeriodDocument, IUniversity
         required: true,
         enum: Object.values(STATE_POSTULATION),
         default: STATE_POSTULATION.ON_HOLD,
-    }
+    },
+    period_next: {
+        type: Schema.Types.ObjectId,
+        ref: MODEL_NAME.UNIVERSITY_PERIOD,
+    },
+    period_previous: {
+        type: Schema.Types.ObjectId,
+        ref: MODEL_NAME.UNIVERSITY_PERIOD,
+    },
+    
 }, {
     strict: true,
     timestamps: {

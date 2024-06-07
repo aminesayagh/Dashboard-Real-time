@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/qs": "^6.9.15",
     "argon2": "^0.40.3",
     "concurrently": "^8.2.2",
     "cors": "^2.8.5",

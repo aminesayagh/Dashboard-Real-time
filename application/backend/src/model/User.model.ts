@@ -5,6 +5,7 @@ import { STATE_USER_ROLE, MODEL_NAME, GENDER_ARRAY, AUTH_PROVIDERS_ARRAY, TGende
 import { ERRORS } from 'constants/ERRORS';
 import { DefaultDocument } from 'types/Mongoose';
 import { hashPassword, comparePassword } from 'helper/hash';
+import { IUserMeAggregate, IUserAggregate } from 'types/Aggregate';
 
 interface IUser {
     user_first_name?: string;
@@ -25,7 +26,7 @@ interface IUser {
     }[]
 }
 
-export interface IUserDocument extends DefaultDocument<IUser> {
+interface IUserMethods {
     addUserRole(role: TStateUserRole): Promise<IUserDocument>;
     removeUserRole(role: TStateUserRole): Promise<IUserDocument>;
     resetPassword(password: string): Promise<IUserDocument>;
@@ -33,8 +34,11 @@ export interface IUserDocument extends DefaultDocument<IUser> {
     verifyPasswordExist(password: string): Promise<boolean>;
     verifyPassword(password: string): Promise<boolean>;
     findByEmail(email: string): Promise<IUserDocument | null>;
+    me(id: string): Promise<IUserMeAggregate>;
+    profile(id: string): Promise<IUserAggregate>;
 }
-export interface IUserModel extends PaginateModel<IUserDocument> {}
+export interface IUserDocument extends DefaultDocument<IUser>, IUserMethods {}
+export interface IUserModel extends PaginateModel<IUserDocument>, IUserMethods {}
 
 const PasswordSchema = new Schema({
     user_password: {
@@ -221,6 +225,77 @@ userSchema.method('verifyPassword', async function (this: IUserDocument, passwor
 
 userSchema.method('findByEmail', async function (this: IUserModel, email: string) {
     return this.findOne({ email });
+});
+
+userSchema.method('me', async function (this: IUserModel, id: string) {
+    const _id = Types.ObjectId(id);
+    const userAggregate = await this.aggregate<IUserMeAggregate>([
+        { $match: { _id } },
+        {
+            $lookup: {
+                from: MODEL_NAME.STUDENT,
+                localField: '_id', // user_id
+                foreignField: 'user_id', // student_id
+                as: 'student_doc' // student_doc
+            }
+        },
+        {
+            $lookup: {
+                from: MODEL_NAME.PROFESSOR,
+                localField: '_id', // user_id
+                foreignField: 'user_id', // professor_id
+                as: 'professor_doc' // professor_doc
+            }
+        },
+        {
+            $lookup: {
+                from: MODEL_NAME.DEPARTMENT,
+                localField: '_id', // user_id
+                foreignField: 'department_manager', // department_manager
+                as: 'department_managed_doc' // department_managed_doc
+            }
+        },
+        {
+            $lookup: {
+                from: MODEL_NAME.TAXONOMY,
+                localField: '_id', // user_id
+                foreignField: 'taxonomy_manager', // taxonomy_manager
+                as: 'taxonomies_managed_doc' // taxonomies_managed_doc
+            }
+        },
+        {
+            $lookup: {
+                from: MODEL_NAME.POSTULATION,
+                localField: '_id', // user_id
+                foreignField: 'user_id', // user_id
+                as: 'postulation_docs' // postulation_docs
+            }
+        },
+        {
+            $project: {
+                _id: 1,
+                updated_at: 1,
+                created_at: 1,
+                user_avatar: 1,
+                user_first_name: 1,
+                user_last_name: 1,
+                user_email: 1,
+                user_roles: 1,
+                user_gender: 1,
+                user_cin: 1,
+                user_phone: 1,
+                user_address: 1,
+                user_address_secondary: 1,
+                user_email_verified: 1,
+                user_auth_provider: 1,
+                student_doc: { $arrayElemAt: ['$student_doc', 0] },
+                professor_doc: { $arrayElemAt: ['$professor_doc', 0] },
+                department_managed_doc: { $arrayElemAt: ['$department_managed_doc', 0] },
+                taxonomies_managed_doc: 1,
+                postulation_docs: 1
+            }
+        }
+    ]);
 });
 
 
