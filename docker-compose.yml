@@ -16,6 +16,13 @@ services:
       - ./application/backend:/app
     environment:
       - PORT=3001
+      - MONGO_DB=app_db
+      - MONGO_URI=mongodb://db:27017/app_db
+      - USER_MAILER_USER="mail@gmail.com"
+      - USER_MAILER_PASSWORD="password"
+      - CLOUDINARY_CLOUD_NAME="cloud_name"
+      - CLOUDINARY_API_KEY="api_key"
+      - CLOUDINARY_API_SECRET="api_secret"
     depends_on:
       - db
       - redis
@@ -45,3 +52,8 @@ services:
       RUNTESTS: 0
       DEBUG: 1
       SAMPLEDATA: 0
+
+  nginx:
+    build: ./nginx
+    ports:
+      - "80:80"
