@@ -86,10 +86,10 @@ router.delete('/:id', async (req: ApiRequest<{}, {}, { id: string }>, res: ApiRe
     });
 });
 
-router.get('/me', async (req: ApiRequest<any, {
+router.get('/me/:id', async (req: ApiRequest<any, {
     id: string;
 }>, res: ApiResponse<IUserMeAggregate>) => {
-    const { id } = req.params;
+  const { id } = req.params;
     const result = await UserModel.me(id).catch((err) => {
         res.status(400).send({ status: 'error', message: err.message });
     });
@@ -103,17 +103,18 @@ router.get('/me', async (req: ApiRequest<any, {
     });
 });
 
-router.get('/:email', async (req: ApiRequest<{}, {}, {
+router.get('/email/:email', async (req: ApiRequest<{}, {}, {
     email: string;
 }>, res: ApiResponse<IUserDocument>) => {
     const { email } = req.params;
-    const result = await UserModel.findByEmail(email).catch((err) => {
-        res.status(400).send({ status: 'error', message: err.message });
-    });
-    if (!result) {
+    let result = await UserModel.findByEmail(email).catch((err) => {
+      res.status(400).send({ status: 'error', message: err.message });
+      });
+      if (!result) {
         res.status(404).send({ status: 'error', message: ERRORS.NOT_FOUND });
         return;
-    }
+        }
+
     res.send({
         status: 'success',
         data: result

@@ -2,6 +2,7 @@ import express, { Application, NextFunction } from "express";
 import { ApiResponse, ApiRequest } from "types/Api";
 import compression from "compression" // compresses requests
 import cookieParser from "cookie-parser" // parses cookie header and populates req.cookies
+import apiRoutes from '../route/api';
 
 import helmet from "helmet" // sets HTTP headers to protect from well-known web vulnerabilities
 import morgan from "morgan" // HTTP request logger middleware for node.js
@@ -60,6 +61,11 @@ const ExpressConfig = (): Application => {
   app.use(handlerInfoRoute);
   
   app.use(handlerError);
+
+  app.use('/api', apiRoutes);
+  app.get('/check', (_, res) => {
+      res.json('Server is running');
+  });
 
 
   return app

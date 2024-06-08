@@ -157,32 +157,32 @@ userSchema.pre(['find', 'findOne'], function () {
     }
 });
 
-userSchema.method('addUserRole', async function (role: TStateUserRole) {
+userSchema.methods.addUserRole = async function (role: TStateUserRole) {
     const actualUserRole = this.user_roles as TStateUserRole[];
     if (actualUserRole.includes(role)) {
         return this;
     }
 
     for (const actualRole of actualUserRole) {
-        if (stateUserRole.translateState(actualRole, role)) {
-            // TODO: if new role is student, we need to check if the user is already has the student document
-            // TODO: if new role is professor, we need to check if the user is already has the professor document
-            this.user_roles.push(role);
+      if (stateUserRole.translateState(actualRole, role)) {
+          // TODO: if new role is student, we need to check if the user is already has the student document
+          // TODO: if new role is professor, we need to check if the user is already has the professor document
+          this.user_roles.push(role);
         }
     }
     return this.save();
-});
+};
 
-userSchema.method('removeUserRole', async function (this: IUserDocument, role: TStateUserRole) {
+userSchema.methods.removeUserRole = async function (this: IUserDocument, role: TStateUserRole) {
     const actualUserRole = this.user_roles as TStateUserRole[];
     if (!actualUserRole.includes(role)) {
         return this;
     }
     this.user_roles = actualUserRole.filter((actualRole) => actualRole !== role);
     return this.save();
-});
+};
 
-userSchema.method('verifyPasswordExist', async function (this: IUserDocument, password: string): Promise<boolean> {
+userSchema.methods.verifyPasswordExist = async function (this: IUserDocument, password: string): Promise<boolean> {
     if (this.user_auth_provider !== AUTH_PROVIDERS.CREDENTIAL || !this.user_password) {
         throw new Error(ERRORS.BAD_CREDENTIALS);
     }
@@ -197,9 +197,9 @@ userSchema.method('verifyPasswordExist', async function (this: IUserDocument, pa
         }
     }
     return false;
-});
+};
 
-userSchema.method('resetPassword', async function (this: IUserDocument, password: string) {
+userSchema.methods.resetPassword = async function (this: IUserDocument, password: string) {
     const validated = await this.verifyPasswordExist(password);
     if (validated) {
         throw new Error(ERRORS.PASSWORD_ALREADY_USED);
@@ -214,20 +214,20 @@ userSchema.method('resetPassword', async function (this: IUserDocument, password
     this.user_reset_passwords.push(newPasswordDocument);
     this.user_password = newPassword;
     return this.save();
-});
+};
 
-userSchema.method('verifyPassword', async function (this: IUserDocument, password: string) {
+userSchema.methods.verifyPassword = async function (this: IUserDocument, password: string) {
     if (this.user_auth_provider !== AUTH_PROVIDERS.CREDENTIAL || !this.user_password) {
         throw new Error(ERRORS.BAD_CREDENTIALS);
     }
     return comparePassword(password, this.user_password);
-});
+};
 
-userSchema.method('findByEmail', async function (this: IUserModel, email: string) {
-    return this.findOne({ email });
-});
+userSchema.statics.findByEmail = async function (this: IUserModel, email: string) {
+    return this.findOne({ email: email });
+};
 
-userSchema.method('me', async function (this: IUserModel, id: string) {
+userSchema.statics.me = async function (this: IUserModel, id: string) {
     const _id = new Types.ObjectId(id);
     const userAggregate = await this.aggregate<IUserMeAggregate>([
         { $match: { _id } },
@@ -298,7 +298,7 @@ userSchema.method('me', async function (this: IUserModel, id: string) {
     ]);
 
     return userAggregate[0];
-});
+};
 
 
 userSchema.plugin(mongoosePagination as any);
