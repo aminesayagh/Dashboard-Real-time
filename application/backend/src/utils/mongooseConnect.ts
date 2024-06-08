@@ -5,7 +5,7 @@ import {
     MONGO_USER,
     MONGO_DB,
     MONGO_PASSWORD
-} from 'env';
+} from '../env';
 
 const KEY: string = `${MONGO_URI}://${MONGO_USER}:${MONGO_PASSWORD}@cluster0.fqw1w.mongodb.net/${MONGO_DB}?retryWrites=true&w=majority` || '';
 
