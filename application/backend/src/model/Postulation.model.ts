@@ -1,6 +1,6 @@
 import { Schema, model, Types, PaginateModel, ObjectId } from 'mongoose';
 import { DefaultDocument } from 'types/Mongoose';
-import { MODEL_NAME, TStatePostulation, STATE_POSTULATION } from 'constants/DB';
+import { MODEL_NAME, TStatePostulation, STATE_POSTULATION } from '../constants/DB';
 
 export interface IPostulationContent {
     postulation_content_body: ObjectId;

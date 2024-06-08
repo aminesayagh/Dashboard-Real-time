@@ -1,16 +1,16 @@
 import express from 'express';
-import { ITaxonomyDocument } from 'src/model/Taxonomy.model';
+import { ITaxonomyDocument } from '../model/Taxonomy.model';
 const router = express.Router();
 import qs from 'qs';
-import { ERRORS } from 'constants/ERRORS';
-import TaxonomyModel from 'model/Taxonomy.model';
+import { ERRORS } from '../constants/ERRORS';
+import TaxonomyModel from '../model/Taxonomy.model';
 
 
 import { ApiResponse, ApiRequest, ApiResponsePagination } from "types/Api";
-import PostulationTypeModel from 'src/model/PostulationType.model';
-import { IPostulationTypeDocument } from 'src/model/PostulationType.model';
+import PostulationTypeModel from '../model/PostulationType.model';
+import { IPostulationTypeDocument } from '../model/PostulationType.model';
 import { Types } from 'mongoose';
-import PostulationTypeContentModel, { IPostulationTypeContentDocument } from 'src/model/PostulationTypeContent.model';
+import PostulationTypeContentModel, { IPostulationTypeContentDocument } from '../model/PostulationTypeContent.model';
 
 router.get('/', async (req: ApiRequest, res: ApiResponsePagination<ITaxonomyDocument>): Promise<void> => {
     const { filter, ...options } = qs.parse(req.query) as any;

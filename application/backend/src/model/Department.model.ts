@@ -1,7 +1,7 @@
 import { Schema, model, Types } from 'mongoose';
 import { PaginateModel } from 'mongoose';
 import { DefaultDocument } from 'types/Mongoose';
-import { MODEL_NAME } from 'constants/DB';
+import { MODEL_NAME } from '../constants/DB';
 
 export interface IDepartment {
     department_name: string;

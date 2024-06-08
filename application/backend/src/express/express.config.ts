@@ -9,7 +9,7 @@ import cors from 'cors';
 import rateLimit from "express-rate-limit"; // rate limiting middleware
 
 const handlerError = (error: any, req: ApiRequest, res: ApiResponse, _: NextFunction) => {
-  console.log({
+  console.error({
     message: error.message,
     stack: error.stack,
     path: req.path,

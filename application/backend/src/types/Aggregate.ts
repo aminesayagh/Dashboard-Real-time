@@ -2,9 +2,9 @@ import { IUserDocument } from '../model/User.model';
 import { IStudentDocument } from '../model/Student.model';
 import { IProfessorDocument } from '../model/Professor.model';
 import { IDepartmentDocument } from '../model/Department.model';
-import { IResourceDocument } from 'src/model/Resource.model';
-import { ITaxonomyDocument } from 'src/model/Taxonomy.model';
-import { IPostulationDocument } from 'src/model/Postulation.model';
+import { IResourceDocument } from 'model/Resource.model';
+import { ITaxonomyDocument } from '../model/Taxonomy.model';
+import { IPostulationDocument } from '../model/Postulation.model';
 
 export type UserPublic = Omit<IUserDocument, 'user_password' | 'user_reset_passwords'>;
 

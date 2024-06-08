@@ -5,6 +5,7 @@ const envVariables = z.object({
     NODE_ENV: z.string().default('development'),
     MONGO_URI: z.string(),
     MONGO_DB: z.string(),
+    MONGO_USER: z.string(),
     MONGO_PASSWORD: z.string(),
     USER_MAILER_USER: z.string(),
     USER_MAILER_PASSWORD: z.string(),
@@ -13,7 +14,6 @@ const envVariables = z.object({
     CLOUDINARY_API_SECRET: z.string(),
 });
 
-const myEnvVariables = envVariables.parse(process.env);
 
 export type TEnvVariables = z.infer<typeof envVariables>;   
 
@@ -24,14 +24,17 @@ declare global {
     }
 }
 
-process.env.NODE_ENV !== "production" ? import("dotenv").then(d => d.config({
-    path: ".dev.env"
-})) : null;
+import { config } from 'dotenv';
+config();
+
+
+const myEnvVariables = envVariables.parse(process.env);
 
 export const PORT = myEnvVariables.PORT;
 export const NODE_ENV = myEnvVariables.NODE_ENV;
 export const MONGO_URI = myEnvVariables.MONGO_URI;
 export const MONGO_DB = myEnvVariables.MONGO_DB;
+export const MONGO_USER = myEnvVariables.MONGO_USER;
 export const MONGO_PASSWORD = myEnvVariables.MONGO_PASSWORD;
 export const USER_MAILER_USER = myEnvVariables.USER_MAILER_USER;
 export const USER_MAILER_PASSWORD = myEnvVariables.USER_MAILER_PASSWORD;

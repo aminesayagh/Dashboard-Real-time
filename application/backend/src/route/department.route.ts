@@ -1,11 +1,11 @@
 import express from 'express';
 const router = express.Router();
 import { ApiResponsePagination, ApiRequest, ApiResponse } from "types/Api";
-import { ERRORS } from 'constants/ERRORS';
-import DepartmentModel, { IDepartmentDocument } from 'model/Department.model';
-import LocationModel, { ILocationDocument } from 'model/Location.model';
+import { ERRORS } from '../constants/ERRORS';
+import DepartmentModel, { IDepartmentDocument } from '../model/Department.model';
+import LocationModel, { ILocationDocument } from '../model/Location.model';
 import qs from 'qs';
-import PostulationModel, { IPostulation, IPostulationContentDocument } from 'src/model/Postulation.model';
+import PostulationModel, { IPostulation, IPostulationContentDocument } from '../model/Postulation.model';
 
 router.get('/', async (req: ApiRequest, res: ApiResponsePagination<IDepartmentDocument>): Promise<void> => {
     const { filter, ...options } = qs.parse(req.query) as any;

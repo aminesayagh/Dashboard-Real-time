@@ -1,5 +1,5 @@
 import { Types, PaginateModel, Schema, model, Model } from 'mongoose';
-import { MODEL_NAME, STATE_RESOURCE_ARRAY, STATE_RESOURCE, TStateResource, TStateAttachment, STATE_ATTACHMENT_ARRAY, STATE_ATTACHMENT, TModelName, MODEL_NAME_ARRAY } from 'constants/DB';
+import { MODEL_NAME, STATE_RESOURCE_ARRAY, STATE_RESOURCE, TStateResource, TStateAttachment, STATE_ATTACHMENT_ARRAY, STATE_ATTACHMENT, TModelName, MODEL_NAME_ARRAY } from '../constants/DB';
 import { DefaultDocument } from 'types/Mongoose';
 
 interface IMedia {

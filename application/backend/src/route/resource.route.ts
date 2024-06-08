@@ -1,11 +1,14 @@
 import express from 'express';
-import { ERRORS } from 'constants/ERRORS';
+import { ERRORS } from '../constants/ERRORS';
 import { ApiRequest, ApiResponse } from 'types/Api';
 import multer from 'multer';
 import { v2 as cloudinary } from 'cloudinary';
 import DatauriParser from 'datauri/parser';
 import path from 'path';
 import z from 'zod';
+
+import ResourceModel, { IAttachmentDocument, IMediaDocument, IResourceDocument } from '../model/Resource.model';
+const router = express.Router();
 
 const zodResourceType = z.enum(['image', 'video', 'raw', 'auto']);
 const zodBodyMedia = z.object({
@@ -14,15 +17,13 @@ const zodBodyMedia = z.object({
     resource_folder: z.enum(['postulation', 'user', 'department', 'taxonomy', 'university_period', 'resource', 'email']).default('resource'),
 });
 
-import ResourceModel, { IAttachmentDocument, IMediaDocument, IResourceDocument } from 'src/model/Resource.model';
-const router = express.Router();
 
 import { 
     CLOUDINARY_API_KEY,
     CLOUDINARY_API_SECRET,
     CLOUDINARY_CLOUD_NAME
-} from 'env';
-import { STATE_RESOURCE } from 'src/constants/DB';
+} from '../env';
+import { STATE_RESOURCE } from '../constants/DB';
 
 cloudinary.config({
     cloud_name: CLOUDINARY_CLOUD_NAME,

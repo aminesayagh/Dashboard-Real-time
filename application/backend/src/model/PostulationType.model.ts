@@ -1,6 +1,6 @@
 import { Schema, Types ,PaginateModel, model } from "mongoose";
 import { DefaultDocument } from "types/Mongoose";
-import { MODEL_NAME } from "constants/DB";
+import { MODEL_NAME } from "../constants/DB";
 
 export interface IPostulationType {
     taxonomies_id: Types.ObjectId[];

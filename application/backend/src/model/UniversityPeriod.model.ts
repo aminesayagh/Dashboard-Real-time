@@ -1,6 +1,6 @@
 import { Schema, model, PaginateModel, Types } from 'mongoose';
 import { DefaultDocument } from 'types/Mongoose';
-import { MODEL_NAME, TStatePostulation, STATE_POSTULATION } from 'constants/DB';
+import { MODEL_NAME, TStatePostulation, STATE_POSTULATION } from '../constants/DB';
 
 export interface IUniversityPeriod {
     period_name: string;

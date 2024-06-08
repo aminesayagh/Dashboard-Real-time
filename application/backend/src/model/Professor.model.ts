@@ -1,8 +1,8 @@
 import { Model, Schema, model } from 'mongoose';
 import mongoosePagination from 'mongoose-paginate-v2';
-import { MODEL_NAME, STATE_PROFESSOR_ARRAY, STATE_PROFESSOR, TStateProfessor } from 'constants/DB';
+import { MODEL_NAME, STATE_PROFESSOR_ARRAY, STATE_PROFESSOR, TStateProfessor } from '../constants/DB';
 import { DefaultDocument } from 'types/Mongoose';
-import { ERRORS } from 'src/constants/ERRORS';
+import { ERRORS } from '../constants/ERRORS';
 
 interface IProfessor {
     user_id: Schema.Types.ObjectId;

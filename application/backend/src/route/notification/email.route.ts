@@ -14,8 +14,8 @@ const zodPostEmail = z.object({
     text: z.string().optional(),
 });
 
-import { USER_MAILER_USER, USER_MAILER_PASSWORD } from 'env';   
-import { ERRORS } from 'src/constants/ERRORS';
+import { USER_MAILER_USER, USER_MAILER_PASSWORD } from '../../env';   
+import { ERRORS } from '../../constants/ERRORS';
 
 router.post('/email', async (req: ApiRequest<z.infer<typeof zodPostEmail>>, res: ApiResponse) => {
     try {

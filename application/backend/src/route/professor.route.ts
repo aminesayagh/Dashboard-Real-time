@@ -1,7 +1,7 @@
 import express from 'express';
 const router = express.Router();
-import { ERRORS } from 'constants/ERRORS';
-import UniversityPeriodModel, { IUniversityPeriodDocument } from 'src/model/UniversityPeriod.model';
+import { ERRORS } from '../constants/ERRORS';
+import UniversityPeriodModel, { IUniversityPeriodDocument } from '../model/UniversityPeriod.model';
 import { ApiRequest, ApiResponse } from 'types/Api';
 
 router.post('/professors', async (req: ApiRequest, res: ApiResponse<IUniversityPeriodDocument>): Promise<void> => {

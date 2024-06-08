@@ -1,10 +1,10 @@
 import { PaginateModel } from 'mongoose';
 import { Schema, model, Types } from 'mongoose';
 import mongoosePagination from 'mongoose-paginate-v2';
-import { STATE_USER_ROLE, MODEL_NAME, GENDER_ARRAY, AUTH_PROVIDERS_ARRAY, TGender, TAuthProviders, TStateUserRole, stateUserRole, AUTH_PROVIDERS } from 'constants/DB';
-import { ERRORS } from 'constants/ERRORS';
+import { STATE_USER_ROLE, MODEL_NAME, GENDER_ARRAY, AUTH_PROVIDERS_ARRAY, TGender, TAuthProviders, TStateUserRole, stateUserRole, AUTH_PROVIDERS } from '../constants/DB';
+import { ERRORS } from '../constants/ERRORS';
 import { DefaultDocument } from 'types/Mongoose';
-import { hashPassword, comparePassword } from 'src/utils/hash';
+import { hashPassword, comparePassword } from '../utils/hash';
 import { IUserMeAggregate, IUserAggregate } from 'types/Aggregate';
 
 interface IUser {

@@ -2,9 +2,9 @@ import express from 'express';
 import qs from 'qs'
 
 import { ApiResponsePagination, ApiRequest, ApiResponse } from "types/Api";
-import UserModel, { IUserDocument } from "model/User.model";
-import { ERRORS } from 'src/constants/ERRORS';
 import { IUserMeAggregate } from 'types/Aggregate';
+import UserModel, { IUserDocument } from "../model/User.model";
+import { ERRORS } from '../constants/ERRORS';
 
 const router = express.Router();
 

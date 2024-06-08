@@ -2,11 +2,11 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "main": "./dist/server.js",
   "scripts": {
     "test": "jest",
-    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/server.js\"",
-    "build": "rm -rf ./dist && tsc --build"
+    "start": "node dist/server.js",
+    "dev": "concurrently \"tsc --watch\" \"nodemon -q dist/server.js\"",
+    "build": "rm -rf ./dist && tsc"
   },
   "keywords": [],
   "author": "",

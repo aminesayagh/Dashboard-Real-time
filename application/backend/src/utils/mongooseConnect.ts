@@ -2,13 +2,14 @@ import mongoose from 'mongoose';
 
 import {
     MONGO_URI,
+    MONGO_USER,
     MONGO_DB,
     MONGO_PASSWORD
 } from 'env';
 
-const cle: string = `${MONGO_URI}:${MONGO_PASSWORD}@cluster0.fqw1w.mongodb.net/${MONGO_DB}?retryWrites=true&w=majority` || '';
+const KEY: string = `${MONGO_URI}://${MONGO_USER}:${MONGO_PASSWORD}@cluster0.fqw1w.mongodb.net/${MONGO_DB}?retryWrites=true&w=majority` || '';
 
-if(!cle){
+if(!KEY){
     throw new Error('Please define the MONGODB_URI environment variable inside .env.local');
 }
 
@@ -44,7 +45,7 @@ async function dbConnect(){
         }
         mongoose.set("strictQuery", false);
         // @ts-ignore
-        cached.promise = await mongoose.connect(cle as string, opts).then(mongoose => {
+        cached.promise = await mongoose.connect(KEY as string, opts).then(mongoose => {
             mongoose.set('strictQuery', true);
             return mongoose;
         })

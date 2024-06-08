@@ -1,6 +1,6 @@
 import { Schema ,PaginateModel, model } from "mongoose";
 import { DefaultDocument } from "types/Mongoose";
-import { MODEL_NAME, TModelName } from "constants/DB";
+import { MODEL_NAME, TModelName } from "../constants/DB";
 
 export interface IPostulationTypeContent {
     postulation_type_content_name: string;
