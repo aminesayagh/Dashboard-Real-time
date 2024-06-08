@@ -30,10 +30,10 @@ const PostulationContentSchema = new Schema<IPostulationContentDocument>({
 export interface IPostulation {
     resources_id: Types.ObjectId[];
     user_id: Types.ObjectId;
-    department_id: Types.ObjectId;
+    postulation_department_id: Types.ObjectId;
     postulation_state: TStatePostulation;
     postulation_type: Types.ObjectId;
-    postulation_content: IPostulationContent[];
+    postulation_content: IPostulationContentDocument[];
 }
 
 export interface IPostulationDocument extends DefaultDocument<IPostulation> {};
@@ -50,11 +50,6 @@ const PostulationSchema = new Schema<IPostulationDocument, IPostulationModel>({
         type: Schema.Types.ObjectId,
         required: true,
         ref: MODEL_NAME.USER,
-    },
-    department_id: {
-        type: Schema.Types.ObjectId,
-        required: true,
-        ref: MODEL_NAME.DEPARTMENT,
     },
     postulation_state: {
         type: String,

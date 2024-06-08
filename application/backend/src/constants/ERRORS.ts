@@ -19,4 +19,7 @@ export const ERRORS = {
     MEDIA_NOT_FOUND: 'Media not found',
     FAILED_TO_GENERATE_BASE64: 'Failed to generate base64',
     FAILED_UPDATING_MEDIA: 'Failed to update media',
+    // resource errors
+    FAILED_TO_CREATE_RESOURCE: 'Failed to create resource',
+    FAILED_TO_DELETE_MEDIA: 'Failed to delete media',
 } as const;

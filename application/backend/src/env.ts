@@ -5,6 +5,7 @@ const envVariables = z.object({
     NODE_ENV: z.string().default('development'),
     MONGO_URI: z.string(),
     MONGO_DB: z.string(),
+    MONGO_PASSWORD: z.string(),
     USER_MAILER_USER: z.string(),
     USER_MAILER_PASSWORD: z.string(),
     CLOUDINARY_CLOUD_NAME: z.string(),
@@ -31,6 +32,7 @@ export const PORT = myEnvVariables.PORT;
 export const NODE_ENV = myEnvVariables.NODE_ENV;
 export const MONGO_URI = myEnvVariables.MONGO_URI;
 export const MONGO_DB = myEnvVariables.MONGO_DB;
+export const MONGO_PASSWORD = myEnvVariables.MONGO_PASSWORD;
 export const USER_MAILER_USER = myEnvVariables.USER_MAILER_USER;
 export const USER_MAILER_PASSWORD = myEnvVariables.USER_MAILER_PASSWORD;
 export const CLOUDINARY_CLOUD_NAME = myEnvVariables.CLOUDINARY_CLOUD_NAME;

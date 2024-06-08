@@ -1,4 +1,4 @@
-import { StateController } from "helper/StateController";
+import { StateController } from "src/utils/StateController";
 
 export const STATE_USER_ROLE = {
     ADMIN: "Admin",

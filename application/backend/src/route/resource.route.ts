@@ -10,11 +10,11 @@ import z from 'zod';
 const zodResourceType = z.enum(['image', 'video', 'raw', 'auto']);
 const zodBodyMedia = z.object({
     resource_type: zodResourceType.default('auto'),
-    resource_folder: z.string(),
     user_id: z.string(),
+    resource_folder: z.enum(['postulation', 'user', 'department', 'taxonomy', 'university_period', 'resource', 'email']).default('resource'),
 });
 
-import ResourceModel, { IResourceDocument } from 'src/model/Resource.model';
+import ResourceModel, { IAttachmentDocument, IMediaDocument, IResourceDocument } from 'src/model/Resource.model';
 const router = express.Router();
 
 import { 
@@ -47,11 +47,17 @@ const createMedia = async (file: Express.Multer.File, resource_type: ResourceTyp
         throw new Error(ERRORS.FAILED_UPDATING_MEDIA);
     }
 }
-router.post('/:resource_folder/', multer().any(), async (req: ApiRequest<
-    Partial<IResourceDocument> & { file: Express.Multer.File[] }, any, { resource_type: ResourceTypes, resource_folder: string }
+const deleteMedia = async (public_id: string) => {
+    try {
+        return await cloudinary.uploader.destroy(public_id);
+    } catch (err) {
+        throw new Error(ERRORS.FAILED_TO_DELETE_MEDIA);
+    }
+}
+router.post('/', multer().any(), async (req: ApiRequest<
+    Partial<IResourceDocument> & { file: Express.Multer.File[] }
     >, res: ApiResponse<IResourceDocument>): Promise<void> => {
     const files = req.files;
-    const { resource_folder } = req.params;
     if (!files) {
         res.status(400).json({
             message: ERRORS.MEDIA_NOT_FOUND,
@@ -63,31 +69,40 @@ router.post('/:resource_folder/', multer().any(), async (req: ApiRequest<
         await Promise.all(files.map(async (file) => {
             try {
                 const resource_type: ResourceTypes = body.resource_type;
+                const resource_folder = body.resource_folder;
                 const media = await createMedia(file, resource_type, resource_folder);
                 if (!media) {
                     throw new Error(ERRORS.MEDIA_NOT_FOUND);
                 }
                 const resource = await ResourceModel.create({
-                    resource_name: file.originalname,
-                    resource_media: [{
-                        media_source: media.secure_url,
-                        media_public_id: media.public_id,
-                        media_signature: media.signature,
-                        media_url: media.url,
-                    }],
+                    resource_name: ResourceModel.generateResourceName(media.original_filename, body.user_id),
                     resource_owner: body.user_id,
                     resource_type,
                     resource_state: STATE_RESOURCE.AVAILABLE,
                 }).catch((err) => {
                     throw new Error(err);
                 });
+                if (!resource) {
+                    throw new Error(ERRORS.FAILED_TO_CREATE_RESOURCE);
+                }
+
+                resource.resource_media.push({
+                    media_source: media.secure_url,
+                    media_public_id: media.public_id,
+                    media_signature: media.signature,
+                    media_url: media.url
+                } as IMediaDocument);
+
+                await resource.save().catch((err) => {
+                    throw new Error(err);
+                });
+
                 const data = resource.toObject();
                 res.status(200).json({
                     status: 'success',
                     data
                 })
             } catch (err) {
-                console.error(err);
                 res.status(500).json({
                     message: ERRORS.INTERNAL_SERVER_ERROR,
                     status: 'error'
@@ -102,12 +117,141 @@ router.post('/:resource_folder/', multer().any(), async (req: ApiRequest<
     }
 });
 
-router.get('/', async () => {});
-router.put('/:id', async () => {});
-router.get('/:id', async () => {});
-router.put('/:id/attachment', async () => {});
-router.get('/:id/attachment', async () => {});
-router.post('/:id/attachment', async () => {});
-router.delete('/:id/attachment/:attachment_id', async () => {});
+router.get('/:id', async (req: ApiRequest, res: ApiResponse<IResourceDocument>): Promise<void> => {
+    const { id } = req.params;
+    const resource = await ResourceModel.findById(id).catch((err) => {
+        throw new Error(err);
+    });
+    if (!resource) {
+        res.status(404).json({
+            message: ERRORS.NOT_FOUND,
+            status: 'error'
+        });
+        return;
+    }
+    
+    const data = resource.toObject();
+    res.status(200).json({
+        status: 'success',
+        data
+    });
+});
+router.put('/:id', async (req: ApiRequest, res: ApiResponse<IResourceDocument>): Promise<void> => {
+    const { id } = req.params;
+    const resource = await ResourceModel.findById(id).catch((err) => {
+        throw new Error(err);
+    });
+    if (!resource) {
+        res.status(404).json({
+            message: ERRORS.NOT_FOUND,
+            status: 'error'
+        });
+        return;
+    }
+    const data = resource.toObject();
+    res.status(200).json({
+        status: 'success',
+        data
+    });
+});
+router.get('/:id/attachments', async (req: ApiRequest<{}, { id: string }>, res: ApiResponse<IAttachmentDocument[]>): Promise<void> => {
+    const { id } = req.params;
+    const resource = await ResourceModel.findById(id).catch((err) => {
+        throw new Error(err);
+    });
+    if (!resource) {
+        res.status(404).json({
+            message: ERRORS.NOT_FOUND,
+            status: 'error'
+        });
+        return;
+    }
+    const data = resource.resource_attachments;
+    res.status(200).json({
+        status: 'success',
+        data
+    });
+});
+router.post('/:id/attachments', async (req: ApiRequest<IAttachmentDocument, { id: string }>, res: ApiResponse<IAttachmentDocument>): Promise<void> => {
+    const { id } = req.params;
+    const resource = await ResourceModel.findById(id).catch((err) => {
+        throw new Error(err);
+    });
+    if (!resource) {
+        res.status(404).json({
+            message: ERRORS.NOT_FOUND,
+            status: 'error'
+        });
+        return;
+    }
+    const attachment = req.body;
+    resource.resource_attachments.push(attachment);
+    await resource.save().catch((err) => {
+        throw new Error(err);
+    });
+    const data = attachment;
+    res.status(200).json({
+        status: 'success',
+        data
+    });
+});
+router.delete('/:id/attachments/:attachment_id', async (req: ApiRequest<{}, { id: string, attachment_id: string }>, res: ApiResponse<IAttachmentDocument>): Promise<void> => {
+    const { id, attachment_id } = req.params;
+    const resource = await ResourceModel.findById(id).catch((
+        err
+    ) => {
+        throw new Error(err);
+    }
+    );
+    if (!resource) {
+        res.status(404).json({
+            message: ERRORS.NOT_FOUND,
+            status: 'error'
+        });
+        return;
+    }
+    const attachment = resource.resource_attachments.find((attachment) => attachment._id.toString() === attachment_id);
+    if (!attachment) {
+        res.status(404).json({
+            message: ERRORS.NOT_FOUND,
+            status: 'error'
+        });
+        return;
+    }
+    resource.resource_attachments = resource.resource_attachments.filter((attachment) => attachment._id.toString() !== attachment_id);
+    await resource.save().catch((err) => {
+        throw new Error(err);
+    });
+    const data = attachment;
+    res.status(200).json({
+        status: 'success',
+        data
+    });
+});
+router.delete('/:id', async (req: ApiRequest, res: ApiResponse<IResourceDocument>): Promise<void> => {
+    const { id } = req.params;
+    const resource = await ResourceModel.findByIdAndDelete(id).catch((err) => {
+        throw new Error(err);
+    });
+    if (!resource) {
+        res.status(404).json({
+            message: ERRORS.NOT_FOUND,
+            status: 'error'
+        });
+        return;
+    }
+    const data = resource.toObject();
+    // delete media from cloudinary
+    await Promise.all(resource.resource_media.map(async (media) => {
+        await deleteMedia(media.media_public_id).catch((err) => {
+            throw new Error(err);
+        });
+    }));
+    
+    res.status(200).json({
+        status: 'success',
+        data
+    });
+});
 
 export default router;

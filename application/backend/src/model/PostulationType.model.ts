@@ -4,6 +4,7 @@ import { MODEL_NAME } from "constants/DB";
 
 export interface IPostulationType {
     taxonomies_id: Types.ObjectId[];
+    department_id: Types.ObjectId;
     postulation_type_period: Types.ObjectId[];
     postulation_type_name: string;
     postulation_type_content: Types.ObjectId[];
@@ -23,6 +24,11 @@ const PostulationTypeSchema = new Schema<IPostulationTypeDocument, IPostulationT
         type: [Schema.Types.ObjectId],
         required: true,
         ref: MODEL_NAME.UNIVERSITY_PERIOD,
+    },
+    department_id: {
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: MODEL_NAME.DEPARTMENT,
     },
     postulation_type_name: {
         type: String,

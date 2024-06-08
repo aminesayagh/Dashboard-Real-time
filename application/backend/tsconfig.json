@@ -111,7 +111,7 @@
       "model/*": ["model/*"],
       "service/*": ["service/*"],
       "route/*": ["route/*"],
-      "helper/*": ["helper/*"],
+      "utils/*": ["utils/*"],
       "constants/*": ["constants/*"],
       "env": ["env.ts"],
       "log": ["log.ts"], // can't import logger from   

@@ -28,6 +28,7 @@ const PostulationTypeContentSchema = new Schema<IPostulationTypeContentDocument>
     postulation_type_content_type: {
         type: String,
         required: true,
+        enum: MODEL_NAME,
         trim: true,
     },
     postulation_type_content_required: {
