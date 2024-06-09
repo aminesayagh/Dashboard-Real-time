@@ -143,3 +143,5 @@ export const text = ({ mode, degree, weight, size }: TextPropsExtended) => cx(
     textStyle({ weight, size }),
     typographyColorDegree({ mode, degree }),
 );
+
+// className='text({ mode: 'dark', degree: 'normal', weight: 'semibold', size: 'md'})'
