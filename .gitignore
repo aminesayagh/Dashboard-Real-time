@@ -132,3 +132,7 @@ dist
 # Ignore redis binary dump (dump.rdb) files
 
 *.rdb
+
+# Ignore Mongodb volumes
+
+data/*
