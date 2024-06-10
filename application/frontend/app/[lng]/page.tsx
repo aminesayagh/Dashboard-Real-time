@@ -18,6 +18,7 @@ export default function Home({
 }) {
 
   const { t } = useTranslation(lng, 'common');
+
   return <>
     <Navbar lng={lng} />
     <Container as='section' size='full' className='min-h-screen' >

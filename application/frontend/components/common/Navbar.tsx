@@ -1,6 +1,7 @@
+'use client';
+
 import React, {  } from "react";
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button } from '@nextui-org/react';
-import { useSession } from "next-auth/react";
+import { Navbar, NavbarBrand, NavbarContent, Link, Button } from '@nextui-org/react';
 import Logo from "@/components/ui/logo/Logo";
 import { text } from '@ui/typography/Typography.style'; 
 import { Lang } from "@/app/i18n/settings";
@@ -11,7 +12,6 @@ export default function NavbarUi({
 }: {
     lng: Lang;
 }) {
-
     const { t } = useTranslation(lng, 'common');
     return (
         <Navbar isBordered> 

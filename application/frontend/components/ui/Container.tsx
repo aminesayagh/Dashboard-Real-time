@@ -7,6 +7,7 @@ export const containerStyle = cva(['mx-auto w-full max-w-full z-container h-fit 
     variants: {
         size: {
             full: '',
+            sm: 'max-w-[640px]',
         }
     }
 });

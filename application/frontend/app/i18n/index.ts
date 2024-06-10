@@ -10,7 +10,7 @@ const initI18next = async (lng: Lang, ns: Namespace) => {
   const i18nInstance = createInstance()
   await i18nInstance
     .use(initReactI18next)
-    .use(resourcesToBackend((language: Lang, namespace: Namespace) => import(`./locales/${language}/${namespace}.json`)))
+    .use(resourcesToBackend((language: Lang, namespace: Namespace) => import(`@public/locales/${language}/${namespace}.json`)))
     .init(getOptions(lng, ns))
   return i18nInstance
 }
