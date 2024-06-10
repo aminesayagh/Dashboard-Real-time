@@ -1,7 +1,7 @@
 export const fallbackLng = "en";
 export const languages = [fallbackLng, "fr"] as const;
 export const defaultNS = 'translation';
-export const namespaces = [defaultNS] as const;
+export const namespaces = [defaultNS, 'common', 'form', 'dash'] as const;
 export const cookieName = 'i18next';
 
 export type Lang = typeof languages[number];

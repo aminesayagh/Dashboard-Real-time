@@ -29,6 +29,7 @@
       "@public/*": ["./public/*"],
       "@ui/*": ["./components/ui/*"],
       "@app/*": ["./app/*"],
+      "@tran/*": ["./app/i18n/*"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

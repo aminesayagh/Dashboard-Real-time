@@ -53,3 +53,4 @@ export function useTranslation(lng: Lang, ns: Namespace, options: any = {}) {
   }
   return ret
 }
+

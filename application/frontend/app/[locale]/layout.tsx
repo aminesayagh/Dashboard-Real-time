@@ -31,11 +31,13 @@ export default function RootLayout({
   };
 }>) {
   return (
-    <html lang={lng} dir={dir(lng)} className="dark">
+    <html lang={lng} dir={dir(lng)} className="light">
       <body className={inter.className}>
         <NextUiProvider >
           <SessionProvider>
-            {children}
+            <main className='light bg-background text-foreground'>
+              {children}
+            </main>
           </SessionProvider>
         </NextUiProvider>
       </body>

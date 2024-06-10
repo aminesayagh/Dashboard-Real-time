@@ -28,22 +28,22 @@ export const typographyColorDegree = cva('', {
         {
             mode: 'dark',
             degree: 'normal',
-            class: 'text-black-800',
+            class: 'text-zinc-800',
         },
         {
             mode: 'dark',
             degree: 'muted',
-            class: 'text-black-700',
+            class: 'text-zinc-700',
         },
         {
             mode: 'dark',
             degree: 'faded',
-            class: 'text-black-500'
+            class: 'text-zinc-500'
         },
         {
             mode: 'dark',
             degree: 'exchanged',
-            class: 'text-black-100'
+            class: 'text-zinc-100'
         },
         {
             mode: 'light',
@@ -93,15 +93,17 @@ export const titleStyle = cva([textDefault, fontFamilyTitle], {
             regular: 'font-regular',
         },
         size: {
-            lg: Style['title_lg'],
-            md: Style['title_md'],
-            sm: Style['title_sm'],
-            xs: Style['title_xs'],
+            h1: Style['title_h1'],
+            h2: Style['title_h2'],
+            h3: Style['title_h3'],
+            h4: Style['title_h4'],
+            h5: Style['title_h5'],
+            h6: Style['title_h6'],
         }
     },
     defaultVariants: {
         weight: 'semibold',
-        size: 'md'
+        size: 'h1'
     }
 });
 
