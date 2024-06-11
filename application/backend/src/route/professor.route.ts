@@ -1,37 +1,41 @@
 import express from 'express';
 const router = express.Router();
 import { ERRORS } from '../constants/ERRORS';
-import UniversityPeriodModel, { IUniversityPeriodDocument } from '../model/UniversityPeriod.model';
+import ProfessorModel, { IProfessorDocument } from '../model/Professor.model';
 import { ApiRequest, ApiResponse } from 'types/Api';
 
-router.post('/professors', async (req: ApiRequest, res: ApiResponse<IUniversityPeriodDocument>): Promise<void> => {
-    const universityPeriod = new UniversityPeriodModel(req.body);
-    const result = await universityPeriod.save().catch((err) => {
+router.post('/', async (req: ApiRequest, res: ApiResponse<IProfessorDocument>): Promise<void> => {
+    try{
+        const Professor = new ProfessorModel(req.body);
+        const result = await Professor.save()
+        if (!result) {
+            res.status(500).send({ status: 'error', message: ERRORS.INTERNAL_SERVER_ERROR });
+            return;
+        }
+        res.send({
+            status: 'success',
+            data: result
+        });
+    } catch (err:any) {
         res.status(400).send({ status: 'error', message: err.message });
-    });
-    if (!result) {
-        res.status(500).send({ status: 'error', message: ERRORS.INTERNAL_SERVER_ERROR });
-        return;
     }
-    res.send({
-        status: 'success',
-        data: result
-    });
 });
 
-router.put('/professors/:id', async (req: ApiRequest<Partial<IUniversityPeriodDocument>, {}, { id: string }>, res: ApiResponse<IUniversityPeriodDocument>) => {
+router.put('/:id', async (req: ApiRequest<Partial<IProfessorDocument>, {}, { id: string }>, res: ApiResponse<IProfessorDocument>) => {
     const { id } = req.params;
-    const result = await UniversityPeriodModel.findByIdAndUpdate(id, req.body).catch((err) => {
+    try {
+        const result = await ProfessorModel.findByIdAndUpdate(id, req.body)
+        if (!result) {
+            res.status(404).send({ status: 'error', message: ERRORS.NOT_FOUND });
+            return;
+        }
+        res.send({
+            status: 'success',
+            data: result
+        });
+    } catch (err:any) {
         res.status(400).send({ status: 'error', message: err.message });
-    });
-    if (!result) {
-        res.status(404).send({ status: 'error', message: ERRORS.NOT_FOUND });
-        return;
     }
-    res.send({
-        status: 'success',
-        data: result
-    });
 });
 
 export default router;

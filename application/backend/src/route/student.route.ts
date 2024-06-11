@@ -25,17 +25,20 @@ router.post('/', async (req: ApiRequest, res: ApiResponse<IStudentDocument>): Pr
 
 router.put('/:id', async (req: ApiRequest<Partial<IStudentDocument>, {}, { id: string }>, res: ApiResponse<IStudentDocument>) => {
     const { id } = req.params;
-    const result = await StudentModel.findByIdAndUpdate(id, req.body).catch((err) => {
-        res.status(400).send({ status: 'error', message: err.message });
-    });
-    if (!result) {
-        res.status(404).send({ status: 'error', message: ERRORS.NOT_FOUND });
-        return;
+    try{
+        const result = await StudentModel.findByIdAndUpdate(id, req.body);
+        if (!result) {
+            res.status(404).send({ status: 'error', message: ERRORS.NOT_FOUND });
+            return;
+        }
+        res.send({
+            status: 'success',
+            data: result
+        });
     }
-    res.send({
-        status: 'success',
-        data: result
-    });
+    catch(err:any){
+        res.status(400).send({ status: 'error', message: err.message });
+    }
 });
 
 export default router;
