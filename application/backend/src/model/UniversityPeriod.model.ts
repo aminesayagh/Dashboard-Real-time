@@ -1,6 +1,7 @@
 import { Schema, model, PaginateModel, Types } from 'mongoose';
 import { DefaultDocument } from 'types/Mongoose';
 import { MODEL_NAME, TStatePostulation, STATE_POSTULATION } from '../constants/DB';
+import mongoosePagination from 'mongoose-paginate-v2';
 
 export interface IUniversityPeriod {
     period_name: string;
@@ -111,4 +112,10 @@ UniversityPeriodSchema.statics.updateCurrentPeriod = async function (newPeriod: 
     return this.create(newPeriod);
 };
 
-export default model<IUniversityPeriodDocument, IUniversityPeriodModel>(MODEL_NAME.UNIVERSITY_PERIOD, UniversityPeriodSchema);
+UniversityPeriodSchema.plugin(mongoosePagination as any);
+
+const UniversityPeriod = model<IUniversityPeriodDocument, IUniversityPeriodModel>(MODEL_NAME.UNIVERSITY_PERIOD, UniversityPeriodSchema);
+
+UniversityPeriod.paginate().then();
+
+export default UniversityPeriod;

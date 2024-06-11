@@ -1,6 +1,7 @@
 import { Schema, Types ,PaginateModel, model } from "mongoose";
 import { DefaultDocument } from "types/Mongoose";
 import { MODEL_NAME } from "../constants/DB";
+import mongoosePagination from 'mongoose-paginate-v2';
 
 export interface IPostulationType {
     taxonomies_id: Types.ObjectId[];
@@ -48,4 +49,10 @@ const PostulationTypeSchema = new Schema<IPostulationTypeDocument, IPostulationT
     }
 });
 
-export default model<IPostulationTypeDocument, IPostulationTypeModel>(MODEL_NAME.POSTULATION_TYPE, PostulationTypeSchema);
+PostulationTypeSchema.plugin(mongoosePagination as any);
+
+const PostulationType = model<IPostulationTypeDocument, IPostulationTypeModel>(MODEL_NAME.POSTULATION_TYPE, PostulationTypeSchema);
+
+PostulationType.paginate().then();
+
+export default PostulationType;

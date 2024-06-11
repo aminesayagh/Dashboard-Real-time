@@ -2,6 +2,7 @@ import { Schema, model, Types } from 'mongoose';
 import { PaginateModel } from 'mongoose';
 import { DefaultDocument } from 'types/Mongoose';
 import { MODEL_NAME, STATE_POSTULATION } from '../constants/DB';
+import mongoosePagination from 'mongoose-paginate-v2';
 
 export interface ITaxonomy {
     taxonomy_type: string;
@@ -59,4 +60,10 @@ const TaxonomySchema = new Schema<ITaxonomyDocument, ITaxonomyModel>({
     }
 });
 
-export default model<ITaxonomyDocument, ITaxonomyModel>(MODEL_NAME.TAXONOMY, TaxonomySchema);
+TaxonomySchema.plugin(mongoosePagination as any);
+
+const Taxonomy = model<ITaxonomyDocument, ITaxonomyModel>(MODEL_NAME.TAXONOMY, TaxonomySchema);
+
+Taxonomy.paginate().then();
+
+export default Taxonomy;

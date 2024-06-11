@@ -2,6 +2,7 @@ import { Schema, model, Types } from 'mongoose';
 import { PaginateModel } from 'mongoose';
 import { DefaultDocument } from 'types/Mongoose';
 import { MODEL_NAME } from '../constants/DB';
+import mongoosePagination from 'mongoose-paginate-v2';
 
 export interface ILocation {
     location_name: string;
@@ -39,5 +40,11 @@ const LocationSchema = new Schema<ILocationDocument, ILocationModel>({
         updatedAt: 'updated_at',
     }
 });
+
+LocationSchema.plugin(mongoosePagination as any);
+
+const Location = model<ILocationDocument, ILocationModel>(MODEL_NAME.LOCATION, LocationSchema);
+
+Location.paginate().then();
 
 export default model<ILocationDocument, ILocationModel>(MODEL_NAME.LOCATION, LocationSchema);

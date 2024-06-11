@@ -2,6 +2,7 @@ import { Schema, model, Types } from 'mongoose';
 import { PaginateModel } from 'mongoose';
 import { DefaultDocument } from 'types/Mongoose';
 import { MODEL_NAME } from '../constants/DB';
+import mongoosePagination from 'mongoose-paginate-v2';
 
 export interface IDepartment {
     department_name: string;
@@ -33,6 +34,10 @@ const DepartmentSchema = new Schema<IDepartmentDocument, IDepartmentModel>({
     }
 });
 
-export default model<IDepartmentDocument, IDepartmentModel>(MODEL_NAME.DEPARTMENT, DepartmentSchema);
+DepartmentSchema.plugin(mongoosePagination as any);
 
-export const Department = model<IDepartmentDocument, IDepartmentModel>(MODEL_NAME.DEPARTMENT, DepartmentSchema);
+const Department = model<IDepartmentDocument, IDepartmentModel>(MODEL_NAME.DEPARTMENT, DepartmentSchema);
+
+Department.paginate().then();
+
+export default Department; 
