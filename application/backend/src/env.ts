@@ -12,6 +12,7 @@ const envVariables = z.object({
     CLOUDINARY_CLOUD_NAME: z.string(),
     CLOUDINARY_API_KEY: z.string(),
     CLOUDINARY_API_SECRET: z.string(),
+    REDIS_URI: z.string().default("redis://localhost:6379"),
 });
 
 
@@ -41,3 +42,4 @@ export const USER_MAILER_PASSWORD = myEnvVariables.USER_MAILER_PASSWORD;
 export const CLOUDINARY_CLOUD_NAME = myEnvVariables.CLOUDINARY_CLOUD_NAME;
 export const CLOUDINARY_API_KEY = myEnvVariables.CLOUDINARY_API_KEY;
 export const CLOUDINARY_API_SECRET = myEnvVariables.CLOUDINARY_API_SECRET;
+export const REDIS_URI = myEnvVariables.REDIS_URI;
