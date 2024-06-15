@@ -23,15 +23,15 @@ export type TSelectItem = React.FC<SelectItemProps>;
 export type TTextarea = React.FC<TextAreaProps>;
 
 export type TForm = React.FC<TFormProps> & {
-    Input?: TInput;
-    Password?: TInput;
-    DateInput?: TDateInput;
-    TimeInput?: TTimeInput;
-    DatePicker?: TDatePickerInput;
-    DateRangePicker?: TDateRangePickerInput;
-    RadioGroup?: TRadioGroup;
-    Radio?: TRadio;
-    Select?: TSelect;
-    SelectItem?: TSelectItem;
-    Textarea?: TTextarea;
+    Input: TInput;
+    Password: TInput;
+    DateInput: TDateInput;
+    TimeInput: TTimeInput;
+    DatePicker: TDatePickerInput;
+    DateRangePicker: TDateRangePickerInput;
+    RadioGroup: TRadioGroup;
+    Radio: TRadio;
+    Select: TSelect;
+    SelectItem: TSelectItem;
+    Textarea: TTextarea;
 }

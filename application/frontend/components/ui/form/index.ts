@@ -9,6 +9,7 @@ import Select, { SelectItemUi as SelectItem } from './Select';
 import RadioGroup, { RadioUi as Radio } from './Radio';
 import { TForm } from './types';
 
+Form.displayName = 'Form';
 Form.Input = Input;
 Form.Password = Password;
 Form.DateInput = DateInput;

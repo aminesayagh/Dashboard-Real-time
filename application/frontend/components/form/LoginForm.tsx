@@ -1,10 +1,11 @@
-import { Input } from "@nextui-org/react";
+import FormUi from '@ui/form';
+
 
 export default function Form() {
     return (
-        <form className='flex flex-col gap-4'>
-            <Input label='Email' placeholder='Enter your email' />
-            <Input label='Password' placeholder='Enter your password' type='password' />
-        </form>
+        <FormUi className='flex flex-col gap-4'>
+            <FormUi.Input label='Email' placeholder='Enter your email' />
+            <FormUi.Input label='Password' placeholder='Enter your password' type='password' />
+        </FormUi>
     )
 }

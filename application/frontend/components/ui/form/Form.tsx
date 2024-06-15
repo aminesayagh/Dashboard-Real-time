@@ -1,9 +1,9 @@
 
 import React from 'react'
 
-import type { TForm } from './types'
+import { TForm } from './types'
 
-const Form: TForm = ({ ...props }) => {
+const Form = ({ ...props }) => {
     return (
         <form {...props}>
             {props.children}
@@ -11,4 +11,4 @@ const Form: TForm = ({ ...props }) => {
     )
 }
 
-export default Form;
+export default Form as TForm;
