@@ -8,6 +8,7 @@ import resourcesToBackend from 'i18next-resources-to-backend';
 import LanguageDetector from 'i18next-browser-languagedetector'
 import { getOptions, languages, cookieName } from './settings';
 import { Lang, Namespace } from './settings';
+import { LooseAutocomplete } from '@/types/helpers';
 
 
 const runsOnServerSide = typeof window === 'undefined';
@@ -49,8 +50,42 @@ export function useTranslation(lng: Lang, ns: Namespace, options: any = {}) {
     useEffect(() => {
       if (cookies.i18next === lng) return
       setCookie(cookieName, lng, { path: '/' })
-    }, [lng, cookies.i18next])
+    }, [lng, cookies.i18next, setCookie])
   }
   return ret
 }
 
+const ROUTER_CONFIG = {
+  'home' : {
+    path: '/',
+  },
+  'login' : {
+    path: '/auth/login',
+  },
+  'register' : {
+    path: '/auth/register',
+  },
+  '404' : {
+    path: '/404',
+  },
+  'dash': {
+    path: '/dash'
+  }
+} as const;
+
+type TPathNames = keyof typeof ROUTER_CONFIG;
+const pathNames = Object.keys(ROUTER_CONFIG) as TPathNames[];
+
+export function generatePageUrl(lng: Lang, path: LooseAutocomplete<TPathNames>): string {
+  const isOnRoute = pathNames.includes(path as TPathNames);
+  if (runsOnServerSide) {
+    if (isOnRoute) {
+      return `/${lng}${(ROUTER_CONFIG[path as TPathNames]).path}`
+    }
+    return `/${lng}/${path}`
+  }
+  if (isOnRoute) {
+    return (ROUTER_CONFIG[path as TPathNames]).path
+  }
+  return path as string;
+}

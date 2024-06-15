@@ -5,7 +5,7 @@ import { Navbar, NavbarBrand, NavbarContent, Link, Button } from '@nextui-org/re
 import Logo from "@/components/ui/logo/Logo";
 import { text } from '@ui/typography/Typography.style'; 
 import { Lang } from "@/app/i18n/settings";
-import { useTranslation } from "@tran/client";
+import { useTranslation, generatePageUrl } from "@tran/client";
 
 export default function NavbarUi({
     lng
@@ -14,15 +14,15 @@ export default function NavbarUi({
 }) {
     const { t } = useTranslation(lng, 'common');
     return (
-        <Navbar isBordered> 
+        <Navbar isBordered maxWidth="xl"> 
             <NavbarBrand className='flex flex-row justify-start items-center gap-4'>
-                <Logo size={40} alt='Logo' mode='dark' href='/' />
+                <Logo size={40} alt='Logo' mode='dark' href={generatePageUrl(lng, 'home')} />
                 <Link className={text({
                     mode: 'dark',
                     degree: 'normal',
                     weight: 'semibold',
                     size: 'xs'
-                })} href={`${lng}/`}>
+                })} href={generatePageUrl(lng, 'home')}>
                     {t('header.logo')}
                 </Link>
             </NavbarBrand>
@@ -30,7 +30,7 @@ export default function NavbarUi({
 
             </NavbarContent>
             <NavbarContent className='flex gap4' justify="end">
-                <Button as={Link} color='primary' href={`${lng}/auth/login`} variant='flat'>
+                <Button as={Link} color='primary' href={generatePageUrl(lng, 'login')} variant='flat'>
                     {t('header.login')}
                 </Button>
             </NavbarContent>

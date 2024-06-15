@@ -128,7 +128,7 @@ $h6: 1rem;
     @apply tracking-wider;
   }
   &_md {
-    @include fluid-type(--font-size, $minScreen, $maxScreen, 0.7rem, 0.9rem);
+    @include fluid-type(--font-size, $minScreen, $maxScreen, 0.78rem, 1rem);
     font-size: calc(var(--font-size, 1rem) / var(--factor, 1));
     line-height: calc(
       (var(--font-size, 1rem) * var(--degree-line-height, 1.5))/ var(--factor, 1)
@@ -136,7 +136,7 @@ $h6: 1rem;
     @apply tracking-wider;
   }
   &_sm {
-    @include fluid-type(--font-size, $minScreen, $maxScreen, 0.6rem, 0.64rem);
+    @include fluid-type(--font-size, $minScreen, $maxScreen, 0.7rem, 0.9rem);
     @screen lg {
       @include fluid-type(--font-size, $minScreen, $maxScreen, 0.6rem, 0.74rem);
     }
@@ -148,7 +148,7 @@ $h6: 1rem;
     @apply tracking-widest lg:tracking-wider;
   }
   &_xs {
-    @include fluid-type(--font-size, $minScreen, $maxScreen, 0.64rem, 0.7rem);
+    @include fluid-type(--font-size, $minScreen, $maxScreen, 0.64rem, 0.8rem);
     font-size: calc(var(--font-size, 0.8rem) / var(--factor, 1));
     // line-height: calc(
     //   var(--font-size, 0.8rem) * var(--degree-line-height, 1.5)
@@ -157,7 +157,7 @@ $h6: 1rem;
     @apply tracking-wider lg:tracking-widest;
   }
   &_xxs {
-    @include fluid-type(--font-size, $minScreen, $maxScreen, 0.53rem, 0.64rem);
+    @include fluid-type(--font-size, $minScreen, $maxScreen, 0.6rem, 0.72rem);
     font-size: calc(var(--font-size, 0.8rem) / var(--factor, 1));
     // line-height: calc(
     //   var(--font-size, 0.8rem) * var(--degree-line-height, 1.5)
@@ -167,41 +167,5 @@ $h6: 1rem;
   }
   &::selection {
     @apply bg-primary-500 text-zinc-300;
-  }
-}
-
-.display {
-  @apply default-text;
-  
-  &:lang(en) {
-    --factor: 1;
-  }
-  &:lang(fr) {
-    --factor: 1.2;
-  }
-  --degree-line-height: 1;
-  &_xl {
-    @include fluid-type(--font-size, $minScreen, 56.25rem, 3rem, 5.5rem);
-    @screen mdl {
-      @include fluid-type(--font-size, 56.25rem, $maxScreen, 5rem, 8rem);
-    }
-    font-size: calc(var(--font-size, 8rem) / var(--factor, 1));
-    line-height: calc((var(--font-size, 8rem) * var(--degree-line-height, 1.2))/ var(--factor, 1));
-  }
-  &_lg {
-    @include fluid-type(--font-size, $minScreen, $maxScreen, 3rem, 6rem);
-    font-size: calc(var(--font-size, 6rem) / var(--factor, 1));
-    line-height: calc((var(--font-size, 6rem) * var(--degree-line-height, 1.2))/ var(--factor, 1));
-  }
-  &_md {
-    @include fluid-type(--font-size, $minScreen, 56.25rem, 1.7rem, 3rem);
-    @screen mdl {
-      @include fluid-type(--font-size, 56.25rem, $maxScreen, 2.4rem, 3.6rem);
-    }
-    font-size: calc(var(--font-size, 4.6rem) / var(--factor, 1));
-    line-height: calc((var(--font-size, 4.6rem) * var(--degree-line-height, 1.2))/ var(--factor, 1));
-  }
-  &::selection {
-    @apply bg-primary-500 text-zinc-200;
   }
 }

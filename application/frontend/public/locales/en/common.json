@@ -6,5 +6,39 @@
     "home_title": "Simplify the management of your end-of-study projects with our PFE application from the Faculty of Hassan 2 in Casablanca",
     "home_body": "Welcome to your end-of-study project (PFE) management space for the Faculty of Hassan 2 in Casablanca. This application is designed to facilitate the coordination and management of PFEs for students and teachers. We are proud to be able to offer this tool to improve the quality of PFEs and facilitate communication between the parties concerned. Welcome to our application, we hope it will meet your needs for PFE management.",
     "home_action": "Log in",
-    "home_action_secondary": "Sign Up"
+    "home_action_secondary": "Sign Up",
+    "home_accordion_title": "Why choose our application?",
+    "home_accordion_body": [
+        {
+            "question": "A tool designed for students and teachers",
+            "answer": "Our application is designed to meet the needs of students and teachers. It offers a simple and intuitive interface that allows you to manage your PFEs easily."
+        },
+        {
+            "question": "A secure and reliable platform",
+            "answer": "We take the security of your data very seriously. Our application is hosted on secure servers and we use the latest technologies to protect your information."
+        },
+        {
+            "question": "A tool that saves you time",
+            "answer": "With our application, you can say goodbye to endless emails and phone calls. Our platform allows you to communicate with your teachers and classmates in real time, saving you time and effort."
+        },
+        {
+            "question": "A tool that promotes collaboration",
+            "answer": "Our application is designed to promote collaboration between students and teachers. You can easily share documents, exchange ideas and work together on your PFEs."
+        }
+    ],
+    "auth_login": {
+        "title": "Log in to your account",
+        "email": "Email Address",
+        "email_placeholder": "Enter your email address",
+        "password": "Password",
+        "password_placeholder": "Enter your password",
+        "remember_me": "Remember me",
+        "forgot_password": "Forgot your password?",
+        "login": "Log in",
+        "or" : "Or",
+        "login_with_google": "Log in with Google",
+        "login_with_github": "Log in with Github",
+        "no_account": "Don't have an account?",
+        "sign_up": "Sign Up"
+    }
 }

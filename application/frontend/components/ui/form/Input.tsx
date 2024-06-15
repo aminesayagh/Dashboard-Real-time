@@ -1,9 +1,8 @@
-import { Input, InputProps } from '@nextui-org/react'
+import { Input } from "@nextui-org/react";
+import type { TInput } from "./types";
 
-export default function InputUi({
-    ...props
-}: InputProps ) {
-    return (
-        <Input {...props} />
-    )
-}
+const InputUi: TInput = ({ ...props }) => {
+  return <Input {...{ size: "md", radius: 'sm', variant: 'flat', ...props }} />;
+};
+
+export default InputUi;

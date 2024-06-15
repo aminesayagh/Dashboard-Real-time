@@ -77,7 +77,7 @@ const config: Config = {
     },
     extend: {
       fontFamily: {
-        'sans': ['var(--font-montserrat)', 'Montserrat', ...defaultTheme.fontFamily.sans], 
+        'sans': ['var(--font-inter)', 'Inter', ...defaultTheme.fontFamily.sans], 
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

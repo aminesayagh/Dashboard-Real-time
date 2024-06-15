@@ -3,12 +3,14 @@ import { twMerge } from 'tailwind-merge';
 
 import { cva, VariantProps } from 'class-variance-authority';
 
-export const containerStyle = cva(['mx-auto w-full max-w-full z-container h-fit max-w-[1240px]'], {
+export const containerStyle = cva(['mx-auto w-full max-w-full z-container h-fit max-w-[1280px]'], {
     variants: {
         size: {
-            full: '',
-            sm: 'max-w-[640px]',
+            xl: 'max-w-[1280px] px-2 px-6 xl:px-12',
         }
+    },
+    defaultVariants: {
+        size: 'xl'
     }
 });
 
