@@ -1,6 +1,6 @@
 // /src/utils/mongooseCache.ts
 import { createClient, RedisClientType } from 'redis';
-import mongoose, { Query } from 'mongoose';
+import mongoose, { Query, Document } from 'mongoose';
 import { REDIS_URI } from '../env';
 
 // Create Redis client
@@ -27,7 +27,7 @@ export function applyMongooseCache() {
         console.log("I am cached")
         return JSON.parse(cacheValue);
       }
-  
+
       const args = arguments as any as [];
       const result = await exec.apply(this, args);
 
@@ -44,48 +44,62 @@ export function applyMongooseCache() {
     }
   };
 
-//   const originalSave = mongoose.Model.prototype.save;
-//   mongoose.Model.prototype.save = async function (...args: any) {
-//     await invalidateCache(this.constructor.modelName);
-//     const result = await originalSave.apply(this, args);
-//     await cacheUpdatedData(result); // Re-fetch and cache the updated document
-//     return result;
-//   };
+  const originalSave = mongoose.Model.prototype.save;
+  mongoose.Model.prototype.save = async function (...args: any) {
+    const result = await originalSave.apply(this, args);
+    await invalidateCache(result);
+    await cacheUpdatedData(result);
+    console.log("Updated the cache")
+    return result;
+  };
 
-//   const originalFindOneAndUpdate = mongoose.Model.findOneAndUpdate;
-//   mongoose.Model.findOneAndUpdate = async function (...args: any) {
-//     const result = await originalFindOneAndUpdate.apply(this, args);
-//     if (result) {
-//       await invalidateCache(this.modelName);
-//       await cacheUpdatedData(result); // Re-fetch and cache the updated document
-//     }
-//     return result;
-//   };
+  const originalFindOneAndUpdate = mongoose.Model.findOneAndUpdate;
+  mongoose.Model.findOneAndUpdate = function (filter: any, update: any, options: any = {}):any {
+    // Ensure options includes { new: true }
+    options.new = true;
+    const query = originalFindOneAndUpdate.call(this, filter, update, options);
 
-//   async function invalidateCache(modelName: string) {
-//     const keyPattern = `*${modelName}*`;
-//     const keys = await client.keys(keyPattern);
-//     if (keys.length) {
-//       await client.del(keys);
-//     }
-//   }
+    // Override exec to handle cache invalidation
+    query.exec = async function () {
+      const args = arguments as any as [];
+      const result = await exec.apply(this, args);
+      const key = generateCacheKey(this);
+      if (result) {
+        await invalidateCache(result);
+        await client.setEx(key, 3600, JSON.stringify(result)); // Cache for 1 hour
+        console.log("Updated the cache after findOneAndUpdate");
+      }
+      return result;
+    };
+    return query;
+  };
 
-//   async function cacheUpdatedData(doc: Document) {
-//     const query = doc.constructor.findById(doc._id);
-//     const key = generateCacheKey(query);
-//     const result = await query.exec();
-//     if (result) {
-//       await client.setEx(key, 3600, JSON.stringify(result)); // Cache for 1 hour
-//     }
-//   }
+  async function invalidateCache(doc: Document) {
+    const model = doc.constructor as mongoose.Model<any>;
+    const query = model.findById(doc._id);
+    const key = generateCacheKey(query);
+    const keys = await client.keys(key);
+    if (keys.length) {
+      await client.del(keys);
+    }
+  }
+
+  async function cacheUpdatedData(doc: Document) {
+    const model = doc.constructor as mongoose.Model<any>;
+    const query = model.findById(doc._id);
+    const key = generateCacheKey(query);
+    const result = await query.exec();
+    if (result) {
+      await client.setEx(key, 3600, JSON.stringify(result)); // Cache for 1 hour
+    }
+  }
 
   function generateCacheKey(query: Query<any, any>): string {
     return JSON.stringify({
       ...query.getQuery(),
-      collection: query.model.collection.name,
-      op: (query as any)._op, 
-      options: getQueryOptions(query),
-      projection: query.projection()
+      collection: query.model.collection.name || "",
+      options: getQueryOptions(query) || {},
+      projection: query.projection() || {}
     });
   }
 
