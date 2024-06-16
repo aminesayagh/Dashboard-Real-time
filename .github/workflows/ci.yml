@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
-      - name: start the db
-        run: docker-compose up
+      - name: start the docker compose
+        run: docker-compose up -d
       - name: Run Jest Tests
         run: docker-compose run backend npm run test
