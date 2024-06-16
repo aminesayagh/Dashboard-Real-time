@@ -1,5 +1,6 @@
 import { cva } from 'class-variance-authority';
-import { cx } from 'class-variance-authority';
+// import { cx } from 'class-variance-authority';
+import { twMerge as tw } from 'tailwind-merge';
 import Style from './Typography.module.scss';
 import { VariantProps } from 'class-variance-authority';
 
@@ -22,7 +23,7 @@ export const typographyColorDegree = cva('', {
     },
     defaultVariants: {
         mode: 'dark',
-        degree: 'normal',
+        degree: 'faded',
     },
     compoundVariants: [
         {
@@ -48,22 +49,22 @@ export const typographyColorDegree = cva('', {
         {
             mode: 'light',
             degree: 'normal',
-            class: 'text-white-800',
+            class: 'text-zinc-600',
         },
         {
             mode: 'light',
             degree: 'muted',
-            class: 'text-white-700',
+            class: 'text-zinc-700',
         },
         {
             mode: 'light',
             degree: 'faded',
-            class: 'text-white-500'
+            class: 'text-zinc-800'
         },
         {
             mode: 'light',
             degree: 'exchanged',
-            class: 'text-white-100'
+            class: 'text-zinc-900'
         },
     ]
 });
@@ -85,7 +86,7 @@ export const displayStyle = cva([textDefault, fontFamilyTitle], {
 
 export type DisplayPropsExtended = VariantProps<typeof displayStyle> & TypographyColorDegreeProps;
 
-export const titleStyle = cva([textDefault, fontFamilyTitle], {
+export const titleStyle = cva([textDefault, fontFamilyTitle, Style['title']], {
     variants: {
         weight: {
             bold: 'font-black',
@@ -131,19 +132,23 @@ export const textStyle = cva([textDefault, fontFamilyText, Style['text']], {
 
 export type TextPropsExtended = VariantProps<typeof textStyle> & TypographyColorDegreeProps;
 
-export const title = ({ mode, degree, weight, size }: TitlePropsExtended) => cx(
+export const title = ({ mode = 'light', degree = 'faded', weight, size }: TitlePropsExtended) => tw(
     titleStyle({ weight, size }),
     typographyColorDegree({ mode, degree }),
 );
 
-export const display = ({ mode, degree, weight }: DisplayPropsExtended) => cx(
+export const display = ({ mode, degree = 'faded', weight }: DisplayPropsExtended) => tw(
     displayStyle({ weight }),
     typographyColorDegree({ mode, degree }),
 );
 
-export const text = ({ mode, degree, weight, size }: TextPropsExtended) => cx(
+export const text = ({ mode, degree = 'faded', weight, size }: TextPropsExtended) => tw(
     textStyle({ weight, size }),
     typographyColorDegree({ mode, degree }),
 );
 
-// className='text({ mode: 'dark', degree: 'normal', weight: 'semibold', size: 'md'})'
+export const link = ({ mode, degree = 'faded', weight, size }: TextPropsExtended) => tw(
+    textStyle({ weight, size }),
+    typographyColorDegree({ mode, degree }),
+    'cursor-pointer text-primary',
+);

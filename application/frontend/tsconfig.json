@@ -31,6 +31,9 @@
       "@app/*": ["./app/*"],
       "@tran/*": ["./app/i18n/*"],
       "@form/*": ["./components/form/*"],
+      "@i18n/*": ["./app/i18n/*"],
+      "@common/*": ["./components/common/*"], 
+      "@utils/*": ["./utils/*"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

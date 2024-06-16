@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react';
-import i18next from 'i18next'; 
+import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import { useTranslation as useTranslationOrg } from 'react-i18next';
 import { useCookies } from 'react-cookie';
@@ -56,16 +56,16 @@ export function useTranslation(lng: Lang, ns: Namespace, options: any = {}) {
 }
 
 const ROUTER_CONFIG = {
-  'home' : {
+  'home': {
     path: '/',
   },
-  'login' : {
+  'login': {
     path: '/auth/login',
   },
-  'register' : {
+  'register': {
     path: '/auth/register',
   },
-  '404' : {
+  '404': {
     path: '/404',
   },
   'dash': {
@@ -78,14 +78,30 @@ const pathNames = Object.keys(ROUTER_CONFIG) as TPathNames[];
 
 export function generatePageUrl(lng: Lang, path: LooseAutocomplete<TPathNames>): string {
   const isOnRoute = pathNames.includes(path as TPathNames);
-  if (runsOnServerSide) {
-    if (isOnRoute) {
-      return `/${lng}${(ROUTER_CONFIG[path as TPathNames]).path}`
-    }
-    return `/${lng}/${path}`
-  }
   if (isOnRoute) {
-    return (ROUTER_CONFIG[path as TPathNames]).path
+    return `/${lng}${(ROUTER_CONFIG[path as TPathNames]).path}`
   }
-  return path as string;
+  return `/${lng}/${path}`
+}
+
+// write a hook to switch language on client side and save it to cookie
+export function useSwitchLanguage() {
+  const [_, setCookie] = useCookies([cookieName])
+  const { i18n } = useTranslationOrg()
+  
+  return {
+    switchLanguage: (lang: Lang) => {
+      const actualLang = i18n.resolvedLanguage;
+      console.log('actualLang ', actualLang, 'lang ', lang);
+      if (actualLang === lang) return
+      const currentPath = window.location.pathname;
+      const currentPathArr = currentPath.split('/');
+      const currentLang = currentPathArr[1];
+      const newPath = currentPath.replace(currentLang, lang);
+      window.history.pushState({}, '', newPath);
+      i18n.changeLanguage(lang);
+
+      setCookie(cookieName, lang, { path: '/' })
+    }
+  }
 }

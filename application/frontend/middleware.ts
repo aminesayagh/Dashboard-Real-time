@@ -12,7 +12,6 @@ export const config = {
 
 export function middleware(req: NextRequest) {
   let lng
-  console.log('niddleware : ',req.cookies)
   if (req.cookies.has(cookieName)) lng = acceptLanguage.get(req.cookies.get(cookieName)?.value)
   if (!lng) lng = acceptLanguage.get(req.headers.get('Accept-Language'))
   if (!lng) lng = fallbackLng

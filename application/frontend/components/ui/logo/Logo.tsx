@@ -1,7 +1,9 @@
+'use client'
 import Link, { LinkProps } from "next/link";
 
 import Image from "next/image";
 import { twMerge } from "tailwind-merge";
+import LogoImage from "@public/logo.svg";
 
 type TLogoMode = "dark" | "light";
 interface LogoProps extends Omit<LinkProps, "size" | "degree" | "children"> {
@@ -20,7 +22,7 @@ const Logo = ({ alt, mode, size, ...props }: LogoProps) => {
     >
       <Image
         className="w-20"
-        src="/logo.svg"
+        src={LogoImage}
         alt={alt}
         width={size}
         height={size}
