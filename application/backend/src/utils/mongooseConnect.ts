@@ -1,61 +1,35 @@
 import mongoose from 'mongoose';
 
-import {
-    MONGO_URI,
-    MONGO_USER,
-    MONGO_DB,
-    MONGO_PASSWORD
-} from '../env';
-import { applyMongooseCache } from './mongooseCache';
-
-// const KEY: string = `${MONGO_URI}://${MONGO_USER}:${MONGO_PASSWORD}@cluster0.fqw1w.mongodb.net/${MONGO_DB}?retryWrites=true&w=majority` || '';
-const KEY: string = `mongodb://${MONGO_USER}:${encodeURIComponent(MONGO_PASSWORD)}@${MONGO_URI}/${MONGO_DB}?authSource=admin&retryWrites=true&w=majority`|| '';
-
-if(!KEY){
-    throw new Error('Please define the MONGODB_URI environment variable inside .env.local');
+export function generateMongoUri(MONGO_USER: string, MONGO_PASSWORD: string, MONGO_URI: string, MONGO_DB: string): string {
+  return `mongodb://${MONGO_USER}:${encodeURIComponent(MONGO_PASSWORD)}@${MONGO_URI}/${MONGO_DB}?authSource=admin&retryWrites=true&w=majority`;
 }
 
-
-
-/**
- * Global is used here to maintain a cached connection across hot reloads
- * in development. This prevents connections growing exponentially
- * during API Route usage.
- */
-
-// @ts-ignore
-let cached = global.mongooseConnected;
-
-if(!cached) {
-    // @ts-ignore
-    cached = global.mongooseConnected = { conn: null, promise: null };
-}
-
-applyMongooseCache();
-
-dbConnect().then(() => {
-    console.log('db connected');
-}).catch((error) => {
-    console.log('Error connecting to MongoDB.');
-    console.log(error);
-})
-
-async function dbConnect(){
-    if(cached.conn) {return cached.conn};
-    if(!cached.promise) {
-        const opts = {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        }
-        mongoose.set("strictQuery", false);
-        // @ts-ignore
-        cached.promise = await mongoose.connect(KEY as string, opts).then(mongoose => {
-            mongoose.set('strictQuery', true);
-            return mongoose;
-        })
+export const dbConnect = async (uri: string): Promise<typeof mongoose> => {
+  try {
+    if (mongoose.connection.readyState === 0) {
+      await mongoose.connect(uri);
+      console.log('Database connected successfully');
+    } else {
+      console.log('Using existing database connection');
     }
-    cached.conn = await cached.promise;
-    return cached.conn;
-}
+  } catch (error) {
+    console.error('Error connecting to MongoDB:', error);
+    throw new Error('Could not connect to MongoDB');
+  }
+  return mongoose;
+};
 
-export default dbConnect;
+export const dbDisconnect = async (): Promise<void> => {
+  if (mongoose.connection.readyState !== 0) {
+    await mongoose.disconnect();
+    console.log('Database disconnected successfully');
+  }
+};
+
+export const clearDatabase = async (): Promise<void> => {
+  const collections = mongoose.connection.collections;
+  for (const key in collections) {
+    const collection = collections[key];
+    await collection.deleteMany({});
+  }
+};

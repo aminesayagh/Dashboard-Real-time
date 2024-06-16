@@ -1,0 +1,19 @@
+name: Tests
+
+on:
+  pull_request:
+    branches:
+      - '*'
+  push:
+    branches:
+      - master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: start the db
+        run: docker-compose up
+      - name: Run Jest Tests
+        run: docker-compose run backend npm run test

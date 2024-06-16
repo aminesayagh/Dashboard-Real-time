@@ -224,7 +224,7 @@ userSchema.methods.verifyPassword = async function (this: IUserDocument, passwor
 };
 
 userSchema.statics.findByEmail = async function (this: IUserModel, email: string) {
-    return this.findOne({ email: email });
+    return await this.findOne({ user_email: email }).exec();
 };
 
 userSchema.statics.me = async function (this: IUserModel, id: string) {
