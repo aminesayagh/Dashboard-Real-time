@@ -240,6 +240,7 @@ router.get('/:id/postulations/:postulation_id', async (req: ApiRequest<any, any,
 router.put('/:id/postulations/:postulation_id', async (req: ApiRequest<Partial<IPostulation>, any, { id: string; postulation_id: string; }>, res: ApiResponse<IPostulation>): Promise<void> => {
     const { id, postulation_id } = req.params;
     try {
+        console.log(await PostulationModel.findOne({ _id: postulation_id, postulation_department_id: id }))
         const postulation = await PostulationModel.findOne({ _id: postulation_id, postulation_department_id: id });
         if (!postulation) {
             res.status(404).send({ status: 'error', message: ERRORS.NOT_FOUND });

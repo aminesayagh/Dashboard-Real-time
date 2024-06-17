@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "test": "jest",
+    "test": "jest --runInBand",
     "start": "node dist/server.js",
     "dev": "concurrently \"tsc --watch\" \"nodemon -q dist/server.js\"",
     "build": "rm -rf ./dist && tsc"

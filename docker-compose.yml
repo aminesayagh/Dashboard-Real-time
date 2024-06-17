@@ -17,6 +17,7 @@ services:
     environment:
       - PORT=3001
       - MONGO_DB=app_db
+      - MONGO_TEST_DB=app_db_test
       - MONGO_URI=db:27017
       - MONGO_USER=user
       - MONGO_PASSWORD=password
@@ -32,7 +33,7 @@ services:
       # - kafka
 
   db:
-    image: mongo:latest
+    image: mongo:7.0.3
     ports:
       - "27017:27017"
     volumes:
@@ -40,7 +41,6 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=user
       - MONGO_INITDB_ROOT_PASSWORD=password
-      - MONGO_INITDB_DATABASE=app_db
 
   redis:
     image: redis:latest

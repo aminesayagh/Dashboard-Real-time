@@ -52,6 +52,11 @@ const PostulationSchema = new Schema<IPostulationDocument, IPostulationModel>({
         required: true,
         ref: MODEL_NAME.USER,
     },
+    postulation_department_id: {
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: MODEL_NAME.DEPARTMENT,  // Ensure this reference is correct
+    },
     postulation_state: {
         type: String,
         required: true,

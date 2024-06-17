@@ -1,15 +1,20 @@
-FROM node:slim
+# Use Node.js base image
+FROM node:18-alpine
 
-ENV NODE_ENV development
-ENV PORT 3001
+# Set working directory
+WORKDIR /usr/src/app
 
-WORKDIR /app
+# Copy package.json and package-lock.json
+COPY package*.json ./
 
-COPY . .
-
+# Install dependencies
 RUN npm install
 
-EXPOSE 3001
-CMD [ "npm", "run", "dev" ]
+# Copy the rest of your application code
+COPY . .
 
-# Exposing server port
+# Expose the application port (if applicable)
+EXPOSE 3000
+
+# Default command
+CMD ["npm", "start"]

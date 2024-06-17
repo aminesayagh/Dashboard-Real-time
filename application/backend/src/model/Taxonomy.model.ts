@@ -7,7 +7,7 @@ import mongoosePagination from 'mongoose-paginate-v2';
 export interface ITaxonomy {
     taxonomy_type: string;
     taxonomy_value: string;
-    taxonomy_parent_id: Types.ObjectId;
+    taxonomy_parent_id?: Types.ObjectId;
     taxonomy_level: number;
     taxonomy_responsible_id: Types.ObjectId;
     taxonomy_state: string;
@@ -34,7 +34,6 @@ const TaxonomySchema = new Schema<ITaxonomyDocument, ITaxonomyModel>({
     },
     taxonomy_parent_id: {
         type: Schema.Types.ObjectId,
-        required: true,
         ref: MODEL_NAME.TAXONOMY,
     },
     taxonomy_level: {
