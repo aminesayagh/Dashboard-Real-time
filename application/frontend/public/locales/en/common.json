@@ -51,5 +51,10 @@
         "no_account": "Don't have an account?",
         "get_account": "Sign Up",
         "sign_up": "Sign Up"
+    },
+    "auth_signup": {
+        "title": "Create an account",
+        "already_account": "Already have an account?",
+        "login": "Log in"
     }
 }

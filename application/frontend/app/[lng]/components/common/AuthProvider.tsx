@@ -80,7 +80,7 @@ export default function Providers() {
           />
         ))
       ) : (
-        <div>No providers</div>
+        <Loading size='md' />
       )}
     </div>
   );

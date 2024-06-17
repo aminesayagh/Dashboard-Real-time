@@ -2,7 +2,7 @@
 
 import { Lang } from "@/app/i18n/settings";
 import Container from "@/app/[lng]/components/ui/Container";
-import { useTranslation } from "@tran/client";
+import { useTranslation } from "@i18n/client";
 import { title } from "@/app/[lng]/components/ui/typography/Typography.style";
 import { Accordion, AccordionItem } from "@nextui-org/react";
 import { text } from "@/app/[lng]/components/ui/typography/Typography.style";

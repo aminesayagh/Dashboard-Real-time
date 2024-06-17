@@ -6,7 +6,7 @@ import { Avatar } from "@nextui-org/avatar";
 import { languages } from "@i18n/settings";
 
 import { Lang } from "@/app/i18n/settings";
-import { useTranslation, useSwitchLanguage } from "@tran/client";
+import { useTranslation, useSwitchLanguage } from "@i18n/client";
 import Link from "next/link";
 
 const AvatarFlag = ({ alt, src }: { alt: string; src: string }) => {

@@ -90,12 +90,12 @@ $h6: 1rem;
     line-height: calc((var(--font-size, $h4) * var(--degree-line-height, 1.2)) / var(--factor, 1));
   }
   &_h5 {
-    @include fluid-type(--font-size, $minScreen, $maxScreen, 0.9rem, 1.4rem);
+    @include fluid-type(--font-size, $minScreen, $maxScreen, 0.9rem, 1.2rem);
     font-size: calc(var(--font-size, $h5) / var(--factor, 1));
     line-height: calc((var(--font-size, $h5) * var(--degree-line-height, 1.2)) / var(--factor, 1));
   }
   &_h6 {
-    @include fluid-type(--font-size, $minScreen, $maxScreen, 0.85rem, 1.2rem);
+    @include fluid-type(--font-size, $minScreen, $maxScreen, 0.85rem, 1rem);
     font-size: calc(var(--font-size, $h6) / var(--factor, 1));
     line-height: calc((var(--font-size, $h6) * var(--degree-line-height, 1.2)) / var(--factor, 1));
   }

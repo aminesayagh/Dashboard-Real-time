@@ -5,7 +5,7 @@ import Container from "@/app/[lng]/components/ui/Container";
 import { Button } from "@nextui-org/react";
 import { title, text } from "@/app/[lng]/components/ui/typography/Typography.style";
 import { twMerge as tw } from "tailwind-merge";
-import { useTranslation } from '@tran/client';
+import { useTranslation } from '@i18n/client';
 import Link from "next/link";
 
 export default function Section({ lang }: { lang: Lang }) {

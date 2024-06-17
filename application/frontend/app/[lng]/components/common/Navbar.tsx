@@ -6,7 +6,7 @@ import Logo from "@/app/[lng]/components/ui/logo/Logo";
 import { text } from '@/app/[lng]/components/ui/typography/Typography.style'; 
 import SwitchLanguage from "@/app/[lng]/components/ui/SwitchLanguage";
 import { Lang } from "@/app/i18n/settings";
-import { useTranslation, generatePageUrl } from "@tran/client";
+import { useTranslation, generatePageUrl } from "@i18n/client";
 
 export default function NavbarUi({
     lng

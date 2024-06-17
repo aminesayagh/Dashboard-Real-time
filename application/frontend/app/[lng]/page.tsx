@@ -1,5 +1,4 @@
 "use client";
-import "../globals.css";
 import Navbar from "@/app/[lng]/components/common/Navbar";
 import HomeSectionIntro from "@/app/[lng]/components/common/section/HomeSectionIntro";
 import HomeSectionFaq from "@/app/[lng]/components/common/section/HomeSectionFaq";

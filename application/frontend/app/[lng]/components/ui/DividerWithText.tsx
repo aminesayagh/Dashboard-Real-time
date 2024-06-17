@@ -10,7 +10,7 @@ export default function DividerWithText({
   return (
     <div className="flex flex-row justify-between items-center py-6">
       <Divider as="div" className="flex-1" />
-      <span className={tw("px-4 uppercase", text({
+      <span className={tw("px-4 uppercase select-none", text({
         size: 'sm',
         weight: 'regular',
         mode: 'light',

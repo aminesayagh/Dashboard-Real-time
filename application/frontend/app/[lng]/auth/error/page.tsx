@@ -1,21 +1,17 @@
-'use client'
+"use client";
 import "@app/globals.css";
-import Container from "@/app/[lng]/components/ui/Container";
-import { Card, CardHeader, CardBody, CardFooter } from "@nextui-org/react";
+import { Card, CardHeader, CardBody } from "@nextui-org/react";
 export default function Error({
-    params: { lng },
-    }: {
-    params: {
-        lng: "fr" | "en";
-    };
+  params: { lng },
+}: {
+  params: {
+    lng: "fr" | "en";
+  };
 }) {
-    return (
-        <Container size='xs' className='py-24 flex flex-col gap-4 justify-start'>
-            <Card>
-                <CardBody>
-                    Error message
-                </CardBody>
-            </Card>
-        </Container>
-    );
+  return (
+    <Card className="w-full py-6 px-3">
+      <CardHeader>Error</CardHeader>
+      <CardBody>Error message</CardBody>
+    </Card>
+  );
 }
