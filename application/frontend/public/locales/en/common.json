@@ -3,11 +3,29 @@
         "logo": "Fsac",
         "login": "Login"
     },
-    "home_title": "Simplify the management of your end-of-study projects with our PFE application from the Faculty of Hassan 2 in Casablanca",
-    "home_body": "Welcome to your end-of-study project (PFE) management space for the Faculty of Hassan 2 in Casablanca. This application is designed to facilitate the coordination and management of PFEs for students and teachers. We are proud to be able to offer this tool to improve the quality of PFEs and facilitate communication between the parties concerned. Welcome to our application, we hope it will meet your needs for PFE management.",
+    "home_title": "Streamlining Academic Success Together",
+    "home_body": "Welcome to the Informatics Department of Faculty Hassan 2's Academic Platform. This innovative application is designed to simplify and enhance the academic processes for both professors and students. Seamlessly manage courses, assignments, and academic records in one centralized hub, fostering a collaborative and efficient educational environment.",
     "home_action": "Log in",
     "home_action_secondary": "Sign Up",
     "home_accordion_title": "Why choose our application?",
+    "lang": {
+        "label": "Language",
+        "list": [
+            {
+                "flag": "us",
+                "code": "en",
+                "name": "En"
+            },
+            {
+                "flag": "fr",
+                "code": "fr",
+                "name": "Fr"
+            }
+        ]
+    },
+    "footer": {
+        "message": "Designed with ❤️ by FSAC students"
+    },
     "home_accordion_body": [
         {
             "question": "A tool designed for students and teachers",
@@ -28,17 +46,15 @@
     ],
     "auth_login": {
         "title": "Log in to your account",
-        "email": "Email Address",
-        "email_placeholder": "Enter your email address",
-        "password": "Password",
-        "password_placeholder": "Enter your password",
         "remember_me": "Remember me",
-        "forgot_password": "Forgot your password?",
-        "login": "Log in",
         "or" : "Or",
-        "login_with_google": "Log in with Google",
-        "login_with_github": "Log in with Github",
         "no_account": "Don't have an account?",
+        "get_account": "Sign Up",
         "sign_up": "Sign Up"
+    },
+    "auth_signup": {
+        "title": "Create an account",
+        "already_account": "Already have an account?",
+        "login": "Log in"
     }
 }

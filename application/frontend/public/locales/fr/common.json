@@ -1,10 +1,55 @@
 {
     "header": {
         "logo": "Fsac",
-        "login": "Login"
+        "login": "Connexion"
     },
-    "home_title": "Simplify the management of your end-of-study projects with our PFE application from the Faculty of Hassan 2 in Casablanca",
-    "home_body": "Welcome to your end-of-study project (PFE) management space for the Faculty of Hassan 2 in Casablanca. This application is designed to facilitate the coordination and management of PFEs for students and teachers. We are proud to be able to offer this tool to improve the quality of PFEs and facilitate communication between the parties concerned. Welcome to our application, we hope it will meet your needs for PFE management.",
-    "home_action": "Log in",
-    "home_action_secondary": "Sign Up"
+    "home_title": "Optimisons Ensemble la Réussite Académique",
+    "home_body": "Bienvenue sur la plateforme académique du département d'informatique de la Faculté Hassan 2. Cette application innovante est conçue pour simplifier et améliorer les processus académiques pour les professeurs et les étudiants. Gérez facilement les cours, les devoirs et les dossiers académiques dans un hub centralisé, favorisant un environnement éducatif collaboratif et efficace.",
+    "home_action": "Se Connecter",
+    "home_action_secondary": "S'inscrire",
+    "home_accordion_title": "Pourquoi choisir notre application?",
+    "lang": {
+        "label": "Langue",
+        "list": [
+            {
+                "flag": "us",
+                "code": "en",
+                "name": "En"
+            },
+            {
+                "flag": "fr",
+                "code": "fr",
+                "name": "Fr"
+            }
+        ]
+    },
+    "home_accordion_body": [
+        {
+            "question": "Un outil conçu pour les étudiants et les enseignants",
+            "answer": "Notre application est conçue pour répondre aux besoins des étudiants et des enseignants. Elle offre une interface simple et intuitive qui vous permet de gérer facilement vos PFEs."
+        },
+        {
+            "question": "Une plateforme sécurisée et fiable",
+            "answer": "Nous prenons la sécurité de vos données très au sérieux. Notre application est hébergée sur des serveurs sécurisés et nous utilisons les dernières technologies pour protéger vos informations."
+        },
+        {
+            "question": "Un outil qui vous fait gagner du temps",
+            "answer": "Avec notre application, vous pouvez dire adieu aux emails et appels téléphoniques interminables. Notre plateforme vous permet de communiquer avec vos enseignants et camarades de classe en temps réel, vous faisant ainsi gagner du temps et des efforts."
+        },
+        {
+            "question": "Un outil qui favorise la collaboration",
+            "answer": "Notre application est conçue pour favoriser la collaboration entre les étudiants et les enseignants. Vous pouvez facilement partager des documents, échanger des idées et travailler ensemble sur vos PFEs."
+        }
+    ],
+    "auth_login": {
+        "title": "Connectez-vous à votre compte",
+        "remember_me": "Se souvenir de moi",
+        "forgot_password": "Mot de passe oublié?",
+        "login": "Connexion",
+        "or" : "Ou",
+        "login_with_google": "Se connecter avec Google",
+        "login_with_github": "Se connecter avec Github",
+        "no_account": "Vous n'avez pas de compte?",
+        "sign_up": "S'inscrire"
+    }
 }

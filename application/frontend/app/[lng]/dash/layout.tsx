@@ -1,18 +1,17 @@
 import type { Metadata } from "next";
-import "@app/globals.css";
-
+import '@app/globals.css';
 import { Inter } from "next/font/google";
 import NextUiProvider from "@providers/NextUiProvider";
 import SessionProvider from "@providers/SessionProvider";
-import { languages } from "@i18n/settings";
-import Container from "@ui/Container";
+import { Lang, languages } from "@i18n/settings";
+import Sidebar from "@common/sidebar";
+import DashboardNavbar from "@common/dashboardNavbar";
 
 export async function generateStaticParams() {
   return languages.map((lng) => ({ lng }));
 }
 
 import { dir } from "i18next";
-import AuthFooter from "../components/common/AuthFooter";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,7 +26,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
   params: {
-    lng: "fr" | "en";
+    lng: Lang
   };
 }>) {
   return (
@@ -35,15 +34,17 @@ export default function RootLayout({
       <body className={inter.className}>
         <NextUiProvider>
           <SessionProvider>
-            <main className="light bg-background text-foreground">
-              <Container
-                size="xs"
-                className="py-24 flex flex-col gap-4 justify-start items-start"
-                as="section"
-              >
+            <main className="light bg-background text-foreground grid grid-cols-12 w-full min-h-screen">
+              <div className='col-start-1 col-span-3 h-full'>
+                <Sidebar lng={lng} />
+              </div>
+              <div className='col-start-4 col-span-9'>
+                <DashboardNavbar lng={lng} /> 
+                <div className="p-6">
                 {children}
-                <AuthFooter lng={lng} />
-              </Container>
+
+                </div>
+            </div>
             </main>
           </SessionProvider>
         </NextUiProvider>

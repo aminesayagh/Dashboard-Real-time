@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
+import "../globals.css";
 
 import { Inter } from "next/font/google";
-import NextUiProvider from "../../providers/NextUiProvider";
-import SessionProvider from "../../providers/SessionProvider";
-import { languages } from '../i18n/settings'
+import NextUiProvider from "@providers/NextUiProvider";
+import SessionProvider from "@providers/SessionProvider";
+import { languages } from '@i18n/settings'
 
 export async function generateStaticParams() {
   return languages.map((lng) => ({ lng }));
 }
 
 import { dir } from 'i18next';
-
 
 const inter = Inter({ subsets: ["latin"] });
 

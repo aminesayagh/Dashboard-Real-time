@@ -1,3 +1,30 @@
 {
-    
+    "sidebar": {
+        "title": "Fsac"
+    },
+    "nav": {
+        "home": "Home",
+        "about": "About",
+        "dashboard": "Dashboard",
+        "dashboard_description": "Your personalized dashboard",
+        "settings": "Settings",
+        "profile": "Profile",
+        "profile_description": "Your profile information",
+        "contact": "Contact",
+        "analysis": "Analysis",
+        "analysis_description": "Your academic performance",
+        "department": "Department",
+        "department_description": "Your department's information",
+        "login": "Login",
+        "register": "Register",
+        "category": "Category",
+        "category_description": "Your category's information",
+        "logout": "Logout",
+        "logout_description": "Logout from the system"
+    },
+    "nav_sections": {
+        "navbar_action": "Actions",
+        "taxonomies": "Taxonomies",
+        "account": "Account"
+    }
 }
