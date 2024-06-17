@@ -22,7 +22,11 @@ export type TSelectItem = React.FC<SelectItemProps>;
 
 export type TTextarea = React.FC<TextAreaProps>;
 
-export type TForm = React.FC<TFormProps> & {
+export type TFormComponent = React.FC<TFormProps & {
+    methods?: any;
+}>;
+
+export type TForm = TFormComponent & {
     Input: TInput;
     Password: TInput;
     DateInput: TDateInput;

@@ -1,9 +1,19 @@
 
 import React from 'react'
 
-import { TForm } from './types'
+import { TForm, TFormComponent } from './types';
+import { FormProvider } from 'react-hook-form';
 
-const Form = ({ ...props }) => {
+const Form: TFormComponent = ({ methods,...props }) => {
+    if (!!methods) {
+        return (
+            <FormProvider {...methods}>
+                <form {...props} >
+                    {props.children}
+                </form>
+            </FormProvider>
+        )
+    }
     return (
         <form {...props}>
             {props.children}

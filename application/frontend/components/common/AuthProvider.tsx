@@ -1,7 +1,5 @@
 import React, { useEffect, useState} from 'react';
 import { getProviders, signIn, LiteralUnion, ClientSafeProvider, useSession } from 'next-auth/react';
-// import GithubProvider from 'next-auth/providers/github';
-// import GoogleProvider from 'next-auth/providers/google';
 import { BuiltInProviderType } from 'next-auth/providers/index';
 import { useTranslation } from 'react-i18next';
 import Google from '@public/icons/google.png';
