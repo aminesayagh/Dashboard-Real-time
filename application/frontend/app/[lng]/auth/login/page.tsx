@@ -1,6 +1,8 @@
 "use client";
 import "@app/globals.css";
 import Container from "@ui/Container";
+
+
 import { Card, CardHeader, CardBody, CardFooter } from "@nextui-org/react";
 import Link from "next/link";
 import { title } from "@ui/typography/Typography.style";

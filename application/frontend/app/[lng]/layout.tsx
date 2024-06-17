@@ -11,7 +11,6 @@ export async function generateStaticParams() {
 
 import { dir } from 'i18next';
 
-
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
