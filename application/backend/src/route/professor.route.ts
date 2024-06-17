@@ -24,7 +24,7 @@ router.post('/', async (req: ApiRequest, res: ApiResponse<IProfessorDocument>): 
 router.put('/:id', async (req: ApiRequest<Partial<IProfessorDocument>, {}, { id: string }>, res: ApiResponse<IProfessorDocument>) => {
     const { id } = req.params;
     try {
-        const result = await ProfessorModel.findByIdAndUpdate(id, req.body)
+        const result = await ProfessorModel.findByIdAndUpdate(id, req.body, {new: true})
         if (!result) {
             res.status(404).send({ status: 'error', message: ERRORS.NOT_FOUND });
             return;
