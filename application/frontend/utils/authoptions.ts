@@ -2,6 +2,9 @@ import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import GithubProvider from "next-auth/providers/github";
 import { SECRET, NEXT_AUTH_URL } from "@utils/env";
+import { MongoDBAdapter } from '@next-auth/mongodb-adapter';
+
+import clientPromise from '@utils/mongodbConnect';
 
 import { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } from './env';
 export const authOptions: NextAuthOptions = {
@@ -16,6 +19,7 @@ export const authOptions: NextAuthOptions = {
       clientSecret: GITHUB_CLIENT_SECRET,
     }),
   ],
+  adapter: MongoDBAdapter(clientPromise.then()),
   debug: true,
   secret: SECRET,
   jwt: {
