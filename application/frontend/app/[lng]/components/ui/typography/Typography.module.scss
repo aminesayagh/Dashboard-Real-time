@@ -136,7 +136,7 @@ $h6: 1rem;
     @apply tracking-wider;
   }
   &_sm {
-    @include fluid-type(--font-size, $minScreen, $maxScreen, 0.7rem, 0.9rem);
+    @include fluid-type(--font-size, $minScreen, $maxScreen, 0.8rem, 1rem);
     font-size: calc(var(--font-size, 0.9rem) / var(--factor, 1));
     line-height: calc((var(--font-size, 0.9rem) * var(--degree-line-height, 1.5)) / var(--factor, 1));
     @apply tracking-widest lg:tracking-wider;

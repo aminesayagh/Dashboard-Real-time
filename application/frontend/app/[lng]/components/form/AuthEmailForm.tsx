@@ -1,4 +1,4 @@
-import FormUi from "@ui/form";
+import FormUi from "@/app/[lng]/components/ui/form";
 import { Button } from "@nextui-org/react";
 import { useTranslation } from "react-i18next";
 import {
@@ -7,7 +7,7 @@ import {
 } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
-import ControllerForm from "@ui/form/ControllerForm";
+import ControllerForm from "@/app/[lng]/components/ui/form/ControllerForm";
 
 
 export default function Form() {
@@ -26,8 +26,10 @@ export default function Form() {
     resolver: zodResolver(schema),
   });
 
-  const onSubmit: SubmitHandler<FormValues> = (data: FormValues) =>
+  const onSubmit: SubmitHandler<FormValues> = (data: FormValues) => {
     console.log(data);
+    // run sign in logic
+  }
   return (
     <FormUi
       className="flex flex-col gap-4"
@@ -44,7 +46,7 @@ export default function Form() {
             {...field}
             {...{
               errorMessage: error?.message,
-              isInvalid: state.invalid,
+              isInvalid: state.invalid
             }}
           />
         )}

@@ -1,11 +1,11 @@
 "use strict";
 
 import { Lang } from "@/app/i18n/settings";
-import Container from "@/components/ui/Container";
+import Container from "@/app/[lng]/components/ui/Container";
 import { useTranslation } from "@tran/client";
-import { title } from "@ui/typography/Typography.style";
+import { title } from "@/app/[lng]/components/ui/typography/Typography.style";
 import { Accordion, AccordionItem } from "@nextui-org/react";
-import { text } from "@ui/typography/Typography.style";
+import { text } from "@/app/[lng]/components/ui/typography/Typography.style";
 import { twMerge as tw } from "tailwind-merge";
 
 const motionProps = {

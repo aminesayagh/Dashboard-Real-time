@@ -2,9 +2,9 @@
 
 import React, {  } from "react";
 import { Navbar, NavbarBrand, NavbarContent, Link, Button } from '@nextui-org/react';
-import Logo from "@/components/ui/logo/Logo";
-import { text } from '@ui/typography/Typography.style'; 
-import SwitchLanguage from "@ui/SwitchLanguage";
+import Logo from "@/app/[lng]/components/ui/logo/Logo";
+import { text } from '@/app/[lng]/components/ui/typography/Typography.style'; 
+import SwitchLanguage from "@/app/[lng]/components/ui/SwitchLanguage";
 import { Lang } from "@/app/i18n/settings";
 import { useTranslation, generatePageUrl } from "@tran/client";
 

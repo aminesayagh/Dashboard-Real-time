@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Input } from ".";
 import type { TInput } from "./types";
-import { Icon } from "@ui/icon";
+import { Icon } from "@/app/[lng]/components/ui/icon";
 
 const PasswordUi: TInput = ({ ...props }) => {
   const [isVisible, setIsVisible] = useState(false);

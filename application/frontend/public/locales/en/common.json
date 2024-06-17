@@ -23,6 +23,9 @@
             }
         ]
     },
+    "footer": {
+        "message": "Designed with ❤️ by FSAC students"
+    },
     "home_accordion_body": [
         {
             "question": "A tool designed for students and teachers",

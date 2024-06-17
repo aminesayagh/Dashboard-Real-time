@@ -1,9 +1,9 @@
 "use strict";
 
 import { Lang } from "@/app/i18n/settings";
-import Container from "@/components/ui/Container";
+import Container from "@/app/[lng]/components/ui/Container";
 import { Button } from "@nextui-org/react";
-import { title, text } from "@ui/typography/Typography.style";
+import { title, text } from "@/app/[lng]/components/ui/typography/Typography.style";
 import { twMerge as tw } from "tailwind-merge";
 import { useTranslation } from '@tran/client';
 import Link from "next/link";

@@ -1,17 +1,17 @@
 "use client";
 import "@app/globals.css";
-import Container from "@ui/Container";
 
 
 import { Card, CardHeader, CardBody, CardFooter } from "@nextui-org/react";
+import Container from "@/app/[lng]/components/ui/Container";
 import Link from "next/link";
-import { title } from "@ui/typography/Typography.style";
-import LoginForm from "@form/LoginForm";
-import { generatePageUrl, useTranslation } from '@tran/client';
-import AuthProvider from "@common/AuthProvider";
-import DividerWithText from "@ui/DividerWithText";
+import { title } from "@/app/[lng]/components/ui/typography/Typography.style";
 import { twMerge as tw } from "tailwind-merge"; 
-import { link, text } from "@ui/typography/Typography.style";
+import LoginForm from "@/app/[lng]/components/form/AuthEmailForm";
+import { generatePageUrl, useTranslation } from '@tran/client';
+import AuthProvider from "@/app/[lng]/components/common/AuthProvider";
+import DividerWithText from "@/app/[lng]/components/ui/DividerWithText";
+import { link, text } from "@/app/[lng]/components/ui/typography/Typography.style";
 export default function Home({
   params: { lng },
 }: {
@@ -56,6 +56,14 @@ export default function Home({
           </div>
         </CardFooter>
       </Card>
+      <div className='flex flex-row justify-center w-full items-center py-2 opacity-80'>
+        <p className={text({
+              size: 'sm',
+              weight: 'regular',
+              mode: 'light',
+              degree: 'faded',
+            })}>{t('footer.message')}</p>
+      </div>
     </Container>
   );
 }

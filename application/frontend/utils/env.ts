@@ -8,6 +8,11 @@ const emvVariables = z.object({
     SECRET: z.string(),
     NEXT_AUTH_URL: z.string(),   
     MONGODB_URI: z.string(),
+    EMAIL_SERVER_HOST: z.string(),
+    EMAIL_SERVER_PORT: z.string(),
+    EMAIL_SERVER_USER: z.string(),
+    EMAIL_SERVER_PASSWORD: z.string(),
+    EMAIL_FROM: z.string(),
 });
 
 export type TEnvVariables = z.infer<typeof emvVariables>;
@@ -30,3 +35,8 @@ export const GITHUB_CLIENT_SECRET = myEnvVariables.GITHUB_CLIENT_SECRET;
 export const SECRET = myEnvVariables.SECRET;
 export const NEXT_AUTH_URL = myEnvVariables.NEXT_AUTH_URL;
 export const MONGODB_URI = myEnvVariables.MONGODB_URI;
+export const EMAIL_SERVER_HOST = myEnvVariables.EMAIL_SERVER_HOST;
+export const EMAIL_SERVER_PORT = myEnvVariables.EMAIL_SERVER_PORT;
+export const EMAIL_SERVER_USER = myEnvVariables.EMAIL_SERVER_USER;
+export const EMAIL_SERVER_PASSWORD = myEnvVariables.EMAIL_SERVER_PASSWORD;
+export const EMAIL_FROM = myEnvVariables.EMAIL_FROM;
