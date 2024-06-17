@@ -83,7 +83,6 @@ describe('GET /api/v1/users/:id', () => {
 
   it('should return 404 for non-existing user ID', async () => {
     const response = await request(app).get('/api/v1/users/60f7c7b4f776d35a4447c5a5'); // An example invalid ID
-    console.log(response.body);
     expect(response.status).toBe(404);
     expect(response.body).toHaveProperty('message');
   });
@@ -159,7 +158,6 @@ describe('GET /api/v1/users/me/:id', () => {
 describe('GET /api/v1/users/email/:email', () => {
   it('should return a user by email', async () => {
     const response = await request(app).get(`/api/v1/users/email/${user.user_email}`);
-    console.log(response.body);
     expect(response.status).toBe(200);
     expect(response.body.data).toHaveProperty('_id', user._id.toString());
     expect(response.body.data.user_email).toBe(`${user.user_email}`);

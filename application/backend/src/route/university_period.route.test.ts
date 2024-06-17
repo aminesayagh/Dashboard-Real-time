@@ -21,7 +21,6 @@ beforeAll(async () => {
   app = ExpressConfig();
 
 	createCurrentPeriod();
-  console.log('Period created for testing:', period);
 });
 
 afterAll(async () => {
