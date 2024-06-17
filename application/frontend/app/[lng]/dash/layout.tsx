@@ -35,10 +35,10 @@ export default function RootLayout({
         <NextUiProvider>
           <SessionProvider>
             <main className="light bg-background text-foreground grid grid-cols-12 w-full min-h-screen">
-              <div className='col-start-1 col-span-4 h-full'>
+              <div className='col-start-1 col-span-3 h-full'>
                 <Sidebar lng={lng} />
               </div>
-              <div className='col-start-5 col-span-8'>
+              <div className='col-start-4 col-span-9'>
                 <DashboardNavbar lng={lng} /> 
                 <div className="p-6">
                 {children}

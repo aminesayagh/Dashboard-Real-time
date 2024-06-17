@@ -7,14 +7,14 @@ import {
   Dropdown,
   DropdownTrigger,
   DropdownMenu,
-  DropdownItem as NextDropdownItem,
+  DropdownItem,
   DropdownItemProps,
   Avatar,
   ScrollShadow,
   Listbox,
   ListboxSection,
 } from "@nextui-org/react";
-import { Icon } from "@ui/icon";
+import { Icon, IconNames } from "@ui/icon";
 
 function SideBarAvatar({
   img,
@@ -26,17 +26,17 @@ function SideBarAvatar({
   field: string;
 }) {
   return (
-    <div>
+    <div className="flex flex-row gap-4 items-center p-1">
       <Avatar
         isBordered
         as="button"
         className="transition-transform transform hover:scale-105"
         src={img}
       />
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col pr-4">
         <h4
           className={title({
-            size: "h5",
+            size: "h6",
             weight: "semibold",
             mode: "light",
             degree: "exchanged",
@@ -46,7 +46,7 @@ function SideBarAvatar({
         </h4>
         <p
           className={text({
-            size: "sm",
+            size: "xs",
             weight: "regular",
             mode: "light",
             degree: "faded",
@@ -70,18 +70,26 @@ function SidebarAvatarDropdown({ lng }: { lng: Lang }) {
           src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
         />
       </DropdownTrigger>
-      <DropdownMenu aria-label="Profile Actions" variant="flat">
-        <NextDropdownItem key="profile">
+      <DropdownMenu aria-label="Profile Actions" className="p-2" >
+        <DropdownItem key="profile">
           <SideBarAvatar
             img="https://i.pravatar.cc/150?u=a042581f4e29026704d"
             name="John Doe"
             field="Software Engineer"
           />
-        </NextDropdownItem>
-        <NextDropdownItem key="dashboard">{t("nav.dashboard")}</NextDropdownItem>
-        <NextDropdownItem key="settings">{t("nav.settings")}</NextDropdownItem>
-        <NextDropdownItem key="profile">{t("nav.profile")}</NextDropdownItem>
-        <NextDropdownItem key="logout">{t("nav.logout")}</NextDropdownItem>
+        </DropdownItem>
+        <DropdownItem key="dashboard" className='text-zinc-900 mt-2' color="primary" variant="flat">
+          {t("nav.dashboard")}
+        </DropdownItem>
+        <DropdownItem key="settings" className='text-zinc-900' color="primary" variant="flat">
+          {t("nav.settings")}
+        </DropdownItem>
+        <DropdownItem key="profile" className='text-zinc-900' color="primary" variant="flat">
+          {t("nav.profile")}
+        </DropdownItem>
+        <DropdownItem key="logout" className='text-red-600' color="danger" variant="flat">
+          {t("nav.logout")}
+        </DropdownItem>
       </DropdownMenu>
     </Dropdown>
   );
@@ -113,12 +121,10 @@ function SidebarHeader({ lng }: { lng: Lang }) {
   );
 }
 
-function DropdownItem({ children, ...props }: DropdownItemProps) {
-  return (
-    <NextDropdownItem color="primary" variant="flat" {...props}>
-      {children}
-    </NextDropdownItem>
-  );
+interface Items {
+  id: string;
+  section: string;
+  items: (DropdownItemProps & { iconName: IconNames })[];
 }
 
 export default function Sidebar({ lng }: { lng: Lang }) {
@@ -129,58 +135,100 @@ export default function Sidebar({ lng }: { lng: Lang }) {
         <SidebarHeader lng={lng} />
       </div>
       <ScrollShadow>
-        <Listbox variant="light" aria-label="Listbox sidebar dashboard">
-          <ListboxSection title={t("nav_sections.navbar_action")} showDivider>
-            <DropdownItem
-              key="dashboard"
-              startContent={<Icon name="EyeSlashFilledIcon" size="24" />}
-              description={t("nav.dashboard_description")}
+        <Listbox
+          variant="light"
+          onSelectionChange={(s) => console.log(s)}
+          items={
+            [
+              {
+                id: "1",
+                section: "navbar_action",
+                items: [
+                  {
+                    id: "1",
+                    key: "dashboard",
+                    iconName: "EyeSlashFilledIcon",
+                    description: t("nav.dashboard_description"),
+                  },
+                  {
+                    id: "2",
+                    key: "department",
+                    iconName: "EyeSlashFilledIcon",
+                    description: t("nav.department_description"),
+                  },
+                  {
+                    id: "3",
+                    key: "analysis",
+                    iconName: "EyeSlashFilledIcon",
+                    description: t("nav.analysis_description"),
+                  },
+                  {
+                    id: "4",
+                    key: "settings",
+                    iconName: "EyeSlashFilledIcon",
+                  },
+                ],
+              },
+              {
+                id: "2",
+                section: "taxonomies",
+                items: [
+                  {
+                    id: "1",
+                    key: "category",
+                    iconName: "EyeSlashFilledIcon",
+                    description: t("nav.category_description"),
+                  },
+                ],
+              },
+              {
+                id: "3",
+                section: "account",
+                items: [
+                  {
+                    id: "1",
+                    key: "profile",
+                    description: t("nav.profile_description"),
+                    iconName: "EyeSlashFilledIcon",
+                    color: "primary",
+                  },
+                  {
+                    id: "2",
+                    key: "logout",
+                    description: t("nav.logout_description"),
+                    iconName: "EyeSlashFilledIcon",
+                    color: "danger",
+                  },
+                ],
+              },
+            ] as Items[]
+          }
+          aria-label="Listbox sidebar dashboard"
+        >
+          {(item: Items) => (
+            <ListboxSection
+              title={t(`nav_sections.${item.section}`)}
+              showDivider
             >
-              {t("nav.dashboard")}
-            </DropdownItem>
-            <DropdownItem
-              key="department"
-              startContent={<Icon name="EyeSlashFilledIcon" size="24" />}
-              description={t("nav.department_description")}
-            >
-              {t("nav.department")}
-            </DropdownItem>
-            <DropdownItem
-              key="Analytics"
-              startContent={<Icon name="EyeSlashFilledIcon" size="24" />}
-              description={t("nav.analysis_description")}
-            >
-              {t("nav.analytics")}
-            </DropdownItem>
-            <DropdownItem key="settings">{t("nav.settings")}</DropdownItem>
-          </ListboxSection>
-          <ListboxSection title={t("nav_sections.taxonomies")} showDivider>
-            <DropdownItem
-              key="category"
-              startContent={<Icon name="EyeSlashFilledIcon" size="24" />}
-              description={t("nav.category_description")}
-            >
-              {t("nav.category")}
-            </DropdownItem>
-          </ListboxSection>
-          <ListboxSection title={t("nav_sections.account")} showDivider>
-            <DropdownItem
-              key="profile"
-              color="primary"
-              startContent={<Icon name="EyeSlashFilledIcon" size="24" />}
-              description={t("nav.profile_description")}
-            >
-              {t("nav.profile")}
-            </DropdownItem>
-            <DropdownItem
-              key="logout"
-              color="danger"
-              startContent={<Icon name="EyeSlashFilledIcon" size="24" />}
-              description={t("nav.logout_description")}
-            >
-              {t("nav.logout")}
-            </DropdownItem>
-          </ListboxSection>
+              {item.items.map((i) => (
+                <DropdownItem
+                  key={i.key}
+                  variant="flat"
+                  color={(i?.color as any) || "primary"}
+                  startContent={
+                    <Icon
+                      name={i.iconName as IconNames}
+                      className="pr-0 pm:mr-2"
+                      size="24"
+                    />
+                  }
+                  description={i.description}
+                >
+                  {t(`nav.${i.key}`)}
+                </DropdownItem>
+              ))}
+            </ListboxSection>
+          )}
         </Listbox>
       </ScrollShadow>
     </div>
