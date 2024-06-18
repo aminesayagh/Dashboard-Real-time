@@ -8,7 +8,6 @@ acceptLanguage.languages(languages as any);
 
 export function middlewareI18n(middleware: CustomMiddleware) {
   return async (request: NextRequest, event: NextFetchEvent) => {
-    console.log('request', request);
     let lng
     if (request.cookies.has(cookieName)) lng = acceptLanguage.get(request.cookies.get(cookieName)?.value)
     if (!lng) lng = acceptLanguage.get(request.headers.get('Accept-Language'))

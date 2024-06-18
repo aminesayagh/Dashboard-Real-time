@@ -1,5 +1,5 @@
 "use client";
-import Navbar from "@/app/[lng]/components/common/Navbar";
+import Navbar from "./Navbar";
 import HomeSectionIntro from "@/app/[lng]/components/common/section/HomeSectionIntro";
 import HomeSectionFaq from "@/app/[lng]/components/common/section/HomeSectionFaq";
 

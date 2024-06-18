@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
-import "../globals.css";
+import "@app/globals.css";
+import { dir } from "i18next";
 
 import { Inter } from "next/font/google";
+import { languages } from "@i18n/settings";
 import NextUiProvider from "@providers/NextUiProvider";
 import SessionProvider from "@providers/SessionProvider";
-import { languages } from '@i18n/settings'
+import { twMerge as tw } from "tailwind-merge";
 
 export async function generateStaticParams() {
   return languages.map((lng) => ({ lng }));
 }
-
-import { dir } from 'i18next';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,23 +21,21 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-  params: {
-    lng,
-  }
+  params: { lng },
 }: Readonly<{
   children: React.ReactNode;
   params: {
-    lng: 'fr' | 'en';
+    lng: "fr" | "en";
   };
 }>) {
   return (
     <html lang={lng} dir={dir(lng)} className="light">
       <body className={inter.className}>
-        <NextUiProvider >
+        <NextUiProvider>
           <SessionProvider>
-            <main className='light bg-background text-foreground'>
+            <div className={tw("light bg-background text-foreground")}>
               {children}
-            </main>
+            </div>
           </SessionProvider>
         </NextUiProvider>
       </body>

@@ -20,11 +20,16 @@
         "category": "Category",
         "category_description": "Your category's information",
         "logout": "Logout",
-        "logout_description": "Logout from the system"
+        "logout_description": "Logout from the system",
+        "student": "Student",
+        "student_description": "Your student's information",
+        "teacher": "Teacher",
+        "teacher_description": "Your teacher's information"
     },
     "nav_sections": {
-        "navbar_action": "Actions",
+        "navbar_action": "Nav",
         "taxonomies": "Taxonomies",
-        "account": "Account"
+        "account": "Account",
+        "user": "User"
     }
 }

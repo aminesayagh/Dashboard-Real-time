@@ -1,13 +1,12 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 import { Select, SelectItem } from "@nextui-org/select";
 import { Avatar } from "@nextui-org/avatar";
 import { languages } from "@i18n/settings";
 
 import { Lang } from "@/app/i18n/settings";
 import { useTranslation, useSwitchLanguage } from "@i18n/client";
-import Link from "next/link";
 
 const AvatarFlag = ({ alt, src }: { alt: string; src: string }) => {
   return <Avatar alt={alt} src={src} className="w-5 h-5 mr-1" />;
