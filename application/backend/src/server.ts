@@ -1,9 +1,9 @@
 import ExpressConfig from "./express/express.config";
-import { MONGO_USER, MONGO_PASSWORD, MONGO_URI, MONGO_DB, PORT } from "./env";
+import { PORT } from "./env";
 import { dbConnect, generateMongoUri } from "./utils/mongooseConnect";
 const app = ExpressConfig();
 
-const key = generateMongoUri(MONGO_USER, MONGO_PASSWORD, MONGO_URI, MONGO_DB) || '';
+const key = generateMongoUri() || '';
 
 dbConnect(key).then(() => {
     console.log('db connected');
