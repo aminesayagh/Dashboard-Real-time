@@ -34,6 +34,7 @@
       "@common/*": ["./app/[lng]/components/common/*"], 
       "@utils/*": ["./utils/*"],
       "@providers/*": ["./app/[lng]/providers/*"],
+      "@types/*": ["./types/*"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "svgr.d.ts"],

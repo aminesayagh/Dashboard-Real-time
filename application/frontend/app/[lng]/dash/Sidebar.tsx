@@ -209,7 +209,7 @@ export default function Sidebar({ lng }: { lng: Lang }) {
                   {
                     id: "2",
                     key: "teacher",
-                    iconName: "Profile_1",
+                    iconName: "Education",
                     description: t("nav.teacher_description"),
                   },
                 ],
@@ -221,7 +221,7 @@ export default function Sidebar({ lng }: { lng: Lang }) {
                   {
                     id: "1",
                     key: "category",
-                    iconName: "EyeSlashFilledIcon",
+                    iconName: "Document_Align_Right_11",
                     description: t("nav.category_description"),
                   },
                 ],
@@ -234,14 +234,14 @@ export default function Sidebar({ lng }: { lng: Lang }) {
                     id: "1",
                     key: "profile",
                     description: t("nav.profile_description"),
-                    iconName: "EyeSlashFilledIcon",
+                    iconName: "Profile_Square",
                     color: "primary",
                   },
                   {
                     id: "2",
                     key: "logout",
                     description: t("nav.logout_description"),
-                    iconName: "EyeSlashFilledIcon",
+                    iconName: "Off",
                     color: "danger",
                   },
                 ],
@@ -258,11 +258,12 @@ export default function Sidebar({ lng }: { lng: Lang }) {
                   variant="flat"
                   color={(i?.color as any) || "primary"}
                   startContent={
-                    <Icon
-                      name={i.iconName as IconNames}
-                      className="pr-0 pm:mr-2"
-                      size="20"
-                    />
+                    <span className="pr-0 md:mr-2">
+                      <Icon
+                        name={i.iconName as IconNames}
+                        size={20}
+                      />
+                    </span>
                   }
                   description={i.description}
                 >

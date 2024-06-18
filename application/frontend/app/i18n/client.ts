@@ -9,6 +9,8 @@ import LanguageDetector from 'i18next-browser-languagedetector'
 import { getOptions, languages, cookieName } from './settings';
 import { Lang, Namespace } from './settings';
 import { LooseAutocomplete } from '@/types/helpers';
+import path from 'path';
+import { signOut } from 'next-auth/react';
 
 
 const runsOnServerSide = typeof window === 'undefined';
@@ -70,6 +72,54 @@ const ROUTER_CONFIG = {
   },
   'dash': {
     path: '/dash'
+  }
+} as const;
+
+const ROUTER_CONFIGS = {
+  'home': {
+    path: '/'
+  },
+  auth: {
+    'login': {
+      path: '/auth/login'
+    },
+    'register': {
+      path: '/auth/register'
+    },
+    'profile': {
+      path: '/auth/profile'
+    }
+  },
+  'dash': {
+    'account': {
+      'profile': {
+        path: '/dash/account/profile'
+      },
+      logout: {
+        path: '/auth/logout'
+      }
+    },
+    'nav': {
+      'dashboard': {
+        path: '/dash'
+      },
+      'department': {
+        path: '/dash/department'
+      }
+    },
+    'taxonomies': {
+      'category': {
+        path: '/dash/taxonomies/category'
+      }
+    },
+    'user': {
+      'student': {
+        path: '/dash/user/student'
+      },
+      'teacher': {
+        path: '/dash/user/teacher'
+      }
+    },
   }
 } as const;
 
