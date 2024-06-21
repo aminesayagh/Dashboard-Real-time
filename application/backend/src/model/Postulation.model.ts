@@ -29,7 +29,7 @@ const PostulationContentSchema = new Schema<IPostulationContentDocument>({
 });
 
 export interface IPostulation {
-    resources_id: Types.ObjectId[];
+    resources_id?: Types.ObjectId[];
     user_id: Types.ObjectId;
     postulation_department_id: Types.ObjectId;
     postulation_state: TStatePostulation;
@@ -44,7 +44,6 @@ export interface IPostulationModel extends PaginateModel<IPostulationDocument> {
 const PostulationSchema = new Schema<IPostulationDocument, IPostulationModel>({
     resources_id: {
         type: [Schema.Types.ObjectId],
-        required: true,
         ref: MODEL_NAME.RESOURCE,
     },
     user_id: {

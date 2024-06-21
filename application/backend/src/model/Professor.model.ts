@@ -1,4 +1,4 @@
-import { Model, Schema, model } from 'mongoose';
+import { Schema, model, PaginateModel } from 'mongoose';
 import mongoosePagination from 'mongoose-paginate-v2';
 import { MODEL_NAME, STATE_PROFESSOR_ARRAY, STATE_PROFESSOR, TStateProfessor } from '../constants/DB';
 import { DefaultDocument } from 'types/Mongoose';
@@ -12,7 +12,7 @@ interface IProfessor {
 
 export interface IProfessorDocument extends DefaultDocument<IProfessor> {}
 
-export interface IProfessorModel extends Model<IProfessorDocument> {}
+export interface IProfessorModel extends PaginateModel<IProfessorDocument> {}
 
 const professorSchema = new Schema<IProfessorDocument, IProfessorModel>({
     user_id: {
@@ -52,5 +52,7 @@ professorSchema.pre('save', async function (this: IProfessorDocument, next) {
 professorSchema.plugin(mongoosePagination);
 
 export const Professor = model<IProfessorDocument, IProfessorModel>(MODEL_NAME.PROFESSOR, professorSchema);
+
+Professor.paginate().then();
 
 export default Professor;

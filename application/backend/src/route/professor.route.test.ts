@@ -50,6 +50,16 @@ afterAll(async () => {
 jest.useRealTimers();
 
 describe('Professor API Tests', () => {
+  describe('GET /api/v1/departments', () => {
+    it('should return a list of departments', async () => {
+      const response = await request(app).get('/api/v1/departments');
+      expect(response.status).toBe(200);
+      expect(response.body.data.docs).toBeInstanceOf(Array);
+      expect(response.body.data.docs.length).toBeGreaterThan(0);
+    });
+    
+  });
+
   describe('POST /api/v1/professors', () => {
     it('should create a new professor', async () => {
         let post_user = new UserModel({
