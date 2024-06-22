@@ -1,4 +1,4 @@
-import { NextAuthOptions } from "next-auth";
+import { NextAuthConfig } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import GithubProvider from "next-auth/providers/github";
 import { SECRET, NEXT_AUTH_URL } from "@utils/env";
@@ -11,9 +11,9 @@ import {
   GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, EMAIL_FROM,
   EMAIL_SERVER_HOST, EMAIL_SERVER_PORT, EMAIL_SERVER_USER, EMAIL_SERVER_PASSWORD
 } from './env';
-export const authOptions: NextAuthOptions = {
+export const authOptions: NextAuthConfig = {
   callbacks: {
-    async signIn({ user, account, email }) {
+    async signIn({ user: _, account, email }) {
       if (!account) {
         return false;
       }
@@ -56,11 +56,12 @@ export const authOptions: NextAuthOptions = {
   secret: SECRET,
   jwt: {
     secret: SECRET,
-  },
+  } as any,
   session: {
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60,
   },
+  basePath: "/api/auth",
   pages: {
     signIn: `${NEXT_AUTH_URL}/auth/login`,
     signOut: `${NEXT_AUTH_URL}/auth/logout`,

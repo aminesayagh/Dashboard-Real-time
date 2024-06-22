@@ -27,7 +27,7 @@
     "install": "^0.13.0",
     "mongodb": "^5.9.2",
     "next": "14.2.3",
-    "next-auth": "^4.24.7",
+    "next-auth": "beta",
     "next-i18n-router": "^5.5.0",
     "next-i18next": "^15.3.0",
     "next-svgr": "^0.0.2",
