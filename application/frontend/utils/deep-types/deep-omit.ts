@@ -1,23 +1,10 @@
-export type LooseAutocomplete<T extends string> = T | Omit<string, T>;
+import {KeysAsDotNotation} from '../types/keys-as-dot-notation';
+import {IsUnion} from '../types/is-union';
+import {UnionToTuple} from '../types/union-to-tuple';
+import {IsNever} from "../types/is-never";
+import {ArrayType, IsArray} from "../types/is-array";
+import {Assume} from "../types/assume";
 
-export type NestedKeysWithoutKey<T, Key extends string> = {
-    [K in keyof T]:
-        K extends Key
-            ? never
-            : T[K] extends string ? K : (NestedKeysWithoutKey<T[K], Key> | K);
-}[keyof T];
-
-
-
-
-type Primitive = string | number | bigint | boolean | undefined | symbol;
-
-export type PropertyStringPath<T, Prefix=''> = {
-    [K in keyof T]: T[K] extends Primitive | Array<any> 
-    ? `${string & Prefix}${ string & K }` 
-    : `${string & Prefix}${ string & K }` | PropertyStringPath <T[K], `${ string & Prefix }${ string & K }.`> ;
-}[keyof T];
-import { IsUnion, KeysAsDotNotation, IsNever, UnionToTuple, Assume, IsArray, ArrayType } from '@utils/types';
 export type DeepOmit<
   T,
   OmittedKeys extends KeysAsDotNotation<T, IgnoredTypes>,
@@ -84,7 +71,6 @@ type DistributeDeepOmit<
     : never
   );
 
-  
 type DeepOmitWithArrayOfKeys<
   T,
   OmittedKeys,

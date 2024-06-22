@@ -6,12 +6,8 @@ import { useTranslation as useTranslationOrg } from 'react-i18next';
 import { useCookies } from 'react-cookie';
 import resourcesToBackend from 'i18next-resources-to-backend';
 import LanguageDetector from 'i18next-browser-languagedetector'
-import { getOptions, languages, cookieName } from './settings';
-import { Lang, Namespace } from './settings';
-import { LooseAutocomplete } from '@/types/helpers';
-import path from 'path';
-import { signOut } from 'next-auth/react';
-
+import { getOptions, languages, cookieName, Lang, Namespace } from './settings';
+export { generatePageUrl } from './settings';
 
 const runsOnServerSide = typeof window === 'undefined';
 
@@ -55,83 +51,6 @@ export function useTranslation(lng: Lang, ns: Namespace, options: any = {}) {
     }, [lng, cookies.i18next, setCookie])
   }
   return ret
-}
-
-const ROUTER_CONFIG = {
-  'home': {
-    path: '/',
-  },
-  'login': {
-    path: '/auth/login',
-  },
-  'register': {
-    path: '/auth/register',
-  },
-  '404': {
-    path: '/404',
-  },
-  'dash': {
-    path: '/dash'
-  }
-} as const;
-
-const ROUTER_CONFIGS = {
-  'home': {
-    path: '/'
-  },
-  auth: {
-    'login': {
-      path: '/auth/login'
-    },
-    'register': {
-      path: '/auth/register'
-    },
-    'profile': {
-      path: '/auth/profile'
-    }
-  },
-  'dash': {
-    'account': {
-      'profile': {
-        path: '/dash/account/profile'
-      },
-      logout: {
-        path: '/auth/logout'
-      }
-    },
-    'nav': {
-      'dashboard': {
-        path: '/dash'
-      },
-      'department': {
-        path: '/dash/department'
-      }
-    },
-    'taxonomies': {
-      'category': {
-        path: '/dash/taxonomies/category'
-      }
-    },
-    'user': {
-      'student': {
-        path: '/dash/user/student'
-      },
-      'teacher': {
-        path: '/dash/user/teacher'
-      }
-    },
-  }
-} as const;
-
-type TPathNames = keyof typeof ROUTER_CONFIG;
-const pathNames = Object.keys(ROUTER_CONFIG) as TPathNames[];
-
-export function generatePageUrl(lng: Lang, path: LooseAutocomplete<TPathNames>): string {
-  const isOnRoute = pathNames.includes(path as TPathNames);
-  if (isOnRoute) {
-    return `/${lng}${(ROUTER_CONFIG[path as TPathNames]).path}`
-  }
-  return `/${lng}/${path}`
 }
 
 // write a hook to switch language on client side and save it to cookie

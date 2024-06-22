@@ -55,7 +55,7 @@ export default function Register({
             {t("auth_signup.already_account")}
           </p>
           <Link
-            href={generatePageUrl(lng, "login")}
+            href={generatePageUrl(lng, "auth.login")}
             className={link({
               size: "sm",
               weight: "semibold",

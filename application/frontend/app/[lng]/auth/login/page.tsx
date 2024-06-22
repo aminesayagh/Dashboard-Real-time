@@ -59,7 +59,7 @@ export default function Home({
             {t("auth_login.no_account")}
           </p>
           <Link
-            href={generatePageUrl(lng, "register")}
+            href={generatePageUrl(lng, "auth.register")}
             as={`/${lng}/auth/register`}
             className={link({
               size: "sm",

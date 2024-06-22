@@ -1,11 +1,11 @@
 'use client';
 import React, {  } from "react";
 import { Navbar, NavbarBrand, NavbarContent, Link, Button } from '@nextui-org/react';
-import Logo from "@/app/[lng]/components/ui/logo/Logo";
-import { text } from '@/app/[lng]/components/ui/typography/Typography.style'; 
-import SwitchLanguage from "@/app/[lng]/components/ui/SwitchLanguage";
-import { Lang } from "@/app/i18n/settings";
-import { useTranslation, generatePageUrl } from "@i18n/client";
+import Logo from "@components/ui/logo/Logo";
+import { text } from '@components/ui/typography/Typography.style'; 
+import SwitchLanguage from "@components/ui/SwitchLanguage";
+import { useTranslation } from "@i18n/client";
+import { generatePageUrl, Lang } from "@i18n/settings";
 
 export default function NavbarUi({
     lng
@@ -31,7 +31,7 @@ export default function NavbarUi({
             </NavbarContent>
             <NavbarContent className='flex gap4' justify="end">
                 <SwitchLanguage lng={lng} />
-                <Button as={Link} color='primary' variant='shadow' size='md' href={generatePageUrl(lng, 'login')} >
+                <Button as={Link} color='primary' variant='shadow' size='md' href={generatePageUrl(lng, 'auth.login')} >
                     {t('header.login')}
                 </Button>
             </NavbarContent>
