@@ -71,7 +71,7 @@ type DistributeDeepPick<
     : never
   );
 
-type DeepPickWithArrayOfKeys<
+export type DeepPickWithArrayOfKeys<
   T,
   PickedKeys,
   IgnoredTypes,

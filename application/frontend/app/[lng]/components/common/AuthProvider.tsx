@@ -3,7 +3,6 @@ import {
   getProviders,
   signIn,
   LiteralUnion,
-  ClientSafeProvider,
   useSession,
 } from "next-auth/react";
 import { BuiltInProviderType } from "next-auth/providers/index";
@@ -48,7 +47,7 @@ const Provider = ({
 export default function Providers() {
   const [providers, setProviders] = useState<Record<
     LiteralUnion<BuiltInProviderType, string>,
-    ClientSafeProvider
+    { id: string; name: string }
   > | null>();
   const { status } = useSession();
 

@@ -1,4 +1,4 @@
-import {DefaultIgnoredTypes, KeysAsDotNotation} from '../types/keys-as-dot-notation';
+import { KeysAsDotNotation } from '../types/keys-as-dot-notation';
 import {IsUnion} from '../types/is-union';
 import {UnionToTuple} from '../types/union-to-tuple';
 import {IsNever} from "../types/is-never";

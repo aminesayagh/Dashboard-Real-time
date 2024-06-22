@@ -22,8 +22,8 @@ export function chain(
   }
 
   return (
-    request: NextRequest,
-    event: NextFetchEvent,
+    _: NextRequest,
+    __: NextFetchEvent,
     response: NextResponse
   ) => {
     return response

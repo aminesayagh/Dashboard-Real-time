@@ -1,8 +1,8 @@
-import { RadioGroup, Radio } from '@nextui-org/radio';
+import { RadioGroup, Radio } from '@nextui-org/react';
 import type { TRadioGroup, TRadio } from './types';
 
-const RadioGroupUi: TRadioGroup = ({ ...props }) => {
-    return <RadioGroup {...{ size: 'md', ...props }} />;
+const RadioGroupUi: TRadioGroup = ({ size = 'md',...props }) => {
+    return <RadioGroup { ...props } />;
 }
 
 export const RadioUi: TRadio = ({ ...props }) => {

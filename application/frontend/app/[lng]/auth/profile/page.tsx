@@ -1,13 +1,11 @@
 "use client";
 import "@app/globals.css";
 
-import { Card, CardHeader, CardBody, CardFooter } from "@nextui-org/react";
+import { Card, CardBody } from "@nextui-org/react";
 import Container from "@/app/[lng]/components/ui/Container";
-import Link from "next/link";
 
-export default function Home({
-    params: { lng },
-    }: {
+
+export default function Home(_: {
     params: {
         lng: "fr" | "en";
     };

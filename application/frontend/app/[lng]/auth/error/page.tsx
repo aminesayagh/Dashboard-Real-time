@@ -1,9 +1,7 @@
 "use client";
 import "@app/globals.css";
 import { Card, CardHeader, CardBody } from "@nextui-org/react";
-export default function Error({
-  params: { lng },
-}: {
+export default function Error(_: {
   params: {
     lng: "fr" | "en";
   };

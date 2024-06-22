@@ -19,9 +19,9 @@ const PasswordUi: TInput = ({ ...props }) => {
             onClick={toggleVisibility}
           >
             {isVisible ? (
-              <Icon name="EyeSlashFilledIcon" size={20} />
+              <Icon name="Show" size={20} />
             ) : (
-              <Icon name="EyeFilledIcon" size={20} />
+              <Icon name="Hide" size={20} />
             )}
           </button>
         ),

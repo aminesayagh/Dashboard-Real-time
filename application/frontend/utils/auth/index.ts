@@ -1,4 +1,4 @@
-import { NextAuthConfig } from "next-auth";
+import NextAuth, { NextAuthConfig } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import GithubProvider from "next-auth/providers/github";
 import { SECRET, NEXT_AUTH_URL } from "@utils/env";
@@ -10,8 +10,9 @@ import clientPromise from '@utils/mongodbConnect';
 import {
   GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, EMAIL_FROM,
   EMAIL_SERVER_HOST, EMAIL_SERVER_PORT, EMAIL_SERVER_USER, EMAIL_SERVER_PASSWORD
-} from './env';
-export const authOptions: NextAuthConfig = {
+} from '../env';
+
+const authOptions: NextAuthConfig = {
   callbacks: {
     async signIn({ user: _, account, email }) {
       if (!account) {
@@ -54,9 +55,7 @@ export const authOptions: NextAuthConfig = {
   adapter: MongoDBAdapter(clientPromise().then()),
   debug: true,
   secret: SECRET,
-  jwt: {
-    secret: SECRET,
-  } as any,
+  
   session: {
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60,
@@ -70,3 +69,10 @@ export const authOptions: NextAuthConfig = {
     error: `${NEXT_AUTH_URL}/auth/error`,
   }
 };
+
+export const {
+  handlers,
+  auth,
+  signIn,
+  signOut,
+} = NextAuth(authOptions);

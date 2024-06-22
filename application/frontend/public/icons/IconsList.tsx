@@ -1,4 +1,3 @@
-import React from 'react';
 
 export { default as Activity_1 } from './Outline/Activity_1.svg';
 export { default as Activity_2 } from './Outline/Activity_2.svg';

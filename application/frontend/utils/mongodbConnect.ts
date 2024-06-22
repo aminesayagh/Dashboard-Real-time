@@ -36,13 +36,13 @@ async function run() {
         client = new MongoClient(uri, options as MongoClientOptions);
         clientPromise = await client.connect();
     }
-    // try{ 
-    //     await clientPromise.db('realtime-dashboard').command({ ping: 1 });
-    //     return clientPromise;
-    // } finally {
-    //     // Ensures that the client will close when you finish/error
-    //     await clientPromise.close();
-    // }
+    try{ 
+        await clientPromise.db('realtime-dashboard').command({ ping: 1 });
+        return clientPromise;
+    } finally {
+        // Ensures that the client will close when you finish/error
+        await clientPromise.close();
+    }
 }
 
 // Export a module-scoped MongoClient promise. By doing this in a

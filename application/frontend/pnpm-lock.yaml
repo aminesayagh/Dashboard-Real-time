@@ -63,7 +63,7 @@ importers:
         specifier: 14.2.3
         version: 14.2.3(@babel/core@7.24.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.77.5)
       next-auth:
-        specifier: beta
+        specifier: 5.0.0-beta.19
         version: 5.0.0-beta.19(next@14.2.3(@babel/core@7.24.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.77.5))(react@18.3.1)
       next-i18n-router:
         specifier: ^5.5.0

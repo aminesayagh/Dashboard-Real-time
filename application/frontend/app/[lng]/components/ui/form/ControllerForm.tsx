@@ -20,7 +20,7 @@ const ControllerForm = <FV extends FieldValues>({
   }) => React.ReactElement;
   name: Path<FV>;
 }) => {
-  const { control, getFieldState, ...rest } = useFormContext<FV>();
+  const { control } = useFormContext<FV>();
   return (
     <Controller<FV>
       name={name}
