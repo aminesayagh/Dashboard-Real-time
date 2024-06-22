@@ -155,115 +155,113 @@ interface Items {
   items: (DropdownItemProps & { iconName: IconNames, link: RouteSettingPath })[];
 }
 
+const ITEMS: Items[] = [
+  {
+    id: "1",
+    section: `nav_sections.navbar_action`,
+    items: [
+      {
+        id: "1",
+        key: "dashboard",
+        iconName: "Chart",
+        description: "nav.dashboard_description",
+        link: "dash.nav.dashboard",
+      },
+      {
+        id: "2",
+        key: "department",
+        iconName: "Home_2",
+        description: "nav.department_description",
+        link: "dash.nav.department",
+      },
+      {
+        id: "3",
+        key: "analysis",
+        iconName: "Graph",
+        description: "nav.analysis_description",
+        link: "dash.nav.analysis",
+      },
+      {
+        id: "4",
+        key: "settings",
+        iconName: "Setting",
+        link: "dash.nav.settings",
+      },
+    ],
+  },
+  {
+    id: "4",
+    section: `nav_sections.user`,
+    items: [
+      {
+        id: "1",
+        key: "student",
+        iconName: "Group_1",
+        description: "nav.student_description",
+        link: "dash.user.student",
+      },
+      {
+        id: "2",
+        key: "teacher",
+        iconName: "Education",
+        description: "nav.teacher_description",
+        link: "dash.user.teacher",
+      },
+    ],
+  },
+  {
+    id: "2",
+    section: `nav_sections.taxonomies`,
+    items: [
+      {
+        id: "1",
+        key: "category",
+        iconName: "Document_Align_Right_11",
+        description: "nav.category_description",
+        link: "dash.taxonomies.category",
+      },
+    ],
+  },
+  {
+    id: "3",
+    section: `nav_sections.account`,
+    items: [
+      {
+        id: "1",
+        key: "profile",
+        description: "nav.profile_description",
+        iconName: "Profile_Square",
+        color: "primary",
+        link: "dash.account.profile",
+      },
+      {
+        id: "2",
+        key: "logout",
+        description: "nav.logout_description",
+        iconName: "Off",
+        color: "danger",
+        link: "dash.account.logout",
+      },
+    ],
+  },
+];
 
 export default function Sidebar({ lng }: { lng: Lang }) {
   const { t } = useTranslation(lng, "dash");
   const router = useRouter();
 
   
-  const ITEMS = useMemo<Items[]>(() => ([
-    {
-      id: "1",
-      section: `nav_sections.navbar_action`,
-      items: [
-        {
-          id: "1",
-          key: "dashboard",
-          iconName: "Chart",
-          description: "nav.dashboard_description",
-          link: "dash.nav.dashboard",
-        },
-        {
-          id: "2",
-          key: "department",
-          iconName: "Home_2",
-          description: "nav.department_description",
-          link: "dash.nav.department",
-        },
-        {
-          id: "3",
-          key: "analysis",
-          iconName: "Graph",
-          description: "nav.analysis_description",
-          link: "dash.nav.analysis",
-        },
-        {
-          id: "4",
-          key: "settings",
-          iconName: "Setting",
-          link: "dash.nav.settings",
-        },
-      ],
-    },
-    {
-      id: "4",
-      section: `nav_sections.user`,
-      items: [
-        {
-          id: "1",
-          key: "student",
-          iconName: "Group_1",
-          description: "nav.student_description",
-          link: "dash.user.student",
-        },
-        {
-          id: "2",
-          key: "teacher",
-          iconName: "Education",
-          description: "nav.teacher_description",
-          link: "dash.user.teacher",
-        },
-      ],
-    },
-    {
-      id: "2",
-      section: `nav_sections.taxonomies`,
-      items: [
-        {
-          id: "1",
-          key: "category",
-          iconName: "Document_Align_Right_11",
-          description: "nav.category_description",
-          link: "dash.taxonomies.category",
-        },
-      ],
-    },
-    {
-      id: "3",
-      section: `nav_sections.account`,
-      items: [
-        {
-          id: "1",
-          key: "profile",
-          description: "nav.profile_description",
-          iconName: "Profile_Square",
-          color: "primary",
-          link: "dash.account.profile",
-        },
-        {
-          id: "2",
-          key: "logout",
-          description: "nav.logout_description",
-          iconName: "Off",
-          color: "danger",
-          link: "dash.account.logout",
-        },
-      ],
-    },
-  ]), []);
   const getConcernedSubItem = useCallback((key: Key) => {
-    const concernedItem = ITEMS.find((i) => i.items.some((j) => j.key === key));
-    if (!concernedItem) {
-      console.error("Item not found");
-      return;
+    for (const item of ITEMS) {
+      for (const subItem of item.items) {
+        if (subItem.key === key) {
+          return subItem;
+        }
+      }
     }
-    const concernedSubItem = concernedItem.items.find((j) => j.key === key);
-    if (!concernedSubItem) {
-      console.error("Sub item not found");
-      return;
-    }
-    return concernedSubItem;
-  }, [ITEMS]);
+    console.error("Item not found");
+    return null;
+  }, []);
 
   const handleAction = useCallback((key: Key) => {
     const concernedItem = getConcernedSubItem(key);
@@ -282,7 +280,6 @@ export default function Sidebar({ lng }: { lng: Lang }) {
       <ScrollShadow>
         <Listbox
           variant="light"
-          onSelectionChange={(s) => console.log("List Task: ", s)}
           items={ITEMS}
           aria-label="Listbox sidebar dashboard"
           onAction={handleAction}
