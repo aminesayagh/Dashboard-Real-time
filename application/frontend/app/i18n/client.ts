@@ -11,7 +11,6 @@ export { generatePageUrl } from './settings';
 
 const runsOnServerSide = typeof window === 'undefined';
 
-// 
 i18next
   .use(initReactI18next)
   .use(LanguageDetector)
@@ -24,6 +23,7 @@ i18next
     },
     preload: runsOnServerSide ? languages : []
   })
+
 
 export function useTranslation(lng: Lang, ns: Namespace, options: any = {}) {
   const [cookies, setCookie] = useCookies([cookieName])
