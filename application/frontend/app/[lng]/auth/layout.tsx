@@ -31,23 +31,13 @@ export default function RootLayout({
   };
 }>) {
   return (
-    <html lang={lng} dir={dir(lng)} className="light">
-      <body className={inter.className}>
-        <NextUiProvider>
-          <SessionProvider>
-            <main className="light bg-background text-foreground">
-              <Container
-                size="xs"
-                className="py-24 flex flex-col gap-4 justify-start items-start"
-                as="section"
-              >
-                {children}
-                <AuthFooter lng={lng} />
-              </Container>
-            </main>
-          </SessionProvider>
-        </NextUiProvider>
-      </body>
-    </html>
+    <Container
+      size="xs"
+      className="py-24 flex flex-col gap-4 justify-start items-start"
+      as="section"
+    >
+      {children}
+      <AuthFooter lng={lng} />
+    </Container>
   );
 }

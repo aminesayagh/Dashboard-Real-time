@@ -1,3 +1,5 @@
+'use client';
+
 import { DateInput } from '@nextui-org/react';
 import type { TDateInput } from './types';
 

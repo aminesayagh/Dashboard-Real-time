@@ -1,3 +1,5 @@
+'use client';
+
 import { RadioGroup, Radio } from '@nextui-org/react';
 import type { TRadioGroup, TRadio } from './types';
 

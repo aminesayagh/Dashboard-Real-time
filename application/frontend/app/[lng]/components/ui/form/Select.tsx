@@ -1,3 +1,4 @@
+'use client';
 import { Select, SelectItem } from '@nextui-org/select';
 import type { TSelect, TSelectItem } from './types';
 

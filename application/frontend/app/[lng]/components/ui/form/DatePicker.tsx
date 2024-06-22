@@ -1,3 +1,4 @@
+'use client';
 import { DatePicker} from '@nextui-org/react';
 import type { TDatePickerInput } from './types';
 
