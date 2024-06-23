@@ -49,7 +49,7 @@ professorSchema.pre('save', async function (this: IProfessorDocument, next) {
     next();
 });
 
-professorSchema.plugin(mongoosePagination);
+professorSchema.plugin(mongoosePagination as any);
 
 export const Professor = model<IProfessorDocument, IProfessorModel>(MODEL_NAME.PROFESSOR, professorSchema);
 

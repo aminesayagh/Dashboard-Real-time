@@ -1,9 +1,12 @@
 import ExpressConfig from "./express/express.config";
 import { PORT } from "./env";
 import { dbConnect, generateMongoUri } from "./utils/mongooseConnect";
+import { connectRedis } from "./utils/mongooseCache";
 const app = ExpressConfig();
 
 const key = generateMongoUri() || '';
+
+connectRedis();
 
 dbConnect(key).then(() => {
     console.log('db connected');

@@ -1,115 +1,78 @@
 // /src/utils/mongooseCache.ts
 import { createClient, RedisClientType } from 'redis';
-import mongoose, { Query, Document } from 'mongoose';
+import { ApiRequest, ApiResponse } from "types/Api";
 import { REDIS_URI } from '../env';
+import { NextFunction } from 'express';
 
 // Create Redis client
 const redisUrl = REDIS_URI || 'redis://localhost:6379';
-const client: RedisClientType = createClient({ url: redisUrl });
+const redisClient: RedisClientType = createClient({ url: redisUrl });
 
-// Connect to Redis
-client.connect().then(() => {
-  console.log('Connected to Redis');
-}).catch(err => {
-  console.error('Redis connection error:', err);
-});
-
-const exec = mongoose.Query.prototype.exec;
-
-// Apply caching to Mongoose queries
-export function applyMongooseCache() {
-  mongoose.Query.prototype.exec = async function () {
-    const key = generateCacheKey(this);
-
-    try {
-      const cacheValue = await client.get(key);
-      if (cacheValue) {
-        console.log("I am cached")
-        return JSON.parse(cacheValue);
-      }
-
-      const args = arguments as any as [];
-      const result = await exec.apply(this, args);
-
-      
-      if (result) {
-        await client.setEx(key, 3600, JSON.stringify(result)); // Cache for 1 hour
-      }
-  
-      return result;
-    } catch (err) {
-      console.error('Cache error:', err);
-      const args = arguments as any as [];
-      return exec.apply(this, args);
-    }
-  };
-
-  const originalSave = mongoose.Model.prototype.save;
-  mongoose.Model.prototype.save = async function (...args: any) {
-    const result = await originalSave.apply(this, args);
-    await invalidateCache(result);
-    await cacheUpdatedData(result);
-    console.log("Updated the cache")
-    return result;
-  };
-
-  const originalFindOneAndUpdate = mongoose.Model.findOneAndUpdate;
-  mongoose.Model.findOneAndUpdate = function (filter: any, update: any, options: any = {}):any {
-    // Ensure options includes { new: true }
-    options.new = true;
-    const query = originalFindOneAndUpdate.call(this, filter, update, options);
-
-    // Override exec to handle cache invalidation
-    query.exec = async function () {
-      const args = arguments as any as [];
-      const result = await exec.apply(this, args);
-      const key = generateCacheKey(this);
-      if (result) {
-        await invalidateCache(result);
-        await client.setEx(key, 3600, JSON.stringify(result)); // Cache for 1 hour
-        console.log("Updated the cache after findOneAndUpdate");
-      }
-      return result;
-    };
-    return query;
-  };
-
-  async function invalidateCache(doc: Document) {
-    const model = doc.constructor as mongoose.Model<any>;
-    const query = model.findById(doc._id);
-    const key = generateCacheKey(query);
-    const keys = await client.keys(key);
-    if (keys.length) {
-      await client.del(keys);
-    }
-  }
-
-  async function cacheUpdatedData(doc: Document) {
-    const model = doc.constructor as mongoose.Model<any>;
-    const query = model.findById(doc._id);
-    const key = generateCacheKey(query);
-    const result = await query.exec();
-    if (result) {
-      await client.setEx(key, 3600, JSON.stringify(result)); // Cache for 1 hour
-    }
-  }
-
-  function generateCacheKey(query: Query<any, any>): string {
-    return JSON.stringify({
-      ...query.getQuery(),
-      collection: query.model.collection.name || "",
-      options: getQueryOptions(query) || {},
-      projection: query.projection() || {}
-    });
-  }
-
-  function getQueryOptions(query: Query<any, any>): Record<string, any> {
-    return {
-      sort: query.getOptions().sort,
-      limit: query.getOptions().limit,
-      skip: query.getOptions().skip,
-      lean: query.getOptions().lean,
-      populate: query.getOptions().populate
-    };
-  }
+export const connectRedis = async () => {
+  // Connect to Redis
+  await redisClient.connect().then(() => {
+    console.log('Connected to Redis');
+  }).catch(err => {
+    console.error('Redis connection error:', err);
+  });
 }
+
+export const disconnectRedis = async () => {
+  // Disconnect from Redis
+  await redisClient.quit().then(() => {
+    console.log('Disconnected from Redis');
+  }).catch(err => {
+    console.error('Redis disconnection error:', err);
+  });
+}
+
+// Middleware to handle caching for GET requests
+export const cacheMiddleware = async (req: ApiRequest, res: ApiResponse, next: NextFunction) => {
+  if (req.method === 'GET') {
+    const key = req.originalUrl;
+    try {
+      const data = await redisClient.get(key);
+      if (data) {
+        console.log("I am cached")
+        res.send(JSON.parse(data));
+      } else {
+        const originalSend = res.send.bind(res);
+        res.send = (body: any) => {
+          redisClient.setEx(key, 3600, JSON.stringify(body)); // Cache for 1 hour
+          return originalSend(body);
+        };
+        next();
+      }
+    } catch (err) {
+      console.error(err);
+      next();
+    }
+  } else {
+    next();
+  }
+};
+
+// @ts-ignore
+export const invalidateCacheMiddleware = async (req: ApiRequest, res: ApiResponse, next: NextFunction) => {
+  if (['POST', 'PUT', 'DELETE', 'PATCH'].includes(req.method)) {
+    const baseUrl = req.baseUrl || req.url;
+    const parts = baseUrl.split('/');
+    parts.pop(); 
+    const pattern = `${parts.join('/')}*`;
+    try {
+      const keys = await redisClient.keys(pattern);
+      if (keys.length > 0) {
+        await redisClient.del(keys);
+        console.log(`Invalidated cache for keys: ${keys.join(', ')}`);
+      }
+      next();
+    } catch (err) {
+      console.error(err);
+      next();
+    }
+  } else {
+    next();
+  }
+};
+
+export default redisClient;

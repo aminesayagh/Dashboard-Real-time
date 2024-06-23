@@ -21,14 +21,14 @@ services:
       - MONGO_TEST_DB=app_db_test
       - MONGO_URI=db:27017
       - MONGO_ATLAS=${MONGO_ATLAS}
-      - MONGO_USER=${MONGO_USER}
-      - MONGO_PASSWORD=${MONGO_PASSWORD}
-      - USER_MAILER_USER=${USER_MAILER_USER}
-      - USER_MAILER_PASSWORD=${USER_MAILER_PASSWORD}
-      - CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME}
-      - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
-      - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
-      - REDIS_URI=${REDIS_URI}
+      - MONGO_USER=user
+      - MONGO_PASSWORD=password
+      - USER_MAILER_USER=mail@gmail.com
+      - USER_MAILER_PASSWORD=password
+      - CLOUDINARY_CLOUD_NAME=cloud_name
+      - CLOUDINARY_API_KEY=api_key
+      - CLOUDINARY_API_SECRET=api_secret
+      - REDIS_URI=redis://redis:6379
     depends_on:
       - db
       - redis
@@ -41,8 +41,8 @@ services:
     volumes:
       - ./data/db:/data/db
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USER}
-      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+      - MONGO_INITDB_ROOT_USERNAME=user
+      - MONGO_INITDB_ROOT_PASSWORD=password
 
   redis:
     image: redis:latest
