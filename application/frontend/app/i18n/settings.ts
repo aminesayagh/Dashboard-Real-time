@@ -33,10 +33,18 @@ export const ROUTER_CONFIGS = {
         },
         'profile': {
             path: '/auth/profile'
+        },
+        'verify': {
+            path: '/auth/verify'
+        },
+        'error': {
+            path: '/auth/error'
+        },
+        'logout': {
+            path: '/auth/logout'
         }
     },
     'dash': {
-        
         'account': {
             'profile': {
                 path: '/dash/account/profile'

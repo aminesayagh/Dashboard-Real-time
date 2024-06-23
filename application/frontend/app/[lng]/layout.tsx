@@ -1,6 +1,8 @@
+
 import type { Metadata } from "next";
 import "@app/globals.css";
 import { dir } from "i18next";
+
 
 import { Inter } from "next/font/google";
 import { languages } from "@i18n/settings";
@@ -28,6 +30,7 @@ export default function RootLayout({
     lng: "fr" | "en";
   };
 }>) {
+
   return (
     <html lang={lng} dir={dir(lng)} className="light">
       <body className={inter.className}>

@@ -7,7 +7,7 @@ const key = generateMongoUri() || '';
 
 dbConnect(key).then(() => {
     console.log('db connected');
-}).catch((error: any) => {
+}).catch((error: Error) => {
     console.log('Error connecting to MongoDB.');
     console.log(error);
 })

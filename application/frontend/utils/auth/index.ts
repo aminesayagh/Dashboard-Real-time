@@ -6,6 +6,7 @@ import { MongoDBAdapter } from '@next-auth/mongodb-adapter';
 import EmailProvider from "next-auth/providers/email";
 
 import clientPromise from '@utils/mongodbConnect';
+import { generatePageUrl } from "@/app/i18n/settings";
 
 import {
   GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, EMAIL_FROM,
@@ -62,11 +63,11 @@ const authOptions: NextAuthConfig = {
   },
   basePath: "/api/auth",
   pages: {
-    signIn: `${NEXT_AUTH_URL}/auth/login`,
-    signOut: `${NEXT_AUTH_URL}/auth/logout`,
-    newUser: `${NEXT_AUTH_URL}/auth/profile`,
-    verifyRequest: `${NEXT_AUTH_URL}/auth/verify-request`,
-    error: `${NEXT_AUTH_URL}/auth/error`,
+    signIn: generatePageUrl('en', "auth.login"), 
+    signOut: generatePageUrl('en', "home"), // Redirect to home page after sign out
+    newUser: generatePageUrl('en', "auth.profile"),
+    verifyRequest: generatePageUrl('en', "auth.verify"),
+    error: generatePageUrl('en', "auth.error"),
   }
 };
 
@@ -74,5 +75,5 @@ export const {
   handlers,
   auth,
   signIn,
-  signOut,
+  signOut
 } = NextAuth(authOptions);

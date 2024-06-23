@@ -1,16 +1,17 @@
 import { Types, Document } from "mongoose";
 
-export type DocumentBase = {
+export type DocumentBase<T> = {
     _id: Types.ObjectId;
     created_at: string;
     updated_at: string;
-}
+} & T;
 
 // Default document type with necessary fields and methods
-export type DefaultDocument<T> = T & 
-  Omit<Document, "toObject"> & {
-    toObject: () => T & DocumentBase;
-  } & DocumentBase;
+export type DefaultDocument<T> = Omit<Document, "toObject"> & {
+    toObject: () => DocumentBase<T>;
+  } & DocumentBase<T>;
+
+export type PublicDocument<T> = ReturnType<DefaultDocument<T>["toObject"]>;
 
 // Type for the object form of the document
 export type ObjectDocument<T> = ReturnType<DefaultDocument<T>["toObject"]>;

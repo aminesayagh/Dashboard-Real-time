@@ -23,3 +23,7 @@ export const ERRORS = {
     FAILED_TO_CREATE_RESOURCE: 'Failed to create resource',
     FAILED_TO_DELETE_MEDIA: 'Failed to delete media',
 } as const;
+
+export const MESSAGE = {
+    EMAIL_SENT: 'Email sent',
+} as const;

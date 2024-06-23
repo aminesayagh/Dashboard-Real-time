@@ -1,5 +1,5 @@
 import express from 'express';
-import { ERRORS } from '../constants/ERRORS';
+import { ERRORS } from '../constants/MESSAGE';
 import StudentModel, { IStudentDocument } from '../model/Student.model';
 import { ApiRequest, ApiResponse } from 'types/Api';
 const router = express.Router();

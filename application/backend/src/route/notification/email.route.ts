@@ -1,11 +1,11 @@
 import nodemailer from 'nodemailer';
 import Mail from "nodemailer/lib/mailer";
+import { z } from 'zod';
 
 import express from 'express';
 import { ApiResponse, ApiRequest } from "types/Api";
 
 const router = express.Router();
-import { z } from 'zod';
 
 const zodPostEmail = z.object({
     to: z.string().email(),
@@ -15,9 +15,13 @@ const zodPostEmail = z.object({
 });
 
 import { USER_MAILER_USER, USER_MAILER_PASSWORD } from '../../env';   
-import { ERRORS } from '../../constants/ERRORS';
+import { ERRORS, MESSAGE } from '../../constants/MESSAGE';
 
-router.post('/email', async (req: ApiRequest<z.infer<typeof zodPostEmail>>, res: ApiResponse) => {
+interface EmailResponse {
+    message: typeof MESSAGE.EMAIL_SENT;
+    info: any;
+}
+router.post('/email', async (req: ApiRequest<z.infer<typeof zodPostEmail>>, res: ApiResponse<EmailResponse>) => {
     try {
         const { to, subject, body, text } = zodPostEmail.parse(req.body);
         const transporter = nodemailer.createTransport({
@@ -42,7 +46,7 @@ router.post('/email', async (req: ApiRequest<z.infer<typeof zodPostEmail>>, res:
             if (error) {
                 res.status(500).json({ status: 'error', message: ERRORS.INTERNAL_SERVER_ERROR });
             } else {
-                res.status(200).json({ status: 'success', data: {message: 'Email sent', info} });
+                res.status(200).json({ status: 'success', data: {message: MESSAGE.EMAIL_SENT, info} });
             }
         });
     } catch (error) {

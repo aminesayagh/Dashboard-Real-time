@@ -12,11 +12,11 @@ export default function Home(_: {
     }) {
     return (
         <Container size='xs' className='py-24 flex flex-col gap-4 justify-start'>
-        <Card>
-            <CardBody>
-            Error message
-            </CardBody>
-        </Card>
+            <Card>
+                <CardBody>
+                    <h1>Profile</h1>
+                </CardBody>
+            </Card>
         </Container>
     );
 }

@@ -1,4 +1,5 @@
 "use client"
+import { signOut } from '@auth/helpers';
 
 export default function Dashboard({
     params: { lng: _ }
@@ -7,10 +8,11 @@ export default function Dashboard({
         lng: "fr" | "en";
     };
 }) {
+    signOut();
 
     return (
         <div>
-            Page content
+            Sign out
         </div>
     );
 }

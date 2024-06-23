@@ -1,7 +1,7 @@
 import express from 'express';
-import { ERRORS } from '../constants/ERRORS';
+import { ERRORS } from '../constants/MESSAGE';
 import UniversityPeriodModel, { IUniversityPeriodDocument } from '../model/UniversityPeriod.model';
-import { ApiRequest, ApiResponse, ApiResponsePagination } from 'types/Api';
+import { ApiRequest, ApiResponse, ApiResponsePagination, IApiDeleteResponse } from 'types/Api';
 import qs from 'qs';
 const router = express.Router();
 
@@ -110,7 +110,7 @@ router.put('/:id', async (req: ApiRequest<Partial<IUniversityPeriodDocument>, {}
         res.status(400).send({ status: 'error', message: err.message });
     }
 });
-router.delete('/:id', async (req: ApiRequest<{}, {}, { id: string }>, res: ApiResponse<{ deletedCount: number }>) => {
+router.delete('/:id', async (req: ApiRequest<{}, {}, { id: string }>, res: IApiDeleteResponse) => {
     const { id } = req.params;
     try{
         const result = await UniversityPeriodModel.deleteOne({ _id: id })
@@ -131,7 +131,7 @@ router.get('/:id/next', async (req: ApiRequest<{}, {}, { id: string }>, res: Api
             res.status(404).send({ status: 'error', message: ERRORS.NOT_FOUND });
             return;
         }
-        res.send({
+        res.status(200).send({
             status: 'success',
             data: result
         });
@@ -147,9 +147,9 @@ router.get('/:id/previous', async (req: ApiRequest<{}, {}, { id: string }>, res:
             res.status(404).send({ status: 'error', message: ERRORS.NOT_FOUND });
             return;
         }
-        res.send({
+        res.status(200).send({
             status: 'success',
-            data: result
+            data: result.toObject()
         });
     }catch (err:any) {
         res.status(400).send({ status: 'error', message: err.message });

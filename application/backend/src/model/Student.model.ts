@@ -1,7 +1,7 @@
 import { Types, Schema, model, PaginateModel } from 'mongoose';
 import { MODEL_NAME, STATE_STUDENT_ARRAY, STATE_STUDENT, TStateStudent, stateStudentRole } from '../constants/DB';
 import { DefaultDocument } from 'types/Mongoose';
-import { ERRORS } from '../constants/ERRORS';
+import { ERRORS } from '../constants/MESSAGE';
 
 interface IStudent {
     user_id: Types.ObjectId;

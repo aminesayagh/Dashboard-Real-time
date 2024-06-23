@@ -1,6 +1,6 @@
 import express from 'express';
 const router = express.Router();
-import { ERRORS } from '../constants/ERRORS';
+import { ERRORS } from '../constants/MESSAGE';
 import ProfessorModel, { IProfessorDocument } from '../model/Professor.model';
 import { ApiRequest, ApiResponse, ApiResponsePagination } from 'types/Api';
 import qs from 'qs';

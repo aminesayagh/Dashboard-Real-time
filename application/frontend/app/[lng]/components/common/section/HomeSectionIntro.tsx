@@ -1,4 +1,4 @@
-"use strict";
+"use client";
 
 import { Lang } from "@/app/i18n/settings";
 import Container from "@/app/[lng]/components/ui/Container";

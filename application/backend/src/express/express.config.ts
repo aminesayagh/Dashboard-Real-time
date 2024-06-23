@@ -9,7 +9,7 @@ import morgan from "morgan" // HTTP request logger middleware for node.js
 import cors from 'cors';
 import rateLimit from "express-rate-limit"; // rate limiting middleware
 
-const handlerError = (error: any, req: ApiRequest, res: ApiResponse, _: NextFunction) => {
+const handlerError = (error: any, req: ApiRequest, res: ApiResponse<unknown>, _: NextFunction) => {
   console.error({
     message: error.message,
     stack: error.stack,
@@ -26,7 +26,7 @@ const handlerError = (error: any, req: ApiRequest, res: ApiResponse, _: NextFunc
   })
 }
 
-const handlerInfoRoute = (req: ApiRequest, _: ApiResponse, next: NextFunction) => {
+const handlerInfoRoute = (req: ApiRequest, _: ApiResponse<unknown>, next: NextFunction) => {
   console.log({
     message: "Request received",
     path: req.path,

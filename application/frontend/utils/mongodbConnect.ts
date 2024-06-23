@@ -2,7 +2,7 @@
 import { MongoClient, ServerApiVersion } from "mongodb";
 import type { MongoClientOptions } from "mongodb";
 
-import { MONGODB_URI } from "@utils/env";
+import { MONGODB_URI, ENV } from "@utils/env";
 const uri = MONGODB_URI || "";
 const options = {
     serverApi: {
@@ -19,8 +19,8 @@ if (!uri) {
 }
 
 async function run() {
-    let clientPromise;
-    if (process.env.NODE_ENV === "development") {
+    let clientPromise: MongoClient;
+    if (ENV === "development") {
         // In development mode, use a global variable so that the value
         // is preserved across module reloads caused by HMR (Hot Module Replacement).
         // @ts-ignore
@@ -36,13 +36,7 @@ async function run() {
         client = new MongoClient(uri, options as MongoClientOptions);
         clientPromise = await client.connect();
     }
-    try{ 
-        await clientPromise.db('realtime-dashboard').command({ ping: 1 });
-        return clientPromise;
-    } finally {
-        // Ensures that the client will close when you finish/error
-        await clientPromise.close();
-    }
+    return clientPromise;
 }
 
 // Export a module-scoped MongoClient promise. By doing this in a

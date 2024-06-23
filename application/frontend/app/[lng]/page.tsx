@@ -1,20 +1,21 @@
-"use client";
 import Navbar from "./Navbar";
 import HomeSectionIntro from "@/app/[lng]/components/common/section/HomeSectionIntro";
 import HomeSectionFaq from "@/app/[lng]/components/common/section/HomeSectionFaq";
 
-export default function Home({
+export default async function Home({
   params: { lng },
 }: {
   params: {
     lng: "fr" | "en";
   };
 }) {
+  if (!lng) return null;
+  console.log(lng);
   return (
     <>
-      <Navbar lng={lng} />
-      <HomeSectionIntro lang={lng} />
-      <HomeSectionFaq lang={lng} />
+      <Navbar lng={lng || 'en'} />
+      <HomeSectionIntro lang={lng || 'en'} />
+      <HomeSectionFaq lang={lng || 'en'} />
     </>
   );
 }

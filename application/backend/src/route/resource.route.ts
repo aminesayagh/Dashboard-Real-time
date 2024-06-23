@@ -1,6 +1,6 @@
 import express from 'express';
-import { ERRORS } from '../constants/ERRORS';
-import { ApiRequest, ApiResponse } from 'types/Api';
+import { ERRORS } from '../constants/MESSAGE';
+import { ApiRequest, ApiResponse, IApiDeleteResponse } from 'types/Api';
 import multer from 'multer';
 import { v2 as cloudinary } from 'cloudinary';
 import DatauriParser from 'datauri/parser';
@@ -229,7 +229,7 @@ router.delete('/:id/attachments/:attachment_id', async (req: ApiRequest<{}, { id
         data
     });
 });
-router.delete('/:id', async (req: ApiRequest, res: ApiResponse<IResourceDocument>): Promise<void> => {
+router.delete('/:id', async (req: ApiRequest, res: IApiDeleteResponse): Promise<void> => {
     const { id } = req.params;
     const resource = await ResourceModel.findByIdAndDelete(id).catch((err) => {
         throw new Error(err);
@@ -241,7 +241,6 @@ router.delete('/:id', async (req: ApiRequest, res: ApiResponse<IResourceDocument
         });
         return;
     }
-    const data = resource.toObject();
     // delete media from cloudinary
     await Promise.all(resource.resource_media.map(async (media) => {
         await deleteMedia(media.media_public_id).catch((err) => {
@@ -251,7 +250,9 @@ router.delete('/:id', async (req: ApiRequest, res: ApiResponse<IResourceDocument
     
     res.status(200).json({
         status: 'success',
-        data
+        data: {
+            deletedCount: 1
+        }
     });
 });
 
