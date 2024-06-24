@@ -51,6 +51,4 @@ professorSchema.pre('save', async function (this: IProfessorDocument, next) {
 
 export const Professor = model<IProfessorDocument, IProfessorModel>(MODEL_NAME.PROFESSOR, professorSchema);
 
-Professor.paginate().then();
-
 export default Professor;

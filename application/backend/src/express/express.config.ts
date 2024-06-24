@@ -1,4 +1,4 @@
-import express, { Application, NextFunction } from "express";
+import express, { Application, NextFunction, Express } from "express";
 import { ApiResponse, ApiRequest } from "types/Api";
 import compression from "compression" // compresses requests
 import cookieParser from "cookie-parser" // parses cookie header and populates req.cookies
@@ -8,6 +8,7 @@ import helmet from "helmet" // sets HTTP headers to protect from well-known web 
 import morgan from "morgan" // HTTP request logger middleware for node.js
 import cors from 'cors';
 import rateLimit from "express-rate-limit"; // rate limiting middleware
+import { generateTypeString, getRoutes } from "../helpers/path";
 
 const handlerError = (error: any, req: ApiRequest, res: ApiResponse<unknown>, _: NextFunction) => {
   console.error({
@@ -38,6 +39,35 @@ const handlerInfoRoute = (req: ApiRequest, _: ApiResponse<unknown>, next: NextFu
   next();
 }
 
+const handlerNotFound = (_: ApiRequest, res: ApiResponse<unknown>) => {
+  return res.status(404).json({
+    message: "Resource not found",
+    status: "error"
+  });
+}
+
+const handlerPath = (app: Express) => (_: ApiRequest, res: ApiResponse<{
+  path: string 
+}>) => {
+  try{
+    const routes = getRoutes(app);
+    const typeString = generateTypeString(routes);
+    res.status(200).json({
+      status: "success",
+      data: {
+        path: typeString
+      }
+    });
+  } catch(err) {
+    console.error(err);
+    res.status(500).json({
+      message: "Internal server error",
+      status: "error"
+    });
+  }
+};
+
+
 const ExpressConfig = (): Application => {
   const app = express()
   app.use(compression()) // Compress all routes 
@@ -63,9 +93,10 @@ const ExpressConfig = (): Application => {
   app.use(handlerError);
 
   app.use('/api', apiRoutes);
-  app.get('/check', (_, res) => {
-      res.json('Server is running');
-  });
+  
+  app.get('/api/v1/path', handlerPath(app));
+
+  app.use(handlerNotFound);
 
 
   return app
@@ -73,4 +104,4 @@ const ExpressConfig = (): Application => {
 
 
 
-export default ExpressConfig
+export default ExpressConfig;

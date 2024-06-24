@@ -1,9 +1,9 @@
 // testSetup.ts
-import { MONGO_USER, MONGO_PASSWORD, MONGO_URI, MONGO_TEST_DB } from '../env';
-import { dbConnect, dbDisconnect, clearDatabase, generateMongoUri } from './mongooseConnect';
+import { MONGO_URI } from '../env';
+import { dbConnect, dbDisconnect, clearDatabase  } from './mongooseConnect';
 
 export const setupTestDB = async () => {
-  const uri = generateMongoUri(MONGO_USER, MONGO_PASSWORD, MONGO_URI, MONGO_TEST_DB);
+  const uri = MONGO_URI;
   await dbConnect(uri);
   await clearDatabase();
 };

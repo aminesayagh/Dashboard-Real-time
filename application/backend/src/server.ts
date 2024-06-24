@@ -1,11 +1,10 @@
 import ExpressConfig from "./express/express.config";
-import { PORT } from "./env";
-import { dbConnect, generateMongoUri } from "./utils/mongooseConnect";
+import { dbConnect } from "./utils/mongooseConnect";
+import { MONGO_URI, PORT } from "./env";
 const app = ExpressConfig();
 
-const key = generateMongoUri() || '';
 
-dbConnect(key).then(() => {
+dbConnect(MONGO_URI).then(() => {
     console.log('db connected');
 }).catch((error: Error) => {
     console.log('Error connecting to MongoDB.');

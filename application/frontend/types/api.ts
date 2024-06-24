@@ -23,6 +23,5 @@ export interface ApiResponseError extends IApiResponseBase {
     message: string;
 }
 
-
 // Type alias for an API response with generic data
 export type ApiResponse<T> = ApiResponseSuccess<T> | ApiResponseError;

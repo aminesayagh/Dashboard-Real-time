@@ -12,6 +12,7 @@ import Authenticated from './Authenticated';
 import { ValidatedSession } from './Authenticated';
 
 import { useProfile } from '@query/profile';
+
 export function Profiled({ children, redirect, lng, sessions, rights }: {
     children: (profile: any) => JSX.Element,
     redirect: RouteSettingPath,

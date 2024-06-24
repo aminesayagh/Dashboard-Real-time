@@ -21,7 +21,7 @@ interface EmailResponse {
     message: typeof MESSAGE.EMAIL_SENT;
     info: any;
 }
-router.post('/email', async (req: ApiRequest<z.infer<typeof zodPostEmail>>, res: ApiResponse<EmailResponse>) => {
+router.post('/send', async (req: ApiRequest<z.infer<typeof zodPostEmail>>, res: ApiResponse<EmailResponse>) => {
     try {
         const { to, subject, body, text } = zodPostEmail.parse(req.body);
         const transporter = nodemailer.createTransport({

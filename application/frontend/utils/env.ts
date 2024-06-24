@@ -14,6 +14,7 @@ const emvVariables = z.object({
     EMAIL_SERVER_PASSWORD: z.string(),
     EMAIL_FROM: z.string(),
     NODE_ENV: z.enum(["development", "production"]),
+    BACKEND_URL: z.string(),
 });
 
 export type TEnvVariables = z.infer<typeof emvVariables>;
@@ -42,3 +43,4 @@ export const EMAIL_SERVER_USER = myEnvVariables.EMAIL_SERVER_USER;
 export const EMAIL_SERVER_PASSWORD = myEnvVariables.EMAIL_SERVER_PASSWORD;
 export const EMAIL_FROM = myEnvVariables.EMAIL_FROM;
 export const ENV = myEnvVariables.NODE_ENV;
+export const BACKEND_URL = myEnvVariables.BACKEND_URL;
