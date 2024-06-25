@@ -1,6 +1,7 @@
 import Navbar from "./Navbar";
 import HomeSectionIntro from "@common/section/HomeSectionIntro";
 import HomeSectionFaq from "@common/section/HomeSectionFaq";
+
 export default async function Home({
   params: { lng },
 }: {
