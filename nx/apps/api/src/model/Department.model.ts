@@ -1,15 +1,8 @@
-import { Schema, model, Types } from 'mongoose';
-import { PaginateModel } from 'mongoose';
-import { DefaultDocument } from 'types/Mongoose';
-import { MODEL_NAME } from '../constants/DB';
+import { Schema, model, PaginateModel } from 'mongoose';
 import mongoosePagination from 'mongoose-paginate-v2';
+import { MODEL_NAME } from 'shared-ts';
+import { IDepartmentDocument  } from 'types/Model';
 
-export interface IDepartment {
-    department_name: string;
-    responsible_id: Types.ObjectId;
-}
-
-export interface IDepartmentDocument extends DefaultDocument<IDepartment> {};
 
 export interface IDepartmentModel extends PaginateModel<IDepartmentDocument> {};
 

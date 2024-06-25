@@ -1,15 +1,9 @@
-import { Types, Document } from "mongoose";
+import { Types, Document } from 'mongoose';
+import { BaseDocument as ExternalBaseDocument, DefaultDocument as ExternalDefaultDocument } from 'shared-ts'
 
-export type DocumentBase<T> = {
-    _id: Types.ObjectId;
-    created_at: string;
-    updated_at: string;
-} & T;
+export type BaseDocument<T> = ExternalBaseDocument<T, Types.ObjectId>; 
+export type DefaultDocument<T> = ExternalDefaultDocument<T, Types.ObjectId, Document<T>>;
 
-// Default document type with necessary fields and methods
-export type DefaultDocument<T> = Omit<Document, "toObject"> & {
-    toObject: () => DocumentBase<T>;
-  } & DocumentBase<T>;
 
 export type PublicDocument<T> = ReturnType<DefaultDocument<T>["toObject"]>;
 

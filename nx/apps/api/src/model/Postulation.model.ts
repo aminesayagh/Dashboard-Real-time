@@ -1,14 +1,10 @@
-import { Schema, model, Types, PaginateModel, ObjectId } from 'mongoose';
-import { DefaultDocument } from 'types/Mongoose';
-import { MODEL_NAME, TStatePostulation, STATE_POSTULATION } from '../constants/DB';
+import { Schema, model,  PaginateModel } from 'mongoose';
+import { MODEL_NAME, STATE_POSTULATION } from 'shared-ts';
+import { IPostulationDocument, IPostulationContentDocument } from 'types/Model';
 import mongoosePagination from 'mongoose-paginate-v2';
 
-export interface IPostulationContent {
-    postulation_content_body: ObjectId;
-    postulation_content_type: ObjectId;
-}
 
-export interface IPostulationContentDocument extends DefaultDocument<IPostulationContent> {};
+
 
 const PostulationContentSchema = new Schema<IPostulationContentDocument>({
     postulation_content_body: {
@@ -28,16 +24,6 @@ const PostulationContentSchema = new Schema<IPostulationContentDocument>({
     }
 });
 
-export interface IPostulation {
-    resources_id?: Types.ObjectId[];
-    user_id: Types.ObjectId;
-    postulation_department_id: Types.ObjectId;
-    postulation_state: TStatePostulation;
-    postulation_type: Types.ObjectId;
-    postulation_content: IPostulationContentDocument[];
-}
-
-export interface IPostulationDocument extends DefaultDocument<IPostulation> {};
 
 export interface IPostulationModel extends PaginateModel<IPostulationDocument> {};
 

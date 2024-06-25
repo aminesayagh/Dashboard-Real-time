@@ -1,6 +1,7 @@
 import express from 'express';
 import { ERRORS } from '../constants/MESSAGE';
-import StudentModel, { IStudentDocument } from '../model/Student.model';
+import StudentModel from '../model/Student.model';
+import { IStudentDocument } from 'types/Model';
 import { ApiRequest, ApiResponse } from 'types/Api';
 const router = express.Router();
 

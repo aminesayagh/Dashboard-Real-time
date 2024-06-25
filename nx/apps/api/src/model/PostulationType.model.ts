@@ -1,17 +1,11 @@
-import { Schema, Types ,PaginateModel, model } from "mongoose";
+import { Schema ,PaginateModel, model } from "mongoose";
 import { DefaultDocument } from "types/Mongoose";
-import { MODEL_NAME } from "../constants/DB";
+import { MODEL_NAME, IPostulationType } from "shared-ts";
 import mongoosePagination from 'mongoose-paginate-v2';
 
-export interface IPostulationType {
-    taxonomies_id: Types.ObjectId[];
-    department_id: Types.ObjectId;
-    postulation_type_period: Types.ObjectId[];
-    postulation_type_name: string;
-    postulation_type_content: Types.ObjectId[];
-}
 
-export interface IPostulationTypeDocument extends DefaultDocument<IPostulationType> {};
+
+export interface IPostulationTypeDocument extends DefaultDocument<IPostulationType<ObjectId>> {};
 
 export interface IPostulationTypeModel extends PaginateModel<IPostulationTypeDocument> {};
 

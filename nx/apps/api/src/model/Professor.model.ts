@@ -1,15 +1,8 @@
 import { Schema, model, PaginateModel } from 'mongoose';
-import { MODEL_NAME, STATE_PROFESSOR_ARRAY, STATE_PROFESSOR, TStateProfessor } from '../constants/DB';
-import { DefaultDocument } from 'types/Mongoose';
+import { MODEL_NAME, STATE_PROFESSOR_ARRAY, STATE_PROFESSOR } from 'shared-ts';
 import { ERRORS } from '../constants/MESSAGE';
+import { IProfessorDocument } from 'types/Model';
 
-interface IProfessor {
-    user_id: Schema.Types.ObjectId;
-    professor_office_location: string;
-    professor_state: TStateProfessor;
-}
-
-export interface IProfessorDocument extends DefaultDocument<IProfessor> {}
 
 export interface IProfessorModel extends PaginateModel<IProfessorDocument> {}
 
@@ -40,7 +33,7 @@ const professorSchema = new Schema<IProfessorDocument, IProfessorModel>({
     },
 });
 
-professorSchema.pre('save', async function (this: IProfessorDocument, next) {
+professorSchema.pre('save', async function (this, next) {
     const user = await this.model(MODEL_NAME.USER).findById(this.user_id);
     if (!user) {
         next(new Error(ERRORS.USER_NOT_FOUND));

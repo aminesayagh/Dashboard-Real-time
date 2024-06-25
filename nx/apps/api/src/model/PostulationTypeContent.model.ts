@@ -1,16 +1,8 @@
 import { Schema ,PaginateModel, model } from "mongoose";
-import { DefaultDocument } from "types/Mongoose";
-import { MODEL_NAME, TModelName } from "../constants/DB";
+import { MODEL_NAME,  } from "shared-ts";
+import { IPostulationTypeContentDocument } from 'types/Model';
 
-export interface IPostulationTypeContent {
-    postulation_type_content_name: string;
-    postulation_type_content_description: string;
-    postulation_type_content_type: TModelName;
-    postulation_type_content_required: boolean;
-    postulation_type_content_options?: string[]; // for select type
-}
 
-export interface IPostulationTypeContentDocument extends DefaultDocument<IPostulationTypeContent> {};
 
 export interface IPostulationTypeModel extends PaginateModel<IPostulationTypeContentDocument> {};
 

@@ -1,18 +1,9 @@
 import { Types, Schema, model, PaginateModel } from 'mongoose';
-import { MODEL_NAME, STATE_STUDENT_ARRAY, STATE_STUDENT, TStateStudent, stateStudentRole } from '../constants/DB';
-import { DefaultDocument } from 'types/Mongoose';
+import { MODEL_NAME, STATE_STUDENT_ARRAY, STATE_STUDENT, TStateStudent, stateStudentRole } from 'shared-ts';
 import { ERRORS } from '../constants/MESSAGE';
+import { IStudentDocument } from 'types/Model';
 
-interface IStudent {
-    user_id: Types.ObjectId;
-    student_cne: string;
-    student_number: string;
-    student_state: TStateStudent;
-}
-
-export interface IStudentModel extends PaginateModel<IStudentDocument> {}
-
-export interface IStudentDocument extends DefaultDocument<IStudent> {
+export interface IStudentModel extends PaginateModel<IStudentDocument> {
     findByUserId(user_id: Types.ObjectId): Promise<IStudentDocument | null>;
     findByCne(cne: string): Promise<IStudentDocument | null>;
     findByStudentNumber(student_number: string): Promise<IStudentDocument | null>;

@@ -2,10 +2,11 @@ import express from 'express';
 const router = express.Router();
 import { ApiResponsePagination, ApiRequest, ApiResponse, IApiDeleteResponse } from "types/Api";
 import { ERRORS } from '../constants/MESSAGE';
-import DepartmentModel, { IDepartmentDocument } from '../model/Department.model';
-import LocationModel, { ILocationDocument } from '../model/Location.model';
+import DepartmentModel from '../model/Department.model';
+import LocationModel from '../model/Location.model';
 import qs from 'qs';
-import PostulationModel, { IPostulation } from '../model/Postulation.model';
+import PostulationModel from '../model/Postulation.model';
+import { IDepartmentDocument, ILocationDocument, IPostulationDocument } from 'types/Model';
 
 router.get('/', async (req: ApiRequest, res: ApiResponsePagination<IDepartmentDocument>): Promise<void> => {
     const { filter, ...options } = qs.parse(req.query) as any;
@@ -186,7 +187,7 @@ router.delete('/:id/locations/:location_id', async (req: ApiRequest<unknown, unk
     }
 });
 
-router.get('/:id/postulations', async (req: ApiRequest<any, any, { id: string; }>, res: ApiResponsePagination<IPostulation>): Promise<void> => {
+router.get('/:id/postulations', async (req: ApiRequest<any, any, { id: string; }>, res: ApiResponsePagination<IPostulationDocument>): Promise<void> => {
     const { id } = req.params;
     const { filter, ...options } = qs.parse(req.query) as any;
     try {
@@ -204,7 +205,7 @@ router.get('/:id/postulations', async (req: ApiRequest<any, any, { id: string; }
     }
 });
 
-router.post('/:id/postulations', async (req: ApiRequest<Partial<IPostulation>, any, { id: string; }>, res: ApiResponse<IPostulation>): Promise<void> => {
+router.post('/:id/postulations', async (req: ApiRequest<Partial<IPostulationDocument>, any, { id: string; }>, res: ApiResponse<IPostulationDocument>): Promise<void> => {
     const { id } = req.params;
     try {
         const postulation = new PostulationModel({ ...req.body, postulation_department_id: id });
@@ -222,7 +223,7 @@ router.post('/:id/postulations', async (req: ApiRequest<Partial<IPostulation>, a
     }
 });
 
-router.get('/:id/postulations/:postulation_id', async (req: ApiRequest<any, any, { id: string; postulation_id: string; }>, res: ApiResponse<IPostulation>): Promise<void> => {
+router.get('/:id/postulations/:postulation_id', async (req: ApiRequest<any, any, { id: string; postulation_id: string; }>, res: ApiResponse<IPostulationDocument>): Promise<void> => {
     const { id, postulation_id } = req.params;
     try {
         const postulation = await PostulationModel.findOne({ _id: postulation_id, postulation_department_id: id });
@@ -239,7 +240,7 @@ router.get('/:id/postulations/:postulation_id', async (req: ApiRequest<any, any,
     }
 });
 
-router.put('/:id/postulations/:postulation_id', async (req: ApiRequest<Partial<IPostulation>, any, { id: string; postulation_id: string; }>, res: ApiResponse<IPostulation>): Promise<void> => {
+router.put('/:id/postulations/:postulation_id', async (req: ApiRequest<Partial<IPostulationDocument>, any, { id: string; postulation_id: string; }>, res: ApiResponse<IPostulationDocument>): Promise<void> => {
     const { id, postulation_id } = req.params;
     try {
         console.log(await PostulationModel.findOne({ _id: postulation_id, postulation_department_id: id }))

@@ -7,7 +7,9 @@ import DatauriParser from 'datauri/parser';
 import path from 'path';
 import z from 'zod';
 
-import ResourceModel, { IAttachmentDocument, IMediaDocument, IResourceDocument } from '../model/Resource.model';
+import ResourceModel from '../model/Resource.model';
+// import {  IAttachmentDocument, IMediaDocument, IResourceDocument } from 'types/Model';
+i
 const router = express.Router();
 
 const zodResourceType = z.enum(['image', 'video', 'raw', 'auto']);
@@ -23,7 +25,7 @@ import {
     CLOUDINARY_API_SECRET,
     CLOUDINARY_CLOUD_NAME
 } from '../env';
-import { STATE_RESOURCE } from '../constants/DB';
+import { IResource, STATE_RESOURCE } from 'shared-ts';
 
 cloudinary.config({
     cloud_name: CLOUDINARY_CLOUD_NAME,
@@ -57,7 +59,7 @@ const deleteMedia = async (public_id: string) => {
 }
 router.post('/', multer().any(), async (req: ApiRequest<
     Partial<IResourceDocument> & { file: Express.Multer.File[] }
-    >, res: ApiResponse<IResourceDocument>): Promise<void> => {
+    >, res: ApiResponse<IResource<ObjectId>>): Promise<void> => {
     const files = req.files;
     if (!files) {
         res.status(400).json({

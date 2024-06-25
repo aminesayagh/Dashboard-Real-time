@@ -2,7 +2,7 @@ import express from 'express';
 import qs from 'qs';
 import UserModel, { IUserDocument } from "../model/User.model";
 import { ApiResponsePagination, ApiRequest, ApiResponse, IApiDeleteResponse } from "types/Api";
-import { IUserMeAggregate } from 'types/Aggregate';
+import { IUserMeAggregate } from 'types/Model';
 import { ERRORS } from '../constants/MESSAGE';
 
 const router = express.Router();

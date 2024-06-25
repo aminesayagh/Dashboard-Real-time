@@ -1,25 +1,7 @@
-import { PaginateModel } from 'mongoose';
-import { Schema, model, Types } from 'mongoose';
+import { PaginateModel, Schema, model, Types } from 'mongoose';
 import mongoosePagination from 'mongoose-paginate-v2';
-import { STATE_USER_ROLE, MODEL_NAME, GENDER_ARRAY, TGender, TStateUserRole, stateUserRole } from '../constants/DB';
-import { DefaultDocument } from 'types/Mongoose';
-import { IUserMeAggregate, IUserAggregate } from 'types/Aggregate';
-
-interface IUser {
-    user_first_name?: string;
-    user_last_name?: string;
-    email: string;
-    name: string;
-    user_roles: TStateUserRole[];
-    user_avatar?: Types.ObjectId;
-    user_gender: TGender;
-    user_cin?: string;
-    user_phone?: string;
-    user_address?: string;
-    user_address_secondary?: string;
-    emailVerified: Date;
-    image: string;
-}
+import { STATE_USER_ROLE, MODEL_NAME, GENDER_ARRAY, TStateUserRole, stateUserRole } from 'shared-ts';
+import { IUserDocument as IUserDocumentExtended,  IUserMeAggregate, IUserAggregate } from 'types/Model';
 
 interface IUserMethods {
     addUserRole(role: TStateUserRole): Promise<IUserDocument>;
@@ -33,7 +15,7 @@ interface IUserMethods {
     profile(id: string): Promise<IUserAggregate>;
 }
 
-export interface IUserDocument extends DefaultDocument<IUser>, IUserMethods {}
+export interface IUserDocument extends IUserDocumentExtended, IUserMethods {}
 export interface IUserModel extends PaginateModel<IUserDocument>, IUserMethods {}
 
 const userSchema = new Schema<IUserDocument, IUserModel>({

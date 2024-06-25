@@ -1,7 +1,8 @@
 import express from 'express';
 import { ERRORS } from '../constants/MESSAGE';
-import UniversityPeriodModel, { IUniversityPeriodDocument } from '../model/UniversityPeriod.model';
+import UniversityPeriodModel from '../model/UniversityPeriod.model';
 import { ApiRequest, ApiResponse, ApiResponsePagination, IApiDeleteResponse } from 'types/Api';
+import { IUniversityPeriodDocument } from 'types/Model';
 import qs from 'qs';
 const router = express.Router();
 

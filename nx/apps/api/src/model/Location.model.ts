@@ -1,16 +1,7 @@
-import { Schema, model, Types } from 'mongoose';
-import { PaginateModel } from 'mongoose';
-import { DefaultDocument } from 'types/Mongoose';
-import { MODEL_NAME } from '../constants/DB';
+import { Schema, model, PaginateModel, ObjectId } from 'mongoose';
+import { MODEL_NAME } from 'shared-ts';
 import mongoosePagination from 'mongoose-paginate-v2';
-
-export interface ILocation {
-    location_name: string;
-    location_reference: string;
-    department_id: Types.ObjectId;
-}
-
-export interface ILocationDocument extends DefaultDocument<ILocation> {};
+import { ILocationDocument } from 'types/Model';
 export interface ILocationModel extends PaginateModel<ILocationDocument> {};
 
 const LocationSchema = new Schema<ILocationDocument, ILocationModel>({

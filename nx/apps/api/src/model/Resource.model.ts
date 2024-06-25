@@ -1,13 +1,7 @@
 import { Types, PaginateModel, Schema, model, Model } from 'mongoose';
-import { MODEL_NAME, STATE_RESOURCE_ARRAY, STATE_RESOURCE, TStateResource, TStateAttachment, STATE_ATTACHMENT_ARRAY, STATE_ATTACHMENT, TModelName, MODEL_NAME_ARRAY } from '../constants/DB';
-import { DefaultDocument } from 'types/Mongoose';
-
-interface IMedia {
-    media_source: string;
-    media_public_id: string;
-    media_signature: string;
-    media_url: string;
-}
+import { MODEL_NAME, IMedia, STATE_RESOURCE_ARRAY, STATE_RESOURCE, TStateResource, STATE_ATTACHMENT_ARRAY, STATE_ATTACHMENT, MODEL_NAME_ARRAY } from 'shared-ts';
+import { DefaultDocument } from '../types/Mongoose';
+import { IAttachmentDocument } from 'types/Model';
 
 
 
@@ -15,17 +9,12 @@ export interface IMediaDocument extends DefaultDocument<IMedia> {};
 
 export interface IMediaModel extends Model<IMediaDocument> {};
 
-interface IAttachment {
-    attachment_reference: Types.ObjectId;
-    attachment_collection: TModelName;
-    attachment_state: TStateAttachment;
-}
 
-export interface IAttachmentDocument extends DefaultDocument<IAttachment> {};
+
 
 export interface IAttachmentModel extends Model<IAttachmentDocument> {};
 
-const attachmentSchema = new Schema<IAttachment, IAttachmentModel>({
+const attachmentSchema = new Schema<IAttachmentDocument, IAttachmentModel>({
     attachment_reference: {
         type: Schema.Types.ObjectId,
         required: true,

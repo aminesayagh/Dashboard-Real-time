@@ -1,16 +1,7 @@
-import { Schema, model, PaginateModel, Types } from 'mongoose';
-import { DefaultDocument } from 'types/Mongoose';
-import { MODEL_NAME, TStatePostulation, STATE_POSTULATION } from '../constants/DB';
+import { Schema, model, PaginateModel } from 'mongoose';
+import { MODEL_NAME, STATE_POSTULATION } from 'shared-ts';
 import mongoosePagination from 'mongoose-paginate-v2';
-
-export interface IUniversityPeriod {
-    period_name: string;
-    period_date_start: Date;
-    period_date_end: Date;
-    period_state: TStatePostulation;
-    period_next?: Types.ObjectId;
-    period_previous?: Types.ObjectId;
-}
+import { IUniversityPeriodDocument } from 'types/Model';
 
 interface IUniversityMethod {
     findByPeriodName(period_name: string): Promise<IUniversityPeriodDocument | null>;
@@ -19,7 +10,6 @@ interface IUniversityMethod {
     updateCurrentPeriod(): Promise<IUniversityPeriodDocument>;
 }
 
-export interface IUniversityPeriodDocument extends DefaultDocument<IUniversityPeriod>, IUniversityMethod {};
 
 export interface IUniversityPeriodModel extends PaginateModel<IUniversityPeriodDocument>, IUniversityMethod {};
 
