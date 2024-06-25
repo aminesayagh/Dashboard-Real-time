@@ -1,6 +1,7 @@
 import Navbar from "./Navbar";
-import HomeSectionIntro from "@/app/[lng]/components/common/section/HomeSectionIntro";
-import HomeSectionFaq from "@/app/[lng]/components/common/section/HomeSectionFaq";
+import HomeSectionIntro from "@common/section/HomeSectionIntro";
+import HomeSectionFaq from "@common/section/HomeSectionFaq";
+import { sharedFunction } from '@fsac-monorepo/types';
 
 export default async function Home({
   params: { lng },

@@ -2,6 +2,7 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
+
   "scripts": {
     "test": "jest --runInBand",
     "start": "node dist/server.js",
@@ -33,7 +34,8 @@
     "qs": "^6.12.1",
     "redis": "^4.6.14",
     "winston": "^3.13.0",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "@fsac-monorepo/types": "workspace:*"
   },
   "devDependencies": {
     "@types/compression": "^1.7.5",

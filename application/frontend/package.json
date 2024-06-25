@@ -46,7 +46,8 @@
     "tabler-icons-react": "^1.56.0",
     "tailwind-merge": "^2.3.0",
     "tailwind-styled-components": "^2.2.0",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "@fsac-monorepo/types": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^20.14.2",

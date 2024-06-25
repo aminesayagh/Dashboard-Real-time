@@ -1,0 +1,22 @@
+{
+    "fields": {
+        "email": {
+            "label": "Email Address",
+            "placeholder": "Enter your email address",
+            "default": "your_email@gmail.com"
+        },
+        "password": {
+            "label": "Password",
+            "placeholder": "Enter your password"
+        }
+    },
+    "buttons": {
+        "continue_with_email": "Continue with Email",
+        "continue_with_google": "Continue with Google",
+        "continue_with_github": "Continue with GitHub"
+    },
+    "errors": {
+        "email": "Please enter a valid email address",
+        "invalid_format": "Please enter a valid {{field}} format"
+    }
+}

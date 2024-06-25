@@ -36,6 +36,7 @@
       "@providers/*": ["./app/[lng]/providers/*"],
       "@auth": ["./utils/auth/index"],
       "@auth/*": ["./utils/auth/*"],
+      "@fsac-monorepo/types": ["../packages/types/src"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "svgr.d.ts"],

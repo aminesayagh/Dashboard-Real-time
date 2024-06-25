@@ -1,0 +1,9 @@
+{
+    "name": "fsac-monorepo",
+    "private": true,
+    "workspaces": [
+        "backend",
+        "frontend",
+        "packages/types"
+    ]
+}
