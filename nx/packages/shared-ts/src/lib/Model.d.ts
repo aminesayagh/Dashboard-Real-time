@@ -1,7 +1,6 @@
 import { TStateUserRole, TGender, TStatePostulation, TStateStudent, TModelName, TStateAttachment, TStateResource, TStateProfessor,  } from "./DB";
-import { BaseDocument, DefaultDocument } from "./mongodb";
 
-export interface IUser<ObjectId> {
+export interface User<ObjectId = string> {
   user_first_name?: string;
   user_last_name?: string;
   email: string;
@@ -18,7 +17,7 @@ export interface IUser<ObjectId> {
 }
 
 
-export interface IUniversityPeriod<ObjectId> {
+export interface UniversityPeriod<ObjectId = string> {
   period_name: string;
   period_date_start: Date;
   period_date_end: Date;
@@ -27,7 +26,7 @@ export interface IUniversityPeriod<ObjectId> {
   period_previous?: ObjectId;
 }
 
-export interface ITaxonomy<ObjectId> {
+export interface Taxonomy<ObjectId = string> {
     taxonomy_type: string;
     taxonomy_value: string;
     taxonomy_parent_id?: ObjectId;
@@ -37,21 +36,21 @@ export interface ITaxonomy<ObjectId> {
 }
 
 
-export interface IStudent<ObjectId> {
+export interface Student<ObjectId = string> {
   user_id: ObjectId;
   student_cne: string;
   student_number: string;
   student_state: TStateStudent;
 }
 
-export interface IMedia {
+export interface Media {
   media_source: string;
   media_public_id: string;
   media_signature: string;
   media_url: string;
 }
 
-export interface IAttachment<ObjectId> {
+export interface Attachment<ObjectId = string> {
   attachment_reference: ObjectId;
   attachment_collection: TModelName;
   attachment_state: TStateAttachment;
@@ -59,17 +58,17 @@ export interface IAttachment<ObjectId> {
 
 
 
-export interface IResource<ObjectId> {
+export interface Resource<ObjectId = string> {
   resource_name: string;
-  resource_media: IMedia[]
+  resource_media: Media[]
   resource_owner: ObjectId;
   resource_type: string;
   resource_state: TStateResource;
-  resource_attachments: IAttachment<ObjectId>[];
+  resource_attachments: Attachment<ObjectId>[];
 }
 
 
-export interface IProfessor<ObjectId> {
+export interface Professor<ObjectId = string> {
   user_id: ObjectId;
   professor_office_location: string;
   professor_state: TStateProfessor;
@@ -77,7 +76,7 @@ export interface IProfessor<ObjectId> {
 
 
 
-export interface IPostulationTypeContent {
+export interface PostulationTypeContent {
   postulation_type_content_name: string;
   postulation_type_content_description: string;
   postulation_type_content_type: TModelName;
@@ -85,7 +84,7 @@ export interface IPostulationTypeContent {
   postulation_type_content_options?: string[]; // for select type
 }
 
-export interface IPostulationType<ObjectId> {
+export interface PostulationType<ObjectId = string> {
   taxonomies_id: ObjectId[];
   department_id: ObjectId;
   postulation_type_period: ObjectId[];
@@ -93,48 +92,46 @@ export interface IPostulationType<ObjectId> {
   postulation_type_content: ObjectId[];
 }
 
-export interface IPostulationContent<ObjectId> {
+export interface PostulationContent<ObjectId = string> {
   postulation_content_body: ObjectId;
   postulation_content_type: ObjectId;
 }
 
 
 
-export interface IPostulation<ObjectId, Document> {
+export interface Postulation<ObjectId = string> {
   resources_id?: ObjectId[];
   user_id: ObjectId;
   postulation_department_id: ObjectId;
   postulation_state: TStatePostulation;
   postulation_type: ObjectId;
-  postulation_content: DefaultDocument<IPostulationContent<ObjectId> ,ObjectId, Document>[];
+  postulation_content: PostulationContent<ObjectId>[];
 }
 
 
-export interface IDepartment<ObjectId> {
+export interface Department<ObjectId = string> {
   department_name: string;
   responsible_id: ObjectId;
 }
 
 
-export interface ILocation<ObjectId> {
+export interface Location<ObjectId = string> {
   location_name: string;
   location_reference: string;
   department_id: ObjectId;
 }
 
-export type IUserDocument<ObjectId, Document> = DefaultDocument<IUser<ObjectId>, ObjectId, Document>;
-export type ITaxonomyDocument<ObjectId, Document> = DefaultDocument<ITaxonomy<ObjectId>, ObjectId, Document>;
-export type IStudentDocument<ObjectId, Document> = DefaultDocument<IStudent<ObjectId>, ObjectId, Document>;
-export type IMediaDocument<ObjectId, Document> = DefaultDocument<IMedia, ObjectId, Document>;
-export type IResourceDocument<ObjectId, Document> = DefaultDocument<IResource<ObjectId>, ObjectId, Document>;
-export type IAttachmentDocument<ObjectId, Document> = DefaultDocument<IAttachment<ObjectId>, ObjectId, Document>;
-export type AttachmentObject<ObjectId> = BaseDocument<IAttachment<ObjectId>, ObjectId>;
-export type IProfessorDocument<ObjectId, Document> = DefaultDocument<IProfessor<ObjectId>, ObjectId, Document>;
-export type ILocationDocument<ObjectId, Document> = DefaultDocument<ILocation<ObjectId>, ObjectId, Document>;
-export type IDepartmentDocument<ObjectId, Document> = DefaultDocument<IDepartment<ObjectId>, ObjectId, Document>;
-export type IPostulationDocument<ObjectId, Document> = DefaultDocument<IPostulation<ObjectId, Document>, ObjectId, Document>;
-export type IPostulationContentDocument<ObjectId, Document> = DefaultDocument<IPostulationContent<ObjectId>, ObjectId, Document>;
-export type IPostulationTypeDocument<ObjectId, Document> = DefaultDocument<IPostulationType<ObjectId>, ObjectId, Document>;
-export type IPostulationTypeContentDocument<ObjectId, Document> = DefaultDocument<IPostulationTypeContent, ObjectId, Document>;
-export type IUniversityPeriodDocument<ObjectId, Document> = DefaultDocument<IUniversityPeriod<ObjectId>, ObjectId, Document>;
+export interface UserMeAggregate<ObjectId = string> extends Omit<User<ObjectId>, 'user_avatar'> {
+  user_avatar: Resource<ObjectId>;
+  student_doc?: Student<ObjectId>;
+  professor_doc?: Professor<ObjectId>;
+  department_managed_doc?: Department<ObjectId>;
+  taxonomies_managed_doc?: Taxonomy<ObjectId>[];
+  postulation_docs?: Postulation<ObjectId>[];
+}
+
+export interface UserAggregate<ObjectId = string> extends Omit<User<ObjectId>, 'user_avatar'> {
+  student : Student<ObjectId>;
+  professor : Professor<ObjectId>;
+}
 

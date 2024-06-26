@@ -1,8 +1,7 @@
 import { PaginateModel, Schema, model, Types, HydratedDocument, Model } from 'mongoose';
 import mongoosePagination from 'mongoose-paginate-v2';
 import { STATE_USER_ROLE, MODEL_NAME, GENDER_ARRAY, TStateUserRole, stateUserRole } from 'shared-ts';
-import {  IUserMeAggregate, IUserAggregate, User } from 'types/Model';
-
+import { UserMeAggregate, UserAggregate, User } from '../types/Models';
 
 interface UserMethods {
     addUserRole(role: TStateUserRole): Promise<HydratedUser>;
@@ -11,14 +10,12 @@ interface UserMethods {
     addLastPasswordReset(password: string): Promise<HydratedUser>;
     verifyPasswordExist(password: string): Promise<boolean>;
     verifyPassword(password: string): Promise<boolean>;
-    findByEmail(email: string): Promise<HydratedUser | null>;
-    me(id: string): Promise<IUserMeAggregate>;
 }
 
 interface UserStatics {
-    profile(id: string): Promise<IUserAggregate>;
+    profile(id: string): Promise<UserAggregate>;
     findByEmail(email: string): Promise<HydratedUser | null>;
-    me(id: string): Promise<IUserMeAggregate>;
+    me(id: string): Promise<UserMeAggregate>;
 }
 interface UserVirtual {}
 
@@ -156,7 +153,7 @@ userSchema.statics.findByEmail = async function (this, email) {
 
 userSchema.statics.me = async function (this, id) {
     const _id = new Types.ObjectId(id);
-    const userAggregate = await this.aggregate<IUserMeAggregate>([
+    const userAggregate = await this.aggregate<UserMeAggregate>([
         { $match: { _id } },
         {
             $lookup: {

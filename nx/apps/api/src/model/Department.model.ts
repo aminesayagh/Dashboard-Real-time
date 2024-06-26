@@ -1,12 +1,18 @@
-import { Schema, model, PaginateModel } from 'mongoose';
-import mongoosePagination from 'mongoose-paginate-v2';
+import { Schema, model, Model, HydratedDocument } from 'mongoose';
 import { MODEL_NAME } from 'shared-ts';
-import { IDepartmentDocument  } from 'types/Model';
+import { Department } from '../types/Models';
+
+interface DepartmentMethods {}  
+
+interface DepartmentStatics {}
+
+interface DepartmentVirtual {}
+
+export type DepartmentModel = Model<Department, {}, DepartmentMethods, DepartmentVirtual> & DepartmentStatics;  
+export type HydratedDepartment = HydratedDocument<Department, DepartmentMethods & DepartmentVirtual>;
 
 
-export interface IDepartmentModel extends PaginateModel<IDepartmentDocument> {};
-
-const DepartmentSchema = new Schema<IDepartmentDocument, IDepartmentModel>({
+const DepartmentSchema = new Schema<Department, DepartmentModel, DepartmentMethods, DepartmentVirtual>({
     department_name: {
         type: String,
         required: true,
@@ -22,15 +28,12 @@ const DepartmentSchema = new Schema<IDepartmentDocument, IDepartmentModel>({
 }, {
     strict: true,
     timestamps: {
-        createdAt: 'created_at',
-        updatedAt: 'updated_at',
+        createdAt: 'createdAt',
+        updatedAt: 'updatedAt',
     }
 });
 
-DepartmentSchema.plugin(mongoosePagination as any);
+const Department = model<Department, DepartmentModel>(MODEL_NAME.DEPARTMENT, DepartmentSchema, MODEL_NAME.DEPARTMENT.toLowerCase());
 
-const Department = model<IDepartmentDocument, IDepartmentModel>(MODEL_NAME.DEPARTMENT, DepartmentSchema);
-
-Department.paginate().then();
 
 export default Department; 

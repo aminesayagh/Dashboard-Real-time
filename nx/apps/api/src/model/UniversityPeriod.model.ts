@@ -1,19 +1,26 @@
-import { Schema, model, PaginateModel } from 'mongoose';
+import { Schema, model, Model, HydratedDocument } from 'mongoose';
 import { MODEL_NAME, STATE_POSTULATION } from 'shared-ts';
-import mongoosePagination from 'mongoose-paginate-v2';
-import { IUniversityPeriodDocument } from 'types/Model';
+import { UniversityPeriod } from '../types/Models';
+import { Document} from 'mongoose';
 
-interface IUniversityMethod {
-    findByPeriodName(period_name: string): Promise<IUniversityPeriodDocument | null>;
-    findByDate(date: Date): Promise<IUniversityPeriodDocument | null>;
-    findCurrentPeriod(): Promise<IUniversityPeriodDocument | null>;
-    updateCurrentPeriod(): Promise<IUniversityPeriodDocument>;
+interface UniversityMethods {
+
 }
 
+interface UniversityStatics {
+    findByPeriodName(period_name: string): Promise<UniversityPeriod | null>;
+    findByDate(date: Date): Promise<UniversityPeriod | null>;
+    findCurrentPeriod(): Promise<UniversityPeriod | null>;
+    updateCurrentPeriod(): Promise<UniversityPeriod>;
+}
 
-export interface IUniversityPeriodModel extends PaginateModel<IUniversityPeriodDocument> {};
+interface UniversityVirtual {}
 
-const UniversityPeriodSchema = new Schema<IUniversityPeriodDocument, IUniversityPeriodModel, IUniversityMethod>({
+
+export type UniversityPeriodModel = Model<UniversityPeriod, {}, UniversityMethods, UniversityVirtual> & UniversityStatics;
+export type HydratedUniversityPeriod = HydratedDocument<UniversityPeriod, UniversityMethods & UniversityVirtual>;
+
+const UniversityPeriodSchema = new Schema<UniversityPeriod, UniversityPeriodModel, UniversityMethods, UniversityVirtual>({
     period_name: {
         type: String,
         required: true,
@@ -31,12 +38,6 @@ const UniversityPeriodSchema = new Schema<IUniversityPeriodDocument, IUniversity
     },
     period_state: {
         type: String,
-        required: function () {
-            if (this.isNew) {
-                return true;
-            }
-            return false;
-        },
         enum: Object.values(STATE_POSTULATION),
         default: STATE_POSTULATION.ON_HOLD,
     },
@@ -52,15 +53,15 @@ const UniversityPeriodSchema = new Schema<IUniversityPeriodDocument, IUniversity
 }, {
     strict: true,
     timestamps: {
-        createdAt: 'created_at',
-        updatedAt: 'updated_at',
+        createdAt: 'createdAt',
+        updatedAt: 'updatedAt',
     }
 });
 
 // override the saving method to add the next and previous period to the current period
-UniversityPeriodSchema.pre('save', async function (next) {
+UniversityPeriodSchema.pre<HydratedUniversityPeriod>('save', async function (next) {
     if (this.isNew) {
-        const previous_period = await this.model(MODEL_NAME.UNIVERSITY_PERIOD).findOne({ period_next: null }) as IUniversityPeriodDocument;
+        const previous_period = await this.model(MODEL_NAME.UNIVERSITY_PERIOD).findOne({ period_next: null }) as HydratedUniversityPeriod;
         if (previous_period) {
             previous_period.period_next = this._id;
             this.period_previous = previous_period._id;
@@ -82,8 +83,8 @@ UniversityPeriodSchema.statics.findCurrentPeriod = async function () {
     return this.findOne({ period_date_start: { $lte: new Date() }, period_date_end: { $gte: new Date() } });
 }
 
-UniversityPeriodSchema.statics.updateCurrentPeriod = async function (newPeriod: Partial<IUniversityPeriodDocument>) {
-    const currentPeriod = await this.findCurrentPeriod() as IUniversityPeriodDocument;
+UniversityPeriodSchema.statics.updateCurrentPeriod = async function (newPeriod) {
+    const currentPeriod = await this.findCurrentPeriod() as HydratedUniversityPeriod;
     if (currentPeriod) {
         if (newPeriod.period_state) {
             currentPeriod.period_state = newPeriod.period_state;
@@ -102,10 +103,8 @@ UniversityPeriodSchema.statics.updateCurrentPeriod = async function (newPeriod: 
     return this.create(newPeriod);
 };
 
-UniversityPeriodSchema.plugin(mongoosePagination as any);
 
-const UniversityPeriod = model<IUniversityPeriodDocument, IUniversityPeriodModel>(MODEL_NAME.UNIVERSITY_PERIOD, UniversityPeriodSchema);
+const UniversityPeriod = model<UniversityPeriod, UniversityPeriodModel>(MODEL_NAME.UNIVERSITY_PERIOD, UniversityPeriodSchema, MODEL_NAME.UNIVERSITY_PERIOD.toLocaleLowerCase());
 
-UniversityPeriod.paginate().then();
 
 export default UniversityPeriod;

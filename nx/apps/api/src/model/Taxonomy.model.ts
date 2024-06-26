@@ -1,13 +1,18 @@
-import { Schema, model } from 'mongoose';
-import { PaginateModel } from 'mongoose';
+import { Schema, model, HydratedDocument, Model } from 'mongoose';
 import { MODEL_NAME, STATE_POSTULATION } from 'shared-ts';
-import mongoosePagination from 'mongoose-paginate-v2';
-import { ITaxonomyDocument } from 'types/Model';
+import { Taxonomy } from '../types/Models';
+
+interface TaxonomyMethods {}
+
+interface TaxonomyStatics {}
+
+interface TaxonomyVirtual {}
+
+export type TaxonomyModel = Model<Taxonomy, {}, TaxonomyMethods, TaxonomyVirtual> & TaxonomyStatics;
+export type HydratedTaxonomy = HydratedDocument<Taxonomy, TaxonomyMethods & TaxonomyVirtual>;
 
 
-export interface ITaxonomyModel extends PaginateModel<ITaxonomyDocument> {};
-
-const TaxonomySchema = new Schema<ITaxonomyDocument, ITaxonomyModel>({
+const TaxonomySchema = new Schema<Taxonomy, TaxonomyModel, TaxonomyMethods, TaxonomyVirtual>({
     taxonomy_type: {
         type: String,
         required: true,
@@ -44,15 +49,12 @@ const TaxonomySchema = new Schema<ITaxonomyDocument, ITaxonomyModel>({
 }, {
     strict: true,
     timestamps: {
-        createdAt: 'created_at',
-        updatedAt: 'updated_at',
+        createdAt: 'createdAt',
+        updatedAt: 'updatedAt',
     }
 });
 
-TaxonomySchema.plugin(mongoosePagination as any);
+const Taxonomy = model<Taxonomy, TaxonomyModel>(MODEL_NAME.TAXONOMY, TaxonomySchema);
 
-const Taxonomy = model<ITaxonomyDocument, ITaxonomyModel>(MODEL_NAME.TAXONOMY, TaxonomySchema);
-
-Taxonomy.paginate().then();
 
 export default Taxonomy;

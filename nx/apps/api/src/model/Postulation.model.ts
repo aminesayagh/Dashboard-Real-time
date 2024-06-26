@@ -1,11 +1,18 @@
-import { Schema, model,  PaginateModel } from 'mongoose';
+import { Schema, model, Model, HydratedDocument } from 'mongoose';
 import { MODEL_NAME, STATE_POSTULATION } from 'shared-ts';
-import { IPostulationDocument, IPostulationContentDocument } from 'types/Model';
+import { Postulation, PostulationContent } from '../types/Models';
 import mongoosePagination from 'mongoose-paginate-v2';
 
+interface PostulationContentMethods {}
 
+interface PostulationContentStatics {}
 
-const PostulationContentSchema = new Schema<IPostulationContentDocument>({
+interface PostulationContentVirtual {}
+
+export type PostulationContentModel = Model<PostulationContent, {}, PostulationContentMethods, PostulationContentVirtual> & PostulationContentStatics;
+export type HydratedPostulationContent = HydratedDocument<PostulationContent, PostulationContentMethods & PostulationContentVirtual>;
+
+const PostulationContentSchema = new Schema<PostulationContent, PostulationContentModel, PostulationContentMethods, PostulationContentVirtual>({
     postulation_content_body: {
         type: Schema.Types.ObjectId,
         required: true,
@@ -18,15 +25,23 @@ const PostulationContentSchema = new Schema<IPostulationContentDocument>({
 }, {
     strict: true,
     timestamps: {
-        createdAt: 'created_at',
-        updatedAt: 'updated_at',
+        createdAt: 'createdAt',
+        updatedAt: 'updatedAt',
     }
 });
 
 
-export interface IPostulationModel extends PaginateModel<IPostulationDocument> {};
+interface PostulationMethods {}
 
-const PostulationSchema = new Schema<IPostulationDocument, IPostulationModel>({
+interface PostulationStatics {}
+
+interface PostulationVirtual {} 
+
+export type PostulationModel = Model<Postulation, {}, PostulationMethods, PostulationVirtual> & PostulationStatics;
+export type HydratedPostulation = HydratedDocument<Postulation, PostulationMethods & PostulationVirtual>;
+
+
+const PostulationSchema = new Schema<Postulation, PostulationModel, PostulationMethods, PostulationVirtual>({
     resources_id: {
         type: [Schema.Types.ObjectId],
         ref: MODEL_NAME.RESOURCE,
@@ -56,15 +71,13 @@ const PostulationSchema = new Schema<IPostulationDocument, IPostulationModel>({
 }, {
     strict: true,
     timestamps: {
-        createdAt: 'created_at',
-        updatedAt: 'updated_at',
+        createdAt: 'createdAt',
+        updatedAt: 'updatedAt',
     }
 });
 
 PostulationSchema.plugin(mongoosePagination as any);
 
-const Postulation = model<IPostulationDocument, IPostulationModel>(MODEL_NAME.POSTULATION, PostulationSchema);
-
-Postulation.paginate().then();
+const Postulation = model<Postulation, PostulationModel>(MODEL_NAME.POSTULATION, PostulationSchema);
 
 export default Postulation;

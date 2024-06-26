@@ -1,18 +1,23 @@
-import { Types, Schema, model, PaginateModel } from 'mongoose';
-import { MODEL_NAME, STATE_STUDENT_ARRAY, STATE_STUDENT, TStateStudent, stateStudentRole } from 'shared-ts';
+import { Types, Schema, model, PaginateModel, Model, HydratedDocument } from 'mongoose';
+import { MODEL_NAME, STATE_STUDENT_ARRAY, STATE_STUDENT, stateStudentRole } from 'shared-ts';
 import { ERRORS } from '../constants/MESSAGE';
-import { IStudentDocument } from 'types/Model';
+import { Student } from '../types/Models';
 
-interface IStudentMethods {
-    findByUserId(user_id: Types.ObjectId): Promise<IStudentDocument | null>;
-    findByCne(cne: string): Promise<IStudentDocument | null>;
-    findByStudentNumber(student_number: string): Promise<IStudentDocument | null>;
-    updateStudentRole(state_student: TStateStudent): Promise<IStudentDocument>;
-}
-export interface IStudentModel extends PaginateModel<IStudentDocument> {
+interface StudentMethods {
 }
 
-const studentSchema = new Schema<IStudentDocument, IStudentModel, IStudentMethods>({
+interface StudentStatics {
+    findByUserId(user_id: Types.ObjectId): Promise<HydratedStudent | null>;
+    findByCne(cne: string): Promise<HydratedStudent | null>;
+    findByStudentNumber(student_number: string): Promise<HydratedStudent | null>;
+    updateStudentRole(state_student: HydratedStudent): Promise<HydratedStudent>;
+}
+interface StudentVirtual {}
+
+export type StudentModel = Model<Student, {}, StudentMethods, StudentVirtual> & StudentStatics;
+export type HydratedStudent = HydratedDocument<Student, StudentMethods & StudentVirtual>;
+
+const studentSchema = new Schema<Student, StudentModel, StudentMethods, StudentVirtual>({
     user_id: {
         type: Schema.Types.ObjectId,
         required: true,
@@ -43,13 +48,13 @@ const studentSchema = new Schema<IStudentDocument, IStudentModel, IStudentMethod
 }, {
     strict: true,
     timestamps: {
-        createdAt: 'created_at',
-        updatedAt: 'updated_at',
+        createdAt: 'createdAt',
+        updatedAt: 'updatedAt',
     }
 });
 
 // override the default save method to check if the user_id exist in the database user before saving
-studentSchema.pre('save', async function (this: IStudentDocument, next) {
+studentSchema.pre('save', async function (this, next) {
     const user = await this.model(MODEL_NAME.USER).findById(this.user_id);
     if (!user) {
         throw new Error(ERRORS.USER_NOT_FOUND);
@@ -57,19 +62,19 @@ studentSchema.pre('save', async function (this: IStudentDocument, next) {
     next();
 });
 
-studentSchema.statics.findByUserId = async function (user_id: Types.ObjectId) {
+studentSchema.statics.findByUserId = async function (user_id) {
     return this.findOne({ user_id });
 };
 
-studentSchema.statics.findByCne = async function (cne: string) {
+studentSchema.statics.findByCne = async function (cne) {
     return this.findOne({ cne });
 };
 
-studentSchema.statics.findByStudentNumber = async function (student_number: string) {
+studentSchema.statics.findByStudentNumber = async function (student_number) {
     return this.findOne({ student_number });
 };
 
-studentSchema.method('updateStudentRole', async function (this: IStudentDocument, state_student: TStateStudent) {
+studentSchema.method('updateStudentRole', async function (this, state_student) {
     if (!stateStudentRole.translateState(this.student_state, state_student)) {
         throw new Error(ERRORS.INVALID_STATE_TRANSITION_STUDENT);
     }
@@ -80,6 +85,6 @@ studentSchema.method('updateStudentRole', async function (this: IStudentDocument
 
 studentSchema.index({ user_id: 1 }, { unique: true });
 
-const StudentModel = model<IStudentDocument, IStudentModel>(MODEL_NAME.STUDENT, studentSchema);
+const StudentModel = model<Student, StudentModel>(MODEL_NAME.STUDENT, studentSchema);
 
 export default StudentModel;

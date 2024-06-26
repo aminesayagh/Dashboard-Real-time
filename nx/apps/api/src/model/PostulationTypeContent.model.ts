@@ -1,12 +1,19 @@
-import { Schema ,PaginateModel, model } from "mongoose";
+import { Schema ,Model, model } from "mongoose";
 import { MODEL_NAME,  } from "shared-ts";
-import { IPostulationTypeContentDocument } from 'types/Model';
+import { PostulationTypeContent } from '../types/Models';
 
+interface PostulationTypeContentMethods {}
 
+interface PostulationTypeStatics {}
 
-export interface IPostulationTypeModel extends PaginateModel<IPostulationTypeContentDocument> {};
+interface PostulationTypeContentVirtual {}
 
-const PostulationTypeContentSchema = new Schema<IPostulationTypeContentDocument, IPostulationTypeModel>({
+export type PostulationTypeContentModel = Model<PostulationTypeContent, {}, PostulationTypeContentMethods, PostulationTypeContentVirtual> & PostulationTypeStatics;
+export type HydratedPostulationTypeContent = PostulationTypeContent;
+
+// export interface IPostulationTypeModel extends PaginateModel<IPostulationTypeContentDocument> {};
+
+const PostulationTypeContentSchema = new Schema<PostulationTypeContent, PostulationTypeContentModel, PostulationTypeContentMethods, PostulationTypeContentVirtual>({
     postulation_type_content_name: {
         type: String,
         required: true,
@@ -34,9 +41,9 @@ const PostulationTypeContentSchema = new Schema<IPostulationTypeContentDocument,
 }, {
     strict: true,
     timestamps: {
-        createdAt: 'created_at',
-        updatedAt: 'updated_at',
+        createdAt: 'createdAt',
+        updatedAt: 'updatedAt',
     }
 });
 
-export default model<IPostulationTypeContentDocument>(MODEL_NAME.POSTULATION_TYPE_CONTENT, PostulationTypeContentSchema);
+export default model<PostulationTypeContent, PostulationTypeContentModel>(MODEL_NAME.POSTULATION_TYPE_CONTENT, PostulationTypeContentSchema, MODEL_NAME.POSTULATION_TYPE_CONTENT.toLowerCase());

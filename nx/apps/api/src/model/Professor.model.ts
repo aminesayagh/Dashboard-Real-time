@@ -1,12 +1,16 @@
-import { Schema, model, PaginateModel } from 'mongoose';
+import { Schema, model, PaginateModel, Model, HydratedDocument } from 'mongoose';
 import { MODEL_NAME, STATE_PROFESSOR_ARRAY, STATE_PROFESSOR } from 'shared-ts';
 import { ERRORS } from '../constants/MESSAGE';
-import { IProfessorDocument } from 'types/Model';
+import { Professor } from '../types/Models';
 
+interface ProfessorMethods {}
+interface ProfessorStatics {}
+interface ProfessorVirtual {}
 
-export interface IProfessorModel extends PaginateModel<IProfessorDocument> {}
+export type ProfessorModel = Model<Professor, {}, ProfessorMethods, ProfessorVirtual> & ProfessorStatics;
+export type HydratedProfessor = HydratedDocument<Professor, ProfessorMethods & ProfessorVirtual>;
 
-const professorSchema = new Schema<IProfessorDocument, IProfessorModel>({
+const professorSchema = new Schema<Professor, ProfessorModel, ProfessorMethods, ProfessorVirtual>({
     user_id: {
         type: Schema.Types.ObjectId,
         required: true,
@@ -28,8 +32,8 @@ const professorSchema = new Schema<IProfessorDocument, IProfessorModel>({
 }, {
     strict: true,
     timestamps: {
-        createdAt: 'created_at',
-        updatedAt: 'updated_at',
+        createdAt: 'createdAt',
+        updatedAt: 'updatedAt',
     },
 });
 
@@ -42,6 +46,5 @@ professorSchema.pre('save', async function (this, next) {
 });
 
 
-export const Professor = model<IProfessorDocument, IProfessorModel>(MODEL_NAME.PROFESSOR, professorSchema);
+export default model<Professor, ProfessorModel>(MODEL_NAME.PROFESSOR, professorSchema, MODEL_NAME.PROFESSOR.toLowerCase());
 
-export default Professor;

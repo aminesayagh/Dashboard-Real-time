@@ -1,11 +1,18 @@
-import { Schema, model, PaginateModel } from 'mongoose';
+import { Schema, model, Model, HydratedDocument } from 'mongoose';
 import { MODEL_NAME } from 'shared-ts';
 import mongoosePagination from 'mongoose-paginate-v2';
-import { ILocationDocument } from 'types/Model';
+import { Location } from '../types/Models';
 
-export interface ILocationModel extends PaginateModel<ILocationDocument> {};
+interface LocationMethods {}
 
-const LocationSchema = new Schema<ILocationDocument, ILocationModel>({
+interface LocationStatics {}
+
+interface LocationVirtual {}
+
+export type LocationModel = Model<Location, {}, LocationMethods, LocationVirtual> & LocationStatics; 
+export type HydratedLocation = HydratedDocument<Location, LocationMethods & LocationVirtual>;  
+
+const LocationSchema = new Schema<Location, LocationModel, LocationMethods, LocationVirtual>({
     location_name: {
         type: String,
         required: true,
@@ -28,15 +35,14 @@ const LocationSchema = new Schema<ILocationDocument, ILocationModel>({
 }, {
     strict: true,
     timestamps: {
-        createdAt: 'created_at',
-        updatedAt: 'updated_at',
+        createdAt: 'createdAt',
+        updatedAt: 'updatedAt',
     }
 });
 
 LocationSchema.plugin(mongoosePagination as any);
 
-const Location = model<ILocationDocument, ILocationModel>(MODEL_NAME.LOCATION, LocationSchema);
+const Location = model<Location, LocationModel>(MODEL_NAME.LOCATION, LocationSchema, MODEL_NAME.LOCATION.toLowerCase());
 
-Location.paginate().then();
 
-export default model<ILocationDocument, ILocationModel>(MODEL_NAME.LOCATION, LocationSchema);
+export default Location;

@@ -1,11 +1,16 @@
-import { PaginateModel, Schema, model, Model } from 'mongoose';
+import { PaginateModel, Schema, model, Model, HydratedDocument } from 'mongoose';
 import { MODEL_NAME, STATE_RESOURCE_ARRAY, STATE_RESOURCE, STATE_ATTACHMENT_ARRAY, STATE_ATTACHMENT, MODEL_NAME_ARRAY } from 'shared-ts';
-import { IAttachmentDocument, IMediaDocument, IResourceDocument } from 'types/Model';
+import { Attachment, Media, Resource } from '../types/Models';
 
-export interface IMediaModel extends Model<IMediaDocument> {};
-export interface IAttachmentModel extends Model<IAttachmentDocument> {};
 
-const attachmentSchema = new Schema<IAttachmentDocument, IAttachmentModel>({
+// Attachment
+interface AttachmentMethods {}
+interface AttachmentStatics {}
+interface AttachmentVirtual {}
+export type AttachmentModel = Model<Attachment, {}, AttachmentMethods, AttachmentVirtual> & AttachmentStatics;
+export type HydratedAttachment = HydratedDocument<Attachment, AttachmentMethods & AttachmentVirtual>;
+
+const attachmentSchema = new Schema<Attachment, AttachmentModel, AttachmentMethods, AttachmentVirtual>({
     attachment_reference: {
         type: Schema.Types.ObjectId,
         required: true,
@@ -24,20 +29,32 @@ const attachmentSchema = new Schema<IAttachmentDocument, IAttachmentModel>({
 }, {
     strict: true,
     timestamps: {
-        createdAt: 'created_at',
-        updatedAt: 'updated_at',
+        createdAt: 'createdAt',
+        updatedAt: 'createdAt',
     }
 });
 
-
-interface IResourceMethods {
+// Resource
+interface ResourceMethods {
     generateResourceName: (resource_name: string, owner_id: string) => string;
 }
+interface ResourceStatics {
+    
+}
+interface ResourceVirtual {}
+
+export type ResourceModel = Model<Resource, {}, ResourceMethods, ResourceVirtual> & PaginateModel<Resource> & ResourceStatics;
+export type HydratedResource = HydratedDocument<Resource, ResourceMethods & ResourceVirtual>;
 
 
-export interface IResourceModel extends PaginateModel<IResourceDocument>, IResourceMethods {};
+interface MediaMethods {}
+interface MediaStatics {}
+interface MediaVirtual {}
 
-const mediaSchema = new Schema<IMediaDocument, IMediaModel>({
+export type MediaModel = Model<Media, {}, MediaMethods, MediaVirtual> & MediaStatics;
+export type HydratedMedia = HydratedDocument<Media, MediaMethods & MediaVirtual>;
+
+const mediaSchema = new Schema<Media, MediaModel>({
     media_source: {
         type: String,
         required: true,
@@ -61,12 +78,12 @@ const mediaSchema = new Schema<IMediaDocument, IMediaModel>({
 }, {
     strict: true,
     timestamps: {
-        createdAt: 'created_at',
-        updatedAt: 'updated_at',
+        createdAt: 'createdAt',
+        updatedAt: 'updatedAt',
     }
 });
 
-const resourceSchema = new Schema<IResourceDocument, IResourceModel>({
+const resourceSchema = new Schema<Resource, ResourceModel, ResourceMethods, ResourceVirtual>({
     resource_name: {
         type: String,
         required: true,
@@ -95,8 +112,8 @@ const resourceSchema = new Schema<IResourceDocument, IResourceModel>({
 }, {
     strict: true,
     timestamps: {
-        createdAt: 'created_at',
-        updatedAt: 'updated_at',
+        createdAt: 'createdAt',
+        updatedAt: 'updatedAt',
     }
 });
 
@@ -105,6 +122,6 @@ resourceSchema.static('generateResourceName', (resource_name: string, owner_id: 
     return `${resource_name}-${owner_id}`;
 });
 
-const ResourceModel = model<IResourceDocument, IResourceModel>(MODEL_NAME.RESOURCE, resourceSchema, MODEL_NAME.RESOURCE.toLowerCase());
+const ResourceModel = model<Resource, ResourceModel>(MODEL_NAME.RESOURCE, resourceSchema, MODEL_NAME.RESOURCE.toLowerCase());
 
 export default ResourceModel;
