@@ -22,3 +22,22 @@ export const toObject = <T>(doc: DefaultDocument<T>): ObjectDocument<T> => {
 // Function to convert an array of Mongoose documents to objects
 export const toObjectArray = <T>(docs: DefaultDocument<T>[]): ObjectDocument<T>[] => 
   docs.map(toObject);
+
+interface DocumentResponse<T extends Document> {
+  id: string;
+  doc: Omit<T, '_id' | 'createdAt' | 'updatedAt'>;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export function toPublicDocument<T extends Document<Types.ObjectId>>(doc: T): DocumentResponse<T> {
+  const { _id, createdAt, updatedAt, ...rest }: { _id: Types.ObjectId, createdAt: Date, updatedAt: Date } = doc.toObject();
+  return {
+    id: _id.toString(),
+    doc: {
+      ...rest
+    } as Omit<T, '_id' | 'createdAt' | 'updatedAt'>,
+    createdAt: createdAt,
+    updatedAt: createdAt,
+  };
+}

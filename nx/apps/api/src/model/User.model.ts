@@ -1,24 +1,32 @@
-import { PaginateModel, Schema, model, Types } from 'mongoose';
+import { PaginateModel, Schema, model, Types, HydratedDocument, Model } from 'mongoose';
 import mongoosePagination from 'mongoose-paginate-v2';
 import { STATE_USER_ROLE, MODEL_NAME, GENDER_ARRAY, TStateUserRole, stateUserRole } from 'shared-ts';
-import { IUserDocument as IUserDocumentExtended,  IUserMeAggregate, IUserAggregate } from 'types/Model';
+import {  IUserMeAggregate, IUserAggregate, User } from 'types/Model';
 
-interface IUserMethods {
-    addUserRole(role: TStateUserRole): Promise<IUserDocument>;
-    removeUserRole(role: TStateUserRole): Promise<IUserDocument>;
-    resetPassword(password: string): Promise<IUserDocument>;
-    addLastPasswordReset(password: string): Promise<IUserDocument>;
+
+interface UserMethods {
+    addUserRole(role: TStateUserRole): Promise<HydratedUser>;
+    removeUserRole(role: TStateUserRole): Promise<HydratedUser>;
+    resetPassword(password: string): Promise<HydratedUser>;
+    addLastPasswordReset(password: string): Promise<HydratedUser>;
     verifyPasswordExist(password: string): Promise<boolean>;
     verifyPassword(password: string): Promise<boolean>;
-    findByEmail(email: string): Promise<IUserDocument | null>;
+    findByEmail(email: string): Promise<HydratedUser | null>;
     me(id: string): Promise<IUserMeAggregate>;
-    profile(id: string): Promise<IUserAggregate>;
 }
 
-export interface IUserDocument extends IUserDocumentExtended {}
-export interface IUserModel extends PaginateModel<IUserDocument> {}
+interface UserStatics {
+    profile(id: string): Promise<IUserAggregate>;
+    findByEmail(email: string): Promise<HydratedUser | null>;
+    me(id: string): Promise<IUserMeAggregate>;
+}
+interface UserVirtual {}
 
-const userSchema = new Schema<IUserDocument, IUserModel, IUserMethods>({
+// export interface IUserDocument extends IUserDocumentExtended {}
+export type UserModel = Model<User, {}, UserMethods, UserVirtual> & UserStatics & PaginateModel<User>;
+export type HydratedUser = HydratedDocument<User, UserMethods & UserVirtual>;
+
+const userSchema = new Schema<User, UserModel, UserMethods, UserVirtual>({
     user_first_name: {
         type: String,
         required: false,
@@ -104,8 +112,8 @@ const userSchema = new Schema<IUserDocument, IUserModel, IUserMethods>({
 }, {
     strict: true,
     timestamps: {
-        createdAt: 'created_at',
-        updatedAt: 'updated_at'
+        createdAt: 'createdAt',
+        updatedAt: 'createdAt'
     }
 });
 
@@ -133,7 +141,7 @@ userSchema.methods.addUserRole = async function (role: TStateUserRole) {
     return this.save();
 };
 
-userSchema.methods.removeUserRole = async function (this: IUserDocument, role: TStateUserRole) {
+userSchema.methods.removeUserRole = async function (this, role) {
     const actualUserRole = this.user_roles as TStateUserRole[];
     if (!actualUserRole.includes(role)) {
         return this;
@@ -142,11 +150,11 @@ userSchema.methods.removeUserRole = async function (this: IUserDocument, role: T
     return this.save();
 };
 
-userSchema.statics.findByEmail = async function (this: IUserModel, email: string) {
+userSchema.statics.findByEmail = async function (this, email) {
     return await this.findOne({ user_email: email }).exec();
 };
 
-userSchema.statics.me = async function (this: IUserModel, id: string) {
+userSchema.statics.me = async function (this, id) {
     const _id = new Types.ObjectId(id);
     const userAggregate = await this.aggregate<IUserMeAggregate>([
         { $match: { _id } },
@@ -219,11 +227,9 @@ userSchema.statics.me = async function (this: IUserModel, id: string) {
     return userAggregate[0];
 };
 
-
 userSchema.plugin(mongoosePagination as any);
 
-const UserModel = model<IUserDocument, IUserModel>(MODEL_NAME.USER, userSchema, MODEL_NAME.USER.toLowerCase());
+const UserModel = model<User, UserModel>(MODEL_NAME.USER, userSchema, MODEL_NAME.USER.toLowerCase());
 
-UserModel.paginate().then();
 
 export default UserModel;
