@@ -1,5 +1,5 @@
 import { TStateUserRole, TGender, TStatePostulation, TStateStudent, TModelName, TStateAttachment, TStateResource, TStateProfessor,  } from "./DB";
-import { DefaultDocument } from "./mongodb";
+import { BaseDocument, DefaultDocument } from "./mongodb";
 
 export interface IUser<ObjectId> {
   user_first_name?: string;
@@ -65,7 +65,7 @@ export interface IResource<ObjectId> {
   resource_owner: ObjectId;
   resource_type: string;
   resource_state: TStateResource;
-  resource_attachments: DefaultDocument<IAttachment<ObjectId>, ObjectId, Document>[];
+  resource_attachments: IAttachment<ObjectId>[];
 }
 
 
@@ -128,6 +128,7 @@ export type IStudentDocument<ObjectId, Document> = DefaultDocument<IStudent<Obje
 export type IMediaDocument<ObjectId, Document> = DefaultDocument<IMedia, ObjectId, Document>;
 export type IResourceDocument<ObjectId, Document> = DefaultDocument<IResource<ObjectId>, ObjectId, Document>;
 export type IAttachmentDocument<ObjectId, Document> = DefaultDocument<IAttachment<ObjectId>, ObjectId, Document>;
+export type AttachmentObject<ObjectId> = BaseDocument<IAttachment<ObjectId>, ObjectId>;
 export type IProfessorDocument<ObjectId, Document> = DefaultDocument<IProfessor<ObjectId>, ObjectId, Document>;
 export type ILocationDocument<ObjectId, Document> = DefaultDocument<ILocation<ObjectId>, ObjectId, Document>;
 export type IDepartmentDocument<ObjectId, Document> = DefaultDocument<IDepartment<ObjectId>, ObjectId, Document>;
@@ -136,3 +137,4 @@ export type IPostulationContentDocument<ObjectId, Document> = DefaultDocument<IP
 export type IPostulationTypeDocument<ObjectId, Document> = DefaultDocument<IPostulationType<ObjectId>, ObjectId, Document>;
 export type IPostulationTypeContentDocument<ObjectId, Document> = DefaultDocument<IPostulationTypeContent, ObjectId, Document>;
 export type IUniversityPeriodDocument<ObjectId, Document> = DefaultDocument<IUniversityPeriod<ObjectId>, ObjectId, Document>;
+

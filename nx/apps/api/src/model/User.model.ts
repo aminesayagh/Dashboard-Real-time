@@ -15,10 +15,10 @@ interface IUserMethods {
     profile(id: string): Promise<IUserAggregate>;
 }
 
-export interface IUserDocument extends IUserDocumentExtended, IUserMethods {}
-export interface IUserModel extends PaginateModel<IUserDocument>, IUserMethods {}
+export interface IUserDocument extends IUserDocumentExtended {}
+export interface IUserModel extends PaginateModel<IUserDocument> {}
 
-const userSchema = new Schema<IUserDocument, IUserModel>({
+const userSchema = new Schema<IUserDocument, IUserModel, IUserMethods>({
     user_first_name: {
         type: String,
         required: false,

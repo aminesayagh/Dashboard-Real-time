@@ -11,9 +11,9 @@ interface IUniversityMethod {
 }
 
 
-export interface IUniversityPeriodModel extends PaginateModel<IUniversityPeriodDocument>, IUniversityMethod {};
+export interface IUniversityPeriodModel extends PaginateModel<IUniversityPeriodDocument> {};
 
-const UniversityPeriodSchema = new Schema<IUniversityPeriodDocument, IUniversityPeriodModel>({
+const UniversityPeriodSchema = new Schema<IUniversityPeriodDocument, IUniversityPeriodModel, IUniversityMethod>({
     period_name: {
         type: String,
         required: true,

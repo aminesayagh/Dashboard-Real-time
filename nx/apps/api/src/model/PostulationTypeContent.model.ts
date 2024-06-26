@@ -6,7 +6,7 @@ import { IPostulationTypeContentDocument } from 'types/Model';
 
 export interface IPostulationTypeModel extends PaginateModel<IPostulationTypeContentDocument> {};
 
-const PostulationTypeContentSchema = new Schema<IPostulationTypeContentDocument>({
+const PostulationTypeContentSchema = new Schema<IPostulationTypeContentDocument, IPostulationTypeModel>({
     postulation_type_content_name: {
         type: String,
         required: true,

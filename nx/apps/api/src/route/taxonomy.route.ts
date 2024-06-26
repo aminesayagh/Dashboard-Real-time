@@ -8,7 +8,7 @@ import { ITaxonomyDocument } from 'types/Model';
 
 import { ApiResponse, ApiRequest, ApiResponsePagination, IApiDeleteResponse } from "types/Api";
 import PostulationTypeModel from '../model/PostulationType.model';
-import { IPostulationTypeDocument } from '../model/PostulationType.model';
+import { IPostulationTypeDocument } from 'types/Model';
 import { Types } from 'mongoose';
 import PostulationTypeContentModel from '../model/PostulationTypeContent.model';
 import { IPostulationTypeContentDocument } from 'types/Model';

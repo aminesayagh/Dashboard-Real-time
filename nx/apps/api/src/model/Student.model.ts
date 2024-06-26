@@ -3,14 +3,16 @@ import { MODEL_NAME, STATE_STUDENT_ARRAY, STATE_STUDENT, TStateStudent, stateStu
 import { ERRORS } from '../constants/MESSAGE';
 import { IStudentDocument } from 'types/Model';
 
-export interface IStudentModel extends PaginateModel<IStudentDocument> {
+interface IStudentMethods {
     findByUserId(user_id: Types.ObjectId): Promise<IStudentDocument | null>;
     findByCne(cne: string): Promise<IStudentDocument | null>;
     findByStudentNumber(student_number: string): Promise<IStudentDocument | null>;
     updateStudentRole(state_student: TStateStudent): Promise<IStudentDocument>;
 }
+export interface IStudentModel extends PaginateModel<IStudentDocument> {
+}
 
-const studentSchema = new Schema<IStudentDocument, IStudentModel>({
+const studentSchema = new Schema<IStudentDocument, IStudentModel, IStudentMethods>({
     user_id: {
         type: Schema.Types.ObjectId,
         required: true,

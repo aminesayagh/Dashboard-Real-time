@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { StateController } from "./StateController";
 
 export const STATE_USER_ROLE = {
@@ -43,7 +44,7 @@ export const MODEL_NAME = {
     UNIVERSITY_PERIOD: "UniversityPeriods",
 } as const;
 
-
+export const zModelName = z.enum(['Users', 'Students', 'Professors', 'Locations', 'Departments', 'ResetPasswords', 'Resources', 'Attachments', 'Media', 'Postulations', 'PostulationTypes', 'PostulationTypeContents', 'Taxonomies', 'UniversityPeriods']);
 export type TModelName = (typeof MODEL_NAME)[keyof typeof MODEL_NAME];
 export const MODEL_NAME_ARRAY = Object.values(MODEL_NAME);
 

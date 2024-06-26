@@ -1,17 +1,8 @@
-import { Types, PaginateModel, Schema, model, Model } from 'mongoose';
-import { MODEL_NAME, IMedia, STATE_RESOURCE_ARRAY, STATE_RESOURCE, TStateResource, STATE_ATTACHMENT_ARRAY, STATE_ATTACHMENT, MODEL_NAME_ARRAY } from 'shared-ts';
-import { DefaultDocument } from '../types/Mongoose';
-import { IAttachmentDocument } from 'types/Model';
-
-
-
-export interface IMediaDocument extends DefaultDocument<IMedia> {};
+import { PaginateModel, Schema, model, Model } from 'mongoose';
+import { MODEL_NAME, STATE_RESOURCE_ARRAY, STATE_RESOURCE, STATE_ATTACHMENT_ARRAY, STATE_ATTACHMENT, MODEL_NAME_ARRAY } from 'shared-ts';
+import { IAttachmentDocument, IMediaDocument, IResourceDocument } from 'types/Model';
 
 export interface IMediaModel extends Model<IMediaDocument> {};
-
-
-
-
 export interface IAttachmentModel extends Model<IAttachmentDocument> {};
 
 const attachmentSchema = new Schema<IAttachmentDocument, IAttachmentModel>({
@@ -38,20 +29,11 @@ const attachmentSchema = new Schema<IAttachmentDocument, IAttachmentModel>({
     }
 });
 
-interface IResource {
-    resource_name: string;
-    resource_media: IMediaDocument[]
-    resource_owner: Types.ObjectId;
-    resource_type: string;
-    resource_state: TStateResource;
-    resource_attachments: IAttachmentDocument[];
-}
 
 interface IResourceMethods {
     generateResourceName: (resource_name: string, owner_id: string) => string;
 }
 
-export interface IResourceDocument extends DefaultDocument<IResource>, IResourceMethods {};
 
 export interface IResourceModel extends PaginateModel<IResourceDocument>, IResourceMethods {};
 

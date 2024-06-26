@@ -5,7 +5,6 @@ import mongoosePagination from 'mongoose-paginate-v2';
 
 
 
-
 const PostulationContentSchema = new Schema<IPostulationContentDocument>({
     postulation_content_body: {
         type: Schema.Types.ObjectId,
