@@ -16,7 +16,7 @@ import {
     UserMeAggregate as TUserMeAggregate,
     UserAggregate as TUserAggregate,
 } from 'shared-ts';
-import { Types, Document as MongoDocument, HydratedDocument } from 'mongoose';
+import { Types, HydratedDocument } from 'mongoose';
 
 type Document<T> = HydratedDocument<T>;
 

@@ -1,7 +1,6 @@
 import { PaginateModel, Schema, model, Model, HydratedDocument } from 'mongoose';
 import { MODEL_NAME, STATE_RESOURCE_ARRAY, STATE_RESOURCE, STATE_ATTACHMENT_ARRAY, STATE_ATTACHMENT, MODEL_NAME_ARRAY } from 'shared-ts';
 import { Attachment, Media, Resource } from '../types/Models';
-import { Types } from 'mongoose';
 
 
 // Attachment

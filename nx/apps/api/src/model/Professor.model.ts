@@ -1,4 +1,4 @@
-import { Schema, model, PaginateModel, Model, HydratedDocument } from 'mongoose';
+import { Schema, model, Model, HydratedDocument } from 'mongoose';
 import { MODEL_NAME, STATE_PROFESSOR_ARRAY, STATE_PROFESSOR } from 'shared-ts';
 import { ERRORS } from '../constants/MESSAGE';
 import { Professor } from '../types/Models';
