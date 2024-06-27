@@ -21,6 +21,7 @@ export function toPublicDoc<T extends Document<Types.ObjectId, any, T>>(doc: T):
   };
 }
 
+
 export type PublicDocArray<T extends Document<Types.ObjectId>> = PublicDoc<T>[];
 
 export function toPublicDocArray<T extends Document<Types.ObjectId, any, T>>(docs: T[]): PublicDocArray<T> {

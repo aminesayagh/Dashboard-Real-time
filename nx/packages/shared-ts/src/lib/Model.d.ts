@@ -125,6 +125,12 @@ export interface Location<ObjectId = string> {
   department_id: ObjectId;
 }
 
+interface DocumentBase<ObjectId> {
+    _id: ObjectId;
+    updatedAt: Date;
+    createdAt: Date;
+}
+
 export interface UserMeAggregate<ObjectId = string> extends Omit<User<ObjectId>, 'user_avatar'> {
   user_avatar: Resource<ObjectId>;
   student_doc?: Student<ObjectId>;
