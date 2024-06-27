@@ -1,4 +1,4 @@
-import { Schema, model, Model, HydratedDocument } from 'mongoose';
+import { Schema, model, Model, HydratedDocument, PaginateModel } from 'mongoose';
 import { MODEL_NAME, STATE_POSTULATION } from 'shared-ts';
 import { Postulation, PostulationContent } from '../types/Models';
 import mongoosePagination from 'mongoose-paginate-v2';
@@ -37,7 +37,7 @@ interface PostulationStatics {}
 
 interface PostulationVirtual {} 
 
-export type PostulationModel = Model<Postulation, {}, PostulationMethods, PostulationVirtual> & PostulationStatics;
+export type PostulationModel = Model<Postulation, {}, PostulationMethods, PostulationVirtual> & PostulationStatics & PaginateModel<Postulation>;
 export type HydratedPostulation = HydratedDocument<Postulation, PostulationMethods & PostulationVirtual>;
 
 

@@ -1,23 +1,23 @@
-import { Schema, model, Model, HydratedDocument } from 'mongoose';
+import { Schema, PaginateModel, model, Model, HydratedDocument } from 'mongoose';
 import { MODEL_NAME, STATE_POSTULATION } from 'shared-ts';
 import { UniversityPeriod } from '../types/Models';
-import { Document} from 'mongoose';
+import mongoosePagination from 'mongoose-paginate-v2';
 
 interface UniversityMethods {
 
 }
 
 interface UniversityStatics {
-    findByPeriodName(period_name: string): Promise<UniversityPeriod | null>;
-    findByDate(date: Date): Promise<UniversityPeriod | null>;
-    findCurrentPeriod(): Promise<UniversityPeriod | null>;
-    updateCurrentPeriod(): Promise<UniversityPeriod>;
+    findByPeriodName(period_name: string): Promise<HydratedUniversityPeriod | null>;
+    findByDate(date: Date): Promise<HydratedUniversityPeriod | null>;
+    findCurrentPeriod(): Promise<HydratedUniversityPeriod | null>;
+    updateCurrentPeriod(): Promise<HydratedUniversityPeriod>;
 }
 
 interface UniversityVirtual {}
 
 
-export type UniversityPeriodModel = Model<UniversityPeriod, {}, UniversityMethods, UniversityVirtual> & UniversityStatics;
+export type UniversityPeriodModel = Model<UniversityPeriod, {}, UniversityMethods, UniversityVirtual> & UniversityStatics & PaginateModel<UniversityPeriod>;
 export type HydratedUniversityPeriod = HydratedDocument<UniversityPeriod, UniversityMethods & UniversityVirtual>;
 
 const UniversityPeriodSchema = new Schema<UniversityPeriod, UniversityPeriodModel, UniversityMethods, UniversityVirtual>({
@@ -103,6 +103,8 @@ UniversityPeriodSchema.statics.updateCurrentPeriod = async function (newPeriod) 
     return this.create(newPeriod);
 };
 
+
+UniversityPeriodSchema.plugin(mongoosePagination as any);
 
 const UniversityPeriod = model<UniversityPeriod, UniversityPeriodModel>(MODEL_NAME.UNIVERSITY_PERIOD, UniversityPeriodSchema, MODEL_NAME.UNIVERSITY_PERIOD.toLocaleLowerCase());
 

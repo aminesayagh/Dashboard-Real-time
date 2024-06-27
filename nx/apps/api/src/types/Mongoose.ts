@@ -23,14 +23,14 @@ export const toObject = <T>(doc: DefaultDocument<T>): ObjectDocument<T> => {
 export const toObjectArray = <T>(docs: DefaultDocument<T>[]): ObjectDocument<T>[] => 
   docs.map(toObject);
 
-interface DocumentResponse<T extends Document> {
+export interface PublicDoc<T extends Document> {
   id: string;
   doc: Omit<T, '_id' | 'createdAt' | 'updatedAt'>;
   createdAt: Date;
   updatedAt: Date;
 }
 
-export function toPublicDocument<T extends Document<Types.ObjectId>>(doc: T): DocumentResponse<T> {
+export function toPublicDoc<T extends Document<Types.ObjectId>>(doc: T): PublicDoc<T> {
   const { _id, createdAt, updatedAt, ...rest }: { _id: Types.ObjectId, createdAt: Date, updatedAt: Date } = doc.toObject();
   return {
     id: _id.toString(),

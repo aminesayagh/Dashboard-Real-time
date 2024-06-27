@@ -119,3 +119,16 @@ export const STATE_POSTULATION = {
 export type TStatePostulation = (typeof STATE_POSTULATION)[keyof typeof STATE_POSTULATION];
 export const STATE_POSTULATION_ARRAY = Object.values(STATE_POSTULATION);
 
+export type ResourceTypes = 'image' | 'video' | 'raw' | 'auto';
+
+const zResourceType = z.enum(['image', 'video', 'raw', 'auto']);
+export const zBodyMedia = z.object({
+    resource_type: zResourceType.default('auto'),
+    user_id: z.string(),
+    resource_folder: z.enum(['postulation', 'user', 'department', 'taxonomy', 'university_period', 'resource', 'email']).default('resource'),
+});
+
+export const zAttachmentBody = z.object({
+    attachment_reference: z.string(),
+    attachment_collection: zModelName,
+});

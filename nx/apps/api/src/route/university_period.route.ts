@@ -1,13 +1,16 @@
 import express from 'express';
 import { ERRORS } from '../constants/MESSAGE';
-import UniversityPeriodModel from '../model/UniversityPeriod.model';
+import UniversityPeriodModel, { HydratedUniversityPeriod } from '../model/UniversityPeriod.model';
 import { ApiRequest, ApiResponse, ApiResponsePagination, IApiDeleteResponse } from 'types/Api';
-import { IUniversityPeriodDocument } from 'types/Model';
 import qs from 'qs';
+import { PublicDoc, toPublicDoc } from '@/types/Mongoose';
+import { UniversityPeriod } from '../types/Models';
+
 const router = express.Router();
 
+type PublicUniversityPeriod = PublicDoc<HydratedUniversityPeriod>;
 
-router.get('/', async (req: ApiRequest, res: ApiResponsePagination<IUniversityPeriodDocument>): Promise<void> => {
+router.get('/', async (req: ApiRequest, res: ApiResponsePagination<UniversityPeriod>): Promise<void> => {
     const { filter, ...options } = qs.parse(req.query) as any;
     try{
         const result = await UniversityPeriodModel.paginate(filter, options)
@@ -24,7 +27,7 @@ router.get('/', async (req: ApiRequest, res: ApiResponsePagination<IUniversityPe
     }
 });
 
-router.post('/', async (req: ApiRequest, res: ApiResponse<IUniversityPeriodDocument>): Promise<void> => {
+router.post('/', async (req: ApiRequest, res: ApiResponse<PublicUniversityPeriod>): Promise<void> => {
     const universityPeriod = new UniversityPeriodModel(req.body);
     try{
         const result = await universityPeriod.save()
@@ -34,14 +37,14 @@ router.post('/', async (req: ApiRequest, res: ApiResponse<IUniversityPeriodDocum
         }
         res.send({
             status: 'success',
-            data: result
+            data: toPublicDoc(result)
         });
     }catch (err:any) {
         res.status(400).send({ status: 'error', message: err.message });
     }
 });
 
-router.get('/current', async (_: ApiRequest, res: ApiResponse<IUniversityPeriodDocument>) => {
+router.get('/current', async (_: ApiRequest, res: ApiResponse<PublicUniversityPeriod>) => {
     try{
         const result = await UniversityPeriodModel.findCurrentPeriod()
         if (!result) {
@@ -50,13 +53,13 @@ router.get('/current', async (_: ApiRequest, res: ApiResponse<IUniversityPeriodD
         }
         res.send({
             status: 'success',
-            data: result
+            data: toPublicDoc(result)
         });
     }catch (err:any) {
         res.status(400).send({ status: 'error', message: err.message });
     }
 });
-router.put('/current', async (req: ApiRequest<Partial<IUniversityPeriodDocument>>, res: ApiResponse<IUniversityPeriodDocument>) => {
+router.put('/current', async (req: ApiRequest<Partial<PublicUniversityPeriod>>, res: ApiResponse<PublicUniversityPeriod>) => {
     try{
         const currentPeriod = await UniversityPeriodModel.findCurrentPeriod();
         console.log('findCurrentPeriod:', await UniversityPeriodModel.findCurrentPeriod());
@@ -72,14 +75,14 @@ router.put('/current', async (req: ApiRequest<Partial<IUniversityPeriodDocument>
         }
         res.send({
             status: 'success',
-            data: result
+            data: toPublicDoc(result)
         });
     }catch (err:any) {
         res.status(400).send({ status: 'error', message: err.message });
     }
 })
 
-router.get('/:id', async (req: ApiRequest<{}, {}, { id: string }>, res: ApiResponse<IUniversityPeriodDocument>) => {
+router.get('/:id', async (req: ApiRequest<{}, {}, { id: string }>, res: ApiResponse<PublicUniversityPeriod>) => {
     const { id } = req.params;
     try{
         const result = await UniversityPeriodModel.findById(id)
@@ -89,13 +92,13 @@ router.get('/:id', async (req: ApiRequest<{}, {}, { id: string }>, res: ApiRespo
         }
         res.send({
             status: 'success',
-            data: result
+            data: toPublicDoc(result)
         });
     }catch (err:any) {
         res.status(400).send({ status: 'error', message: err.message });
     }
 });
-router.put('/:id', async (req: ApiRequest<Partial<IUniversityPeriodDocument>, {}, { id: string }>, res: ApiResponse<IUniversityPeriodDocument>) => {
+router.put('/:id', async (req: ApiRequest<Partial<PublicUniversityPeriod>, {}, { id: string }>, res: ApiResponse<PublicUniversityPeriod>) => {
     const { id } = req.params;
     try{
         const result = await UniversityPeriodModel.findByIdAndUpdate(id, req.body, { new: true })
@@ -105,7 +108,7 @@ router.put('/:id', async (req: ApiRequest<Partial<IUniversityPeriodDocument>, {}
         }
         res.send({
             status: 'success',
-            data: result
+            data: toPublicDoc(result)
         });
     }catch (err:any) {
         res.status(400).send({ status: 'error', message: err.message });
@@ -124,7 +127,7 @@ router.delete('/:id', async (req: ApiRequest<{}, {}, { id: string }>, res: IApiD
         res.status(400).send({ status: 'error', message: err.message });
     }
 });
-router.get('/:id/next', async (req: ApiRequest<{}, {}, { id: string }>, res: ApiResponse<IUniversityPeriodDocument>) => {
+router.get('/:id/next', async (req: ApiRequest<{}, {}, { id: string }>, res: ApiResponse<PublicUniversityPeriod>) => {
     const { id } = req.params;
     try{
         const result = await UniversityPeriodModel.findById(id).populate('period_next')
@@ -134,13 +137,13 @@ router.get('/:id/next', async (req: ApiRequest<{}, {}, { id: string }>, res: Api
         }
         res.status(200).send({
             status: 'success',
-            data: result
+            data: toPublicDoc(result)
         });
     }catch (err:any) {
         res.status(400).send({ status: 'error', message: err.message });
     }
 });
-router.get('/:id/previous', async (req: ApiRequest<{}, {}, { id: string }>, res: ApiResponse<IUniversityPeriodDocument>) => {
+router.get('/:id/previous', async (req: ApiRequest<{}, {}, { id: string }>, res: ApiResponse<PublicUniversityPeriod>) => {
     const { id } = req.params;
     try{
         const result = await UniversityPeriodModel.findById(id).populate('period_previous')
@@ -150,7 +153,7 @@ router.get('/:id/previous', async (req: ApiRequest<{}, {}, { id: string }>, res:
         }
         res.status(200).send({
             status: 'success',
-            data: result.toObject()
+            data: toPublicDoc(result)
         });
     }catch (err:any) {
         res.status(400).send({ status: 'error', message: err.message });

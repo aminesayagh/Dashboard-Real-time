@@ -1,11 +1,14 @@
 import express from 'express';
 import { ERRORS } from '../constants/MESSAGE';
-import StudentModel from '../model/Student.model';
-import { IStudentDocument } from 'types/Model';
+import StudentModel, { HydratedStudent } from '../model/Student.model';
+import { Student } from '../types/Models';
+import { PublicDoc, toPublicDoc } from '../types/Mongoose';
 import { ApiRequest, ApiResponse } from 'types/Api';
 const router = express.Router();
 
-router.post('/', async (req: ApiRequest, res: ApiResponse<IStudentDocument>): Promise<void> => {
+type PublicStudent = PublicDoc<HydratedStudent>;
+
+router.post('/', async (req: ApiRequest, res: ApiResponse<PublicStudent>): Promise<void> => {
     try {
         const student = new StudentModel(req.body);
         const result = await student.save();
@@ -17,14 +20,14 @@ router.post('/', async (req: ApiRequest, res: ApiResponse<IStudentDocument>): Pr
 
         res.send({
             status: 'success',
-            data: result
+            data: toPublicDoc(result)
         });
     } catch (err:any) {
         res.status(400).send({ status: 'error', message: err.message });
     }
 });
 
-router.put('/:id', async (req: ApiRequest<Partial<IStudentDocument>, {}, { id: string }>, res: ApiResponse<IStudentDocument>) => {
+router.put('/:id', async (req: ApiRequest<Partial<Student>, {}, { id: string }>, res: ApiResponse<PublicStudent>) => {
     const { id } = req.params;
     try{
         const result = await StudentModel.findByIdAndUpdate(id, req.body, {new: true});
@@ -34,7 +37,7 @@ router.put('/:id', async (req: ApiRequest<Partial<IStudentDocument>, {}, { id: s
         }
         res.send({
             status: 'success',
-            data: result
+            data: toPublicDoc(result)
         });
     }
     catch(err:any){

@@ -1,27 +1,14 @@
 import express from 'express';
 import { ERRORS } from '../constants/MESSAGE';
-import ProfessorModel from '../model/Professor.model';
-import { ApiRequest, ApiResponse, ApiResponsePagination } from 'types/Api';
-import { IProfessorDocument } from 'types/Model';
-import qs from 'qs';
+import ProfessorModel, { HydratedProfessor } from '../model/Professor.model';
+import { ApiRequest, ApiResponse } from 'types/Api';
+import { Professor } from '../types/Models';
+import { PublicDoc, toPublicDoc } from '../types/Mongoose';
 
 const router = express.Router();
+type PublicProfessor = PublicDoc<HydratedProfessor>;   
 
-router.get('/', async (req: ApiRequest, res: ApiResponsePagination<IProfessorDocument>): Promise<void> => {
-    const { filter, ...options } = qs.parse(req.query) as any;
-    try {
-        const result = await ProfessorModel.paginate(filter, options);
-        if (!result) {
-            res.status(404).send({ status: 'error', message: ERRORS.NOT_FOUND });
-            return;
-        }
-        res.send({ status: 'success', data: result });
-    } catch (err: any) {
-        res.status(400).send({ status: 'error', message: err.message });
-    }
-});
-
-router.post('/', async (req: ApiRequest, res: ApiResponse<IProfessorDocument>): Promise<void> => {
+router.post('/', async (req: ApiRequest, res: ApiResponse<PublicProfessor>): Promise<void> => {
     try{
         const Professor = new ProfessorModel(req.body);
         const result = await Professor.save()
@@ -31,14 +18,14 @@ router.post('/', async (req: ApiRequest, res: ApiResponse<IProfessorDocument>): 
         }
         res.send({
             status: 'success',
-            data: result
+            data: toPublicDoc(result)
         });
     } catch (err:any) {
         res.status(400).send({ status: 'error', message: err.message });
     }
 });
 
-router.put('/:id', async (req: ApiRequest<Partial<IProfessorDocument>, {}, { id: string }>, res: ApiResponse<IProfessorDocument>) => {
+router.put('/:id', async (req: ApiRequest<Partial<Professor>, {}, { id: string }>, res: ApiResponse<PublicProfessor>) => {
     const { id } = req.params;
     try {
         const result = await ProfessorModel.findByIdAndUpdate(id, req.body, {new: true})
@@ -48,7 +35,7 @@ router.put('/:id', async (req: ApiRequest<Partial<IProfessorDocument>, {}, { id:
         }
         res.send({
             status: 'success',
-            data: result
+            data: toPublicDoc(result)
         });
     } catch (err:any) {
         res.status(400).send({ status: 'error', message: err.message });

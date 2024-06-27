@@ -1,5 +1,6 @@
-import { Schema, model, Model, HydratedDocument } from "mongoose";
+import { Schema, model, Model, HydratedDocument, PaginateModel } from "mongoose";
 import { MODEL_NAME } from "shared-ts";
+import mongoosePagination from "mongoose-paginate-v2";
 import { PostulationType } from "types/Models";
 
 interface PostulationTypeMethods {}
@@ -8,10 +9,8 @@ interface PostulationTypeStatics {}
 
 interface PostulationTypeVirtual {}
 
-export type PostulationTypeModel = Model<PostulationType, {}, PostulationTypeMethods, PostulationTypeVirtual> & PostulationTypeStatics;
-export type HydratedPostulationTypeContent = HydratedDocument<PostulationType, PostulationTypeMethods & PostulationTypeVirtual>;
-
-// export interface IPostulationTypeModel extends PaginateModel<IPostulationTypeDocument> {};
+export type PostulationTypeModel = Model<PostulationType, {}, PostulationTypeMethods, PostulationTypeVirtual> & PostulationTypeStatics & PaginateModel<PostulationType>;
+export type HydratedPostulationType = HydratedDocument<PostulationType, PostulationTypeMethods & PostulationTypeVirtual>;
 
 const PostulationTypeSchema = new Schema<PostulationType, PostulationTypeModel, PostulationTypeMethods, PostulationTypeVirtual>({
     taxonomies_id: {
@@ -46,6 +45,8 @@ const PostulationTypeSchema = new Schema<PostulationType, PostulationTypeModel, 
         updatedAt: 'updatedAt',
     }
 });
+
+PostulationTypeSchema.plugin(mongoosePagination as any);
 
 const PostulationType = model<PostulationType, PostulationTypeModel>(MODEL_NAME.POSTULATION_TYPE, PostulationTypeSchema, MODEL_NAME.POSTULATION_TYPE.toLowerCase());
 

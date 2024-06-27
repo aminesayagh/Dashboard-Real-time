@@ -1,14 +1,17 @@
 import express from 'express';
 import qs from 'qs';
-import UserModel from "../model/User.model";
+import UserModel, { HydratedUser } from "../model/User.model";
 import { ApiResponsePagination, ApiRequest, ApiResponse, IApiDeleteResponse } from "types/Api";
-import { IUserMeAggregate } from 'types/Model';
+import { UserMeAggregate, User } from '../types/Models';
+import { PublicDoc, toPublicDoc } from '../types/Mongoose';
 import { ERRORS } from '../constants/MESSAGE';
 
 const router = express.Router();
 
+type PublicUser = PublicDoc<HydratedUser>;
+
 // GET /api/v1/users
-router.get('/', async (req: ApiRequest, res: ApiResponsePagination<IUserDocument>): Promise<void> => {
+router.get('/', async (req: ApiRequest, res: ApiResponsePagination<User>): Promise<void> => {
     const { filter, ...options } = qs.parse(req.query) as any;
     try {
         const result = await UserModel.paginate(filter, options);
@@ -23,7 +26,7 @@ router.get('/', async (req: ApiRequest, res: ApiResponsePagination<IUserDocument
     }
 });
 // POST /api/v1/users
-router.post('/', async (req: ApiRequest, res: ApiResponse<IUserDocument>): Promise<void> => {
+router.post('/', async (req: ApiRequest, res: ApiResponse<PublicUser>): Promise<void> => {
     try {
         const user = new UserModel(req.body);
         const result = await user.save();
@@ -31,14 +34,14 @@ router.post('/', async (req: ApiRequest, res: ApiResponse<IUserDocument>): Promi
             res.status(500).json({ status: 'error', message: ERRORS.INTERNAL_SERVER_ERROR });
             return;
         }
-        res.status(200).json({ status: 'success', data: result.toObject() });
+        res.status(200).json({ status: 'success', data: toPublicDoc(result) });
     } catch (err: any) {
         res.status(400).json({ status: 'error', message: err.message });
     }
 });
 
 // GET /api/v1/users/:id
-router.get('/:id', async (req: ApiRequest, res: ApiResponse<IUserDocument>): Promise<void> => {
+router.get('/:id', async (req: ApiRequest, res: ApiResponse<PublicUser>): Promise<void> => {
     const { id } = req.params;
     try {
         const result = await UserModel.findById(id);
@@ -46,14 +49,14 @@ router.get('/:id', async (req: ApiRequest, res: ApiResponse<IUserDocument>): Pro
             res.status(404).json({ status: 'error', message: ERRORS.NOT_FOUND });
             return;
         }
-        res.status(200).json({ status: 'success', data: result.toObject() });
+        res.status(200).json({ status: 'success', data: toPublicDoc(result) });
     } catch (err: any) {
         res.status(400).json({ status: 'error', message: err.message });
     }
 });
 
 // PUT /api/v1/users/:id
-router.put('/:id', async (req: ApiRequest<Partial<IUserDocument>>, res: ApiResponse<IUserDocument>): Promise<void> => {
+router.put('/:id', async (req: ApiRequest<Partial<User>>, res: ApiResponse<PublicUser>): Promise<void> => {
     const { id } = req.params;
     try {
         const result = await UserModel.findByIdAndUpdate(id, req.body, { new: true });
@@ -61,7 +64,7 @@ router.put('/:id', async (req: ApiRequest<Partial<IUserDocument>>, res: ApiRespo
             res.status(404).json({ status: 'error', message: ERRORS.NOT_FOUND });
             return;
         }
-        res.status(200).json({ status: 'success', data: result.toObject() });
+        res.status(200).json({ status: 'success', data: toPublicDoc(result) });
     } catch (err: any) {
         res.status(400).json({ status: 'error', message: err.message });
     }
@@ -83,7 +86,7 @@ router.delete('/:id', async (req: ApiRequest, res: IApiDeleteResponse): Promise<
 });
 
 // GET /api/v1/users/me/:id
-router.get('/me/:id', async (req: ApiRequest, res: ApiResponse<IUserMeAggregate>): Promise<void> => {
+router.get('/me/:id', async (req: ApiRequest, res: ApiResponse<UserMeAggregate>): Promise<void> => {
     const { id } = req.params;
     try {
         const result = await UserModel.me(id);
@@ -98,7 +101,7 @@ router.get('/me/:id', async (req: ApiRequest, res: ApiResponse<IUserMeAggregate>
 });
 
 // GET /api/v1/users/email/:email
-router.get('/email/:email', async (req: ApiRequest, res: ApiResponse<IUserDocument>): Promise<void> => {
+router.get('/email/:email', async (req: ApiRequest, res: ApiResponse<PublicUser>): Promise<void> => {
     const { email } = req.params;
     try {
         const result = await UserModel.findByEmail(email);
@@ -106,7 +109,7 @@ router.get('/email/:email', async (req: ApiRequest, res: ApiResponse<IUserDocume
             res.status(404).json({ status: 'error', message: ERRORS.NOT_FOUND });
             return;
         }
-        res.status(200).json({ status: 'success', data: result });
+        res.status(200).json({ status: 'success', data: toPublicDoc(result) });
     } catch (err: any) {
         res.status(400).json({ status: 'error', message: err.message });
     }

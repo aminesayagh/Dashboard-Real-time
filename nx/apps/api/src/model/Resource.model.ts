@@ -36,10 +36,9 @@ const attachmentSchema = new Schema<Attachment, AttachmentModel, AttachmentMetho
 
 // Resource
 interface ResourceMethods {
-    generateResourceName: (resource_name: string, owner_id: string) => string;
 }
 interface ResourceStatics {
-    
+    generateResourceName: (resource_name: string, owner_id: string) => string;
 }
 interface ResourceVirtual {}
 

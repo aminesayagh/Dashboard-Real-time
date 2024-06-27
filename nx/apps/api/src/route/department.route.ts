@@ -2,13 +2,19 @@ import express from 'express';
 const router = express.Router();
 import { ApiResponsePagination, ApiRequest, ApiResponse, IApiDeleteResponse } from "types/Api";
 import { ERRORS } from '../constants/MESSAGE';
-import DepartmentModel from '../model/Department.model';
-import LocationModel from '../model/Location.model';
-import qs from 'qs';
-import PostulationModel from '../model/Postulation.model';
-import { IDepartmentDocument, ILocationDocument, IPostulationDocument } from 'types/Model';
+import DepartmentModel, { HydratedDepartment } from '../model/Department.model';
 
-router.get('/', async (req: ApiRequest, res: ApiResponsePagination<IDepartmentDocument>): Promise<void> => {
+import LocationModel, { HydratedLocation } from '../model/Location.model';
+import qs from 'qs';
+import PostulationModel, { HydratedPostulation } from '../model/Postulation.model';
+import { PublicDoc, toPublicDoc } from '@/types/Mongoose';
+import { Department, Location, Postulation } from '../types/Models';
+
+type PublicDepartment = PublicDoc<HydratedDepartment>;
+type PublicLocation = PublicDoc<HydratedLocation>;
+type PublicPostulation = PublicDoc<HydratedPostulation>;
+
+router.get('/', async (req: ApiRequest, res: ApiResponsePagination<Department>): Promise<void> => {
     const { filter, ...options } = qs.parse(req.query) as any;
     try {
         const result = await DepartmentModel.paginate(filter, options);
@@ -26,7 +32,7 @@ router.get('/', async (req: ApiRequest, res: ApiResponsePagination<IDepartmentDo
     }
 });
 
-router.post('/', async (req: ApiRequest, res: ApiResponse<IDepartmentDocument>): Promise<void> => {
+router.post('/', async (req: ApiRequest, res: ApiResponse<PublicDepartment>): Promise<void> => {
     try {
         const department = new DepartmentModel(req.body);
         const result = await department.save();
@@ -36,14 +42,14 @@ router.post('/', async (req: ApiRequest, res: ApiResponse<IDepartmentDocument>):
         }
         res.status(200).json({
             status: 'success',
-            data: result.toObject()
+            data: toPublicDoc(result)
         });
     } catch (err: any) {
         res.status(400).json({ status: 'error', message: err.message });
     }
 });
 
-router.get('/:id', async (req: ApiRequest<any, any, { id: string; }>, res: ApiResponse<IDepartmentDocument>): Promise<void> => {
+router.get('/:id', async (req: ApiRequest<any, any, { id: string; }>, res: ApiResponse<PublicDepartment>): Promise<void> => {
     const { id } = req.params;
     try {
         const department = await DepartmentModel.findById(id);
@@ -53,14 +59,14 @@ router.get('/:id', async (req: ApiRequest<any, any, { id: string; }>, res: ApiRe
         }
         res.status(200).json({
             status: 'success',
-            data: department.toObject()
+            data: toPublicDoc(department)
         });
     } catch (err: any) {
         res.status(400).json({ status: 'error', message: err.message });
     }
 });
 
-router.put('/:id', async (req: ApiRequest<Partial<IDepartmentDocument>, {}, { id: string; }>, res: ApiResponse<IDepartmentDocument>): Promise<void> => {
+router.put('/:id', async (req: ApiRequest<Partial<Department>, {}, { id: string; }>, res: ApiResponse<PublicDepartment>): Promise<void> => {
     const { id } = req.params;
     try {
         const department = await DepartmentModel.findById(id);
@@ -72,7 +78,7 @@ router.put('/:id', async (req: ApiRequest<Partial<IDepartmentDocument>, {}, { id
         const result = await department.save();
         res.status(200).json({
             status: 'success',
-            data: result.toObject()
+            data: toPublicDoc(result)
         });
     } catch (err: any) {
         res.status(400).json({ status: 'error', message: err.message });
@@ -96,7 +102,7 @@ router.delete('/:id', async (req: ApiRequest<any, any, { id: string; }>, res: IA
     }
 });
 
-router.get('/:id/locations', async (req: ApiRequest<any, any, { id: string; }>, res: ApiResponsePagination<ILocationDocument>): Promise<void> => {
+router.get('/:id/locations', async (req: ApiRequest<any, any, { id: string; }>, res: ApiResponsePagination<Location>): Promise<void> => {
     const { id } = req.params;
     const { filter, ...options } = qs.parse(req.query) as any;
     try {
@@ -114,7 +120,7 @@ router.get('/:id/locations', async (req: ApiRequest<any, any, { id: string; }>, 
     }
 });
 
-router.post('/:id/locations', async (req: ApiRequest<Partial<ILocationDocument>, any, { id: string; }>, res: ApiResponse<ILocationDocument>): Promise<void> => {
+router.post('/:id/locations', async (req: ApiRequest<Partial<Location>, any, { id: string; }>, res: ApiResponse<PublicLocation>): Promise<void> => {
     const { id } = req.params;
     try {
         const location = new LocationModel({ ...req.body, department_id: id });
@@ -125,14 +131,14 @@ router.post('/:id/locations', async (req: ApiRequest<Partial<ILocationDocument>,
         }
         res.status(200).json({
             status: 'success',
-            data: result.toObject()
+            data: toPublicDoc(result)
         });
     } catch (err: any) {
         res.status(400).json({ status: 'error', message: err.message });
     }
 });
 
-router.get('/:id/locations/:location_id', async (req: ApiRequest<any, any, { id: string; location_id: string; }>, res: ApiResponse<ILocationDocument>): Promise<void> => {
+router.get('/:id/locations/:location_id', async (req: ApiRequest<any, any, { id: string; location_id: string; }>, res: ApiResponse<PublicLocation>): Promise<void> => {
     const { id, location_id } = req.params;
     try {
         const location = await LocationModel.findOne({ _id: location_id, department_id: id });
@@ -142,14 +148,14 @@ router.get('/:id/locations/:location_id', async (req: ApiRequest<any, any, { id:
         }
         res.status(200).json({
             status: 'success',
-            data: location.toObject()
+            data: toPublicDoc(location)
         });
     } catch (err: any) {
         res.status(400).json({ status: 'error', message: err.message });
     }
 });
 
-router.put('/:id/locations/:location_id', async (req: ApiRequest<Partial<ILocationDocument>, any, { id: string; location_id: string; }>, res: ApiResponse<ILocationDocument>): Promise<void> => {
+router.put('/:id/locations/:location_id', async (req: ApiRequest<Partial<Location>, any, { id: string; location_id: string; }>, res: ApiResponse<PublicLocation>): Promise<void> => {
     const { id, location_id } = req.params;
     try {
         const location = await LocationModel.findOne({ _id: location_id, department_id: id });
@@ -161,7 +167,7 @@ router.put('/:id/locations/:location_id', async (req: ApiRequest<Partial<ILocati
         const result = await location.save();
         res.status(200).json({
             status: 'success',
-            data: result.toObject()
+            data: toPublicDoc(result)
         });
     } catch (err: any) {
         res.status(400).json({ status: 'error', message: err.message });
@@ -187,7 +193,7 @@ router.delete('/:id/locations/:location_id', async (req: ApiRequest<unknown, unk
     }
 });
 
-router.get('/:id/postulations', async (req: ApiRequest<any, any, { id: string; }>, res: ApiResponsePagination<IPostulationDocument>): Promise<void> => {
+router.get('/:id/postulations', async (req: ApiRequest<any, any, { id: string; }>, res: ApiResponsePagination<Postulation>): Promise<void> => {
     const { id } = req.params;
     const { filter, ...options } = qs.parse(req.query) as any;
     try {
@@ -205,7 +211,7 @@ router.get('/:id/postulations', async (req: ApiRequest<any, any, { id: string; }
     }
 });
 
-router.post('/:id/postulations', async (req: ApiRequest<Partial<IPostulationDocument>, any, { id: string; }>, res: ApiResponse<IPostulationDocument>): Promise<void> => {
+router.post('/:id/postulations', async (req: ApiRequest<Partial<Postulation>, any, { id: string; }>, res: ApiResponse<PublicPostulation>): Promise<void> => {
     const { id } = req.params;
     try {
         const postulation = new PostulationModel({ ...req.body, postulation_department_id: id });
@@ -223,7 +229,7 @@ router.post('/:id/postulations', async (req: ApiRequest<Partial<IPostulationDocu
     }
 });
 
-router.get('/:id/postulations/:postulation_id', async (req: ApiRequest<any, any, { id: string; postulation_id: string; }>, res: ApiResponse<IPostulationDocument>): Promise<void> => {
+router.get('/:id/postulations/:postulation_id', async (req: ApiRequest<any, any, { id: string; postulation_id: string; }>, res: ApiResponse<PublicPostulation>): Promise<void> => {
     const { id, postulation_id } = req.params;
     try {
         const postulation = await PostulationModel.findOne({ _id: postulation_id, postulation_department_id: id });
@@ -233,14 +239,14 @@ router.get('/:id/postulations/:postulation_id', async (req: ApiRequest<any, any,
         }
         res.status(200).json({
             status: 'success',
-            data: postulation.toObject()
+            data: toPublicDoc(postulation)
         });
     } catch (err: any) {
         res.status(400).json({ status: 'error', message: err.message });
     }
 });
 
-router.put('/:id/postulations/:postulation_id', async (req: ApiRequest<Partial<IPostulationDocument>, any, { id: string; postulation_id: string; }>, res: ApiResponse<IPostulationDocument>): Promise<void> => {
+router.put('/:id/postulations/:postulation_id', async (req: ApiRequest<Partial<Postulation>, any, { id: string; postulation_id: string; }>, res: ApiResponse<PublicPostulation>): Promise<void> => {
     const { id, postulation_id } = req.params;
     try {
         console.log(await PostulationModel.findOne({ _id: postulation_id, postulation_department_id: id }))

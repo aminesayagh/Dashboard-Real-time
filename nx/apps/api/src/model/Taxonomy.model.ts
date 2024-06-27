@@ -1,6 +1,7 @@
-import { Schema, model, HydratedDocument, Model } from 'mongoose';
+import { PaginateModel, Schema, model, HydratedDocument, Model } from 'mongoose';
 import { MODEL_NAME, STATE_POSTULATION } from 'shared-ts';
 import { Taxonomy } from '../types/Models';
+import mongoosePagination from 'mongoose-paginate-v2';
 
 interface TaxonomyMethods {}
 
@@ -8,7 +9,7 @@ interface TaxonomyStatics {}
 
 interface TaxonomyVirtual {}
 
-export type TaxonomyModel = Model<Taxonomy, {}, TaxonomyMethods, TaxonomyVirtual> & TaxonomyStatics;
+export type TaxonomyModel = Model<Taxonomy, {}, TaxonomyMethods, TaxonomyVirtual> & TaxonomyStatics & PaginateModel<Taxonomy>;
 export type HydratedTaxonomy = HydratedDocument<Taxonomy, TaxonomyMethods & TaxonomyVirtual>;
 
 
@@ -53,6 +54,8 @@ const TaxonomySchema = new Schema<Taxonomy, TaxonomyModel, TaxonomyMethods, Taxo
         updatedAt: 'updatedAt',
     }
 });
+
+TaxonomySchema.plugin(mongoosePagination as any);
 
 const Taxonomy = model<Taxonomy, TaxonomyModel>(MODEL_NAME.TAXONOMY, TaxonomySchema);
 

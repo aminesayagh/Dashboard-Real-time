@@ -1,4 +1,4 @@
-import { Schema ,Model, model } from "mongoose";
+import { Schema ,Model, model, HydratedDocument } from "mongoose";
 import { MODEL_NAME,  } from "shared-ts";
 import { PostulationTypeContent } from '../types/Models';
 
@@ -9,7 +9,7 @@ interface PostulationTypeStatics {}
 interface PostulationTypeContentVirtual {}
 
 export type PostulationTypeContentModel = Model<PostulationTypeContent, {}, PostulationTypeContentMethods, PostulationTypeContentVirtual> & PostulationTypeStatics;
-export type HydratedPostulationTypeContent = PostulationTypeContent;
+export type HydratedPostulationTypeContent = HydratedDocument<PostulationTypeContent>;
 
 // export interface IPostulationTypeModel extends PaginateModel<IPostulationTypeContentDocument> {};
 

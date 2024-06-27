@@ -5,21 +5,16 @@ import multer from 'multer';
 import { v2 as cloud } from 'cloudinary';
 import DataUriParser from 'datauri/parser';
 import path from 'path';
-import z from 'zod';
-import { STATE_RESOURCE, zModelName,  } from 'shared-ts';
+import { STATE_RESOURCE, ResourceTypes, zBodyMedia, zAttachmentBody, STATE_ATTACHMENT } from 'shared-ts';
 import mongoose, { Types } from 'mongoose';
 
-import ResourceModel from '../model/Resource.model';
-import {  IAttachmentDocument, IResourceDocument, AttachmentObject } from 'types/Model';
+import ResourceModel, { HydratedAttachment, HydratedResource } from '../model/Resource.model';
+import {  Resource } from '../types/Models';
 
 const router = express.Router();
 
-const zodResourceType = z.enum(['image', 'video', 'raw', 'auto']);
-const zodBodyMedia = z.object({
-    resource_type: zodResourceType.default('auto'),
-    user_id: z.string(),
-    resource_folder: z.enum(['postulation', 'user', 'department', 'taxonomy', 'university_period', 'resource', 'email']).default('resource'),
-});
+type PublicResource = PublicDoc<HydratedResource>;
+type PublicAttachment = PublicDoc<HydratedAttachment>;
 
 
 import { 
@@ -27,6 +22,7 @@ import {
     CLOUDINARY_API_SECRET,
     CLOUDINARY_CLOUD_NAME
 } from '../env';
+import { PublicDoc, toPublicDoc } from '@/types/Mongoose';
 cloud.config({
     cloud_name: CLOUDINARY_CLOUD_NAME,
     api_key: CLOUDINARY_API_KEY,
@@ -34,7 +30,6 @@ cloud.config({
 })
 
 const generateRandomNumber = () => Math.floor(Math.random() * 1000);
-type ResourceTypes = 'image' | 'video' | 'raw' | 'auto';
 const createMedia = async (file: Express.Multer.File, resource_type: ResourceTypes, resource_folder: string) => {
     const parser = new DataUriParser();
     const base64Image = parser.format(path.extname(`${file.originalname}_${generateRandomNumber()}`).toString(), file.buffer);
@@ -58,8 +53,8 @@ const deleteMedia = async (public_id: string) => {
     }
 }
 router.post('/', multer().any(), async (req: ApiRequest<
-    Partial<IResourceDocument> & { file: Express.Multer.File[] }
-    >, res: ApiResponse<IResourceDocument>): Promise<void> => {
+    Partial<Resource> & { file: Express.Multer.File[] }
+    >, res: ApiResponse<PublicResource>): Promise<void> => {
     const files = req.files;
     if (!files) {
         res.status(400).json({
@@ -67,7 +62,7 @@ router.post('/', multer().any(), async (req: ApiRequest<
             status: 'error'
         });
     }
-    const body = zodBodyMedia.parse(req.body);
+    const body = zBodyMedia.parse(req.body);
     if (Array.isArray(files)) {
         await Promise.all(files.map(async (file) => {
             try {
@@ -176,17 +171,10 @@ router.get('/:id/attachments', async (req: ApiRequest<{}, { id: string }>, res: 
     });
 });
 
-
-
-const zAttachmentBody = z.object({
-    attachment_reference: z.string(),
-    attachment_collection: zModelName,
-});
-
 router.post('/:id/attachments', async (req: ApiRequest<{
     attachment_reference: string,
     attachment_collection: string,
-}, { id: string }>, res: ApiResponse<IAttachmentDocument>): Promise<void> => {
+}, { id: string }>, res: ApiResponse<PublicAttachment>): Promise<void> => {
     const { id: idResource } = req.params;
     const resource = await ResourceModel.findById(idResource).catch((err) => {
         res.status(400).json({
@@ -228,13 +216,12 @@ router.post('/:id/attachments', async (req: ApiRequest<{
     await resource.save().catch((err) => {
         throw new Error(err);
     });
-    const data = attachment;
     res.status(200).json({
         status: 'success',
-        data
+        data: toPublicDoc(attachment)
     });
 });
-router.delete('/:id/attachments/:attachment_id', async (req: ApiRequest<{}, { id: string, attachment_id: string }>, res: ApiResponse<AttachmentObject>): Promise<void> => {
+router.delete('/:id/attachments/:attachment_id', async (req: ApiRequest<{}, { id: string, attachment_id: string }>, res: ApiResponse<HydratedAttachment>): Promise<void> => {
     const { id, attachment_id } = req.params;
     const resource = await ResourceModel.findById(id).catch((
         err
@@ -261,10 +248,9 @@ router.delete('/:id/attachments/:attachment_id', async (req: ApiRequest<{}, { id
     await resource.save().catch((err) => {
         throw new Error(err);
     });
-    const data = attachment.toObject();
     res.status(200).json({
         status: 'success',
-        data
+        data: toPublicDoc(attachment)
     });
 });
 router.delete('/:id', async (req: ApiRequest, res: IApiDeleteResponse): Promise<void> => {

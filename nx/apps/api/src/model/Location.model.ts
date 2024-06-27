@@ -1,4 +1,4 @@
-import { Schema, model, Model, HydratedDocument } from 'mongoose';
+import { Schema, model, Model, HydratedDocument, PaginateModel } from 'mongoose';
 import { MODEL_NAME } from 'shared-ts';
 import mongoosePagination from 'mongoose-paginate-v2';
 import { Location } from '../types/Models';
@@ -9,7 +9,7 @@ interface LocationStatics {}
 
 interface LocationVirtual {}
 
-export type LocationModel = Model<Location, {}, LocationMethods, LocationVirtual> & LocationStatics; 
+export type LocationModel = Model<Location, {}, LocationMethods, LocationVirtual> & LocationStatics & PaginateModel<Location>;
 export type HydratedLocation = HydratedDocument<Location, LocationMethods & LocationVirtual>;  
 
 const LocationSchema = new Schema<Location, LocationModel, LocationMethods, LocationVirtual>({

@@ -1,5 +1,6 @@
-import { Schema, model, Model, HydratedDocument } from 'mongoose';
+import { Schema, model, Model, HydratedDocument, PaginateModel } from 'mongoose';
 import { MODEL_NAME } from 'shared-ts';
+import mongoosePagination from 'mongoose-paginate-v2';
 import { Department } from '../types/Models';
 
 interface DepartmentMethods {}  
@@ -8,7 +9,7 @@ interface DepartmentStatics {}
 
 interface DepartmentVirtual {}
 
-export type DepartmentModel = Model<Department, {}, DepartmentMethods, DepartmentVirtual> & DepartmentStatics;  
+export type DepartmentModel = Model<Department, {}, DepartmentMethods, DepartmentVirtual> & DepartmentStatics & PaginateModel<Department>;
 export type HydratedDepartment = HydratedDocument<Department, DepartmentMethods & DepartmentVirtual>;
 
 
@@ -32,6 +33,8 @@ const DepartmentSchema = new Schema<Department, DepartmentModel, DepartmentMetho
         updatedAt: 'updatedAt',
     }
 });
+
+DepartmentSchema.plugin(mongoosePagination as any);
 
 const Department = model<Department, DepartmentModel>(MODEL_NAME.DEPARTMENT, DepartmentSchema, MODEL_NAME.DEPARTMENT.toLowerCase());
 
