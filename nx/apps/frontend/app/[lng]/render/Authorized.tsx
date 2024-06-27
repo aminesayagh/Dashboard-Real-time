@@ -1,17 +1,9 @@
 'use client'
-import { ReactNode, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/react';
-import type { Session } from '@/types/auth';
-import { signOut } from '@auth/helpers';
 import Loading from '@ui/Loading';
-import Error from '@ui/Error';
-import { Lang, RouteSettingPath, generatePageUrl } from '@i18n/settings';
+import { Lang } from '@i18n/settings';
 import { TStateUserRole } from '@/types/data';
-import Authenticated from './Authenticated';
-import { ValidatedSession } from './Authenticated';
 import Profiled from './Profiled';
-import RedirectDefault, { RedirectComponent } from './DefaultRedirect';
+import { RedirectComponent } from './DefaultRedirect';
 
 const hasRight = (rights: TStateUserRole[], userRights: TStateUserRole[]): boolean => rights.some(right => userRights.includes(right)); 
 

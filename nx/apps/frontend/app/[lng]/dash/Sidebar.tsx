@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo, useCallback, Key } from "react";
+import React, { useCallback, Key } from "react";
 import { title, text } from "@ui/typography/Typography.style";
 import { generatePageUrl, Lang, RouteSettingPath } from "@/app/i18n/settings";
 import { useTranslation } from "@i18n/client";

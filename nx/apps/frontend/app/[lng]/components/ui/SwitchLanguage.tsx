@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import { Select, SelectItem } from "@nextui-org/select";
-import { Avatar } from "@nextui-org/avatar";
+import { Select, SelectItem } from "@nextui-org/react";
+import { Avatar } from "@nextui-org/react";
 import { languages } from "@i18n/settings";
 
 import { Lang } from "@/app/i18n/settings";

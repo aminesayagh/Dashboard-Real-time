@@ -13,7 +13,6 @@ export default function Action({
     };
   }>) {
     return (
-        
         <Container size='sm' as='section' className="py-24 flex flex-col gap-4 justify-start items-start">
             <Card >
                 <CardBody>
