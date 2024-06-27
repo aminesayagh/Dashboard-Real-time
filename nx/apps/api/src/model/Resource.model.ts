@@ -1,6 +1,7 @@
 import { PaginateModel, Schema, model, Model, HydratedDocument } from 'mongoose';
 import { MODEL_NAME, STATE_RESOURCE_ARRAY, STATE_RESOURCE, STATE_ATTACHMENT_ARRAY, STATE_ATTACHMENT, MODEL_NAME_ARRAY } from 'shared-ts';
 import { Attachment, Media, Resource } from '../types/Models';
+import { Types } from 'mongoose';
 
 
 // Attachment
@@ -36,6 +37,9 @@ const attachmentSchema = new Schema<Attachment, AttachmentModel, AttachmentMetho
 
 // Resource
 interface ResourceMethods {
+    assignMedia: (media: Media) => Promise<Resource>;
+    assignAttachment: (attachment: Attachment) => Promise<Resource>;
+    findAttachmentById: (attachment_id: string) => HydratedAttachment | undefined;
 }
 interface ResourceStatics {
     generateResourceName: (resource_name: string, owner_id: string) => string;
@@ -121,6 +125,28 @@ resourceSchema.static('generateResourceName', (resource_name: string, owner_id: 
     return `${resource_name}-${owner_id}`;
 });
 
+// add a new method to resourceSchema.methods, helping to assign a new resource_media 
+resourceSchema.methods.assignMedia = function (media: Media) {
+    const mediaDoc = new MediaModel(media);
+    this.resource_media.push(mediaDoc);
+    return this.save();
+};
+
+// add a attachment to resource
+resourceSchema.methods.assignAttachment = function (attachment: Attachment) {
+    const attachmentDoc = new AttachmentModel(attachment);
+    this.resource_attachments.push(attachmentDoc);
+    return this.save();
+};
+
+// add a method to Find a attachment by id and return HydratedAttachment
+resourceSchema.methods.findAttachmentById = function (attachment_id: string) {
+    const attachment = this.resource_attachments.find((attachment) => attachment._id && attachment._id.toString() === attachment_id);
+    return attachment as HydratedAttachment;
+};
+
+const AttachmentModel = model<Attachment, AttachmentModel>(MODEL_NAME.ATTACHMENT, attachmentSchema, MODEL_NAME.ATTACHMENT.toLowerCase());
+const MediaModel = model<Media, MediaModel>(MODEL_NAME.MEDIA, mediaSchema, MODEL_NAME.MEDIA.toLowerCase());
 const ResourceModel = model<Resource, ResourceModel>(MODEL_NAME.RESOURCE, resourceSchema, MODEL_NAME.RESOURCE.toLowerCase());
 
 export default ResourceModel;

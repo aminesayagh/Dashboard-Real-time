@@ -58,13 +58,17 @@ export interface Attachment<ObjectId = string> {
 
 
 
-export interface Resource<ObjectId = string> {
+export interface Resource<ObjectId = string, AttachmentDocument = Attachment & {
+  _id: ObjectId;
+}, MediaDocument = Media & {
+  _id: ObjectId;
+}> {
   resource_name: string;
-  resource_media: Media[]
+  resource_media: MediaDocument[]
   resource_owner: ObjectId;
   resource_type: string;
   resource_state: TStateResource;
-  resource_attachments: Attachment<ObjectId>[];
+  resource_attachments: AttachmentDocument[];
 }
 
 

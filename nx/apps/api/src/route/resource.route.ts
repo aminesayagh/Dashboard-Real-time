@@ -9,7 +9,7 @@ import { STATE_RESOURCE, ResourceTypes, zBodyMedia, zAttachmentBody, STATE_ATTAC
 import mongoose, { Types } from 'mongoose';
 
 import ResourceModel, { HydratedAttachment, HydratedResource } from '../model/Resource.model';
-import {  Resource } from '../types/Models';
+import { Attachment, Resource } from '../types/Models';
 
 const router = express.Router();
 
@@ -84,7 +84,7 @@ router.post('/', multer().any(), async (req: ApiRequest<
                     throw new Error(ERRORS.FAILED_TO_CREATE_RESOURCE);
                 }
 
-                resource.resource_media.push({
+                resource.assignMedia({
                     media_source: media.secure_url,
                     media_public_id: media.public_id,
                     media_signature: media.signature,
@@ -95,10 +95,9 @@ router.post('/', multer().any(), async (req: ApiRequest<
                     throw new Error(err);
                 });
 
-                const data = resource.toObject();
                 res.status(200).json({
                     status: 'success',
-                    data
+                    data: toPublicDoc(resource)
                 })
             } catch (err) {
                 res.status(500).json({
@@ -115,7 +114,7 @@ router.post('/', multer().any(), async (req: ApiRequest<
     }
 });
 
-router.get('/:id', async (req: ApiRequest, res: ApiResponse<IResourceDocument>): Promise<void> => {
+router.get('/:id', async (req: ApiRequest, res: ApiResponse<PublicResource>): Promise<void> => {
     const { id } = req.params;
     const resource = await ResourceModel.findById(id).catch((err) => {
         throw new Error(err);
@@ -128,13 +127,12 @@ router.get('/:id', async (req: ApiRequest, res: ApiResponse<IResourceDocument>):
         return;
     }
     
-    const data = resource.toObject();
     res.status(200).json({
         status: 'success',
-        data
+        data: toPublicDoc(resource)
     });
 });
-router.put('/:id', async (req: ApiRequest, res: ApiResponse<IResourceDocument>): Promise<void> => {
+router.put('/:id', async (req: ApiRequest, res: ApiResponse<PublicResource>): Promise<void> => {
     const { id } = req.params;
     const resource = await ResourceModel.findById(id).catch((err) => {
         throw new Error(err);
@@ -146,13 +144,12 @@ router.put('/:id', async (req: ApiRequest, res: ApiResponse<IResourceDocument>):
         });
         return;
     }
-    const data = resource.toObject();
     res.status(200).json({
         status: 'success',
-        data
+        data: toPublicDoc(resource)
     });
 });
-router.get('/:id/attachments', async (req: ApiRequest<{}, { id: string }>, res: ApiResponse<AttachmentObject[]>): Promise<void> => {
+router.get('/:id/attachments', async (req: ApiRequest<{}, { id: string }>, res: ApiResponse<Attachment[]>): Promise<void> => {
     const { id } = req.params;
     const resource = await ResourceModel.findById(id).catch((err) => {
         throw new Error(err);
@@ -164,19 +161,21 @@ router.get('/:id/attachments', async (req: ApiRequest<{}, { id: string }>, res: 
         });
         return;
     }
+
     const data = resource.resource_attachments;
+
     res.status(200).json({
         status: 'success',
-        data
+        data,
     });
 });
 
 router.post('/:id/attachments', async (req: ApiRequest<{
     attachment_reference: string,
     attachment_collection: string,
-}, { id: string }>, res: ApiResponse<PublicAttachment>): Promise<void> => {
+}, { id: string }>, res: ApiResponse<Attachment>): Promise<void> => {
     const { id: idResource } = req.params;
-    const resource = await ResourceModel.findById(idResource).catch((err) => {
+    const resource = await ResourceModel.findById(idResource).catch((_) => {
         res.status(400).json({
             message: ERRORS.NOT_FOUND,
             status: 'error'
@@ -208,20 +207,25 @@ router.post('/:id/attachments', async (req: ApiRequest<{
         return;
     }
 
-    resource.resource_attachments.push({
+    resource.assignAttachment({
         attachment_reference: found?._id,
         attachment_collection: collection,
         attachment_state: STATE_ATTACHMENT.ATTACHED,
     });
-    await resource.save().catch((err) => {
-        throw new Error(err);
-    });
+    const attachmentResponse = resource.resource_attachments.find((attachment) => attachment.attachment_reference.toString() === reference.toString());
+    if (!attachmentResponse) {
+        res.status(500).json({
+            message: ERRORS.INTERNAL_SERVER_ERROR,
+            status: 'error'
+        });
+        return;
+    }
     res.status(200).json({
         status: 'success',
-        data: toPublicDoc(attachment)
+        data: attachmentResponse
     });
 });
-router.delete('/:id/attachments/:attachment_id', async (req: ApiRequest<{}, { id: string, attachment_id: string }>, res: ApiResponse<HydratedAttachment>): Promise<void> => {
+router.delete('/:id/attachments/:attachment_id', async (req: ApiRequest<{}, { id: string, attachment_id: string }>, res: ApiResponse<PublicAttachment>): Promise<void> => {
     const { id, attachment_id } = req.params;
     const resource = await ResourceModel.findById(id).catch((
         err

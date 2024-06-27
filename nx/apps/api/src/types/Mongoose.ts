@@ -30,7 +30,7 @@ export interface PublicDoc<T extends Document> {
   updatedAt: Date;
 }
 
-export function toPublicDoc<T extends Document<Types.ObjectId>>(doc: T): PublicDoc<T> {
+export function toPublicDoc<T extends Document<Types.ObjectId, any, T>>(doc: T): PublicDoc<T> {
   const { _id, createdAt, updatedAt, ...rest }: { _id: Types.ObjectId, createdAt: Date, updatedAt: Date } = doc.toObject();
   return {
     id: _id.toString(),
