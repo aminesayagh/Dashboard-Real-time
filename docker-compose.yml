@@ -1,20 +1,20 @@
 version: '3.9'
 services:
   frontend:
-    build: ./application/frontend
+    build: ./nx/apps/frontend
     ports:
       - "3000:3000"
     volumes:
-      - ./application/frontend:/app
+      - ./nx/apps/frontend:/app
     depends_on:
       - backend
 
   backend:
-    build: ./application/backend
+    build: ./nx/apps/api
     ports:
       - "3001:3001"
     volumes:
-      - ./application/backend:/app
+      - ./nx/apps/api:/app
     environment:
       - PORT=3001
       - MONGO_DB=app_db
