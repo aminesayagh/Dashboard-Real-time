@@ -1,10 +1,10 @@
 import { Types, Document } from 'mongoose';
 
-
+type DefaultKeys = '_id' | 'createdAt' | 'updatedAt';
 
 export interface PublicDoc<T extends Document<Types.ObjectId>> {
   id: string;
-  doc: Omit<T, '_id' | 'createdAt' | 'updatedAt'>;
+  doc: Omit<T, DefaultKeys>;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -15,7 +15,7 @@ export function toPublicDoc<T extends Document<Types.ObjectId, any, T>>(doc: T):
     id: _id.toString(),
     doc: {
       ...rest
-    } as Omit<T, '_id' | 'createdAt' | 'updatedAt'>,
+    } as Omit<T, DefaultKeys>,
     createdAt: createdAt,
     updatedAt: createdAt,
   };
