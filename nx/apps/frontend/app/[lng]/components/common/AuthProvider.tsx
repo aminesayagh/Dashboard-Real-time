@@ -1,3 +1,4 @@
+'use client'
 import React, { useEffect, useState } from "react";
 import {
   getProviders,
@@ -12,7 +13,9 @@ import Google from "@public/icons/google.png";
 import Github from "@public/icons/github.png";
 import Image from "next/image";
 
-import { Button } from "@nextui-org/button";
+import { Button } from "@nextui-org/react";
+import { Lang } from "@/app/i18n/settings";
+
 const providerImage = {
   google: Google,
   github: Github,
@@ -44,7 +47,7 @@ const Provider = ({
   );
 };
 
-export default function Providers() {
+export default function Providers({ lng }: { lng: Lang }) {
   const [providers, setProviders] = useState<Record<
     LiteralUnion<BuiltInProviderType, string>,
     { id: string; name: string }
@@ -62,7 +65,7 @@ export default function Providers() {
     setTheProviders();
   }, []);
   if (status === "loading") {
-    return <Loading size='md' />;
+    return <Loading size='md' lang={lng} />;
   }
   return (
     <div className='flex flex-col gap-2'>
@@ -79,7 +82,7 @@ export default function Providers() {
           />
         ))
       ) : (
-        <Loading size='md' />
+        <Loading size='md' lang={lng} />
       )}
     </div>
   );

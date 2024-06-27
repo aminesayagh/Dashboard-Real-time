@@ -11,6 +11,23 @@
   "namedInputs": {
     "noMarkdown": "!{projectRoot}/**/*.md"
   },
+  "projects": {
+    "api": {
+      "root": "apps/api",
+      "projectType": "application",
+      "tags": []
+    },
+    "frontend": {
+      "root": "apps/frontend",
+      "projectType": "application",
+      "tags": []
+    },
+    "shared-ts": {
+      "root": "packages/shared-ts",
+      "projectType": "library",
+      "tags": []
+    }
+  },
   "targetDefaults": {
     "build": {
       "inputs": ["noMarkdown", "^noMarkdown"],

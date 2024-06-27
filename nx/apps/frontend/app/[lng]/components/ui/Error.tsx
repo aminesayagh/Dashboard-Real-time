@@ -2,7 +2,7 @@
 import React from 'react';
 import { Lang } from '@i18n/settings';
 
-export default function Error({ lang, message }: {
+export default function Error({ message }: {
     lang: Lang,
     message: string
 }) {

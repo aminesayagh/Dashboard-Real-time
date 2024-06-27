@@ -8,7 +8,6 @@ import resourcesToBackend from 'i18next-resources-to-backend';
 import LanguageDetector from 'i18next-browser-languagedetector'
 import { getOptions, languages, cookieName, Lang, Namespace } from './settings';
 export { generatePageUrl } from './settings';
-import { } from 'shared-ts';
 
 
 const runsOnServerSide = typeof window === 'undefined';

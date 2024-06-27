@@ -1,6 +1,6 @@
 "use client";
 import React from 'react';
-import { Spinner } from "@nextui-org/spinner";
+import { Spinner } from "@nextui-org/react";
 import { Lang } from '@/app/i18n/settings';
 
 

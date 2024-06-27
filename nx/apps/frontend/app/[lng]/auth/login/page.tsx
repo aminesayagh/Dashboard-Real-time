@@ -41,7 +41,7 @@ export default function Home({
       <CardBody>
         <LoginForm />
         <DividerWithText>{t("or")}</DividerWithText>
-        <AuthProvider />
+        <AuthProvider lng={lng} />
       </CardBody>
       <CardFooter>
         <div className="w-full text-center">

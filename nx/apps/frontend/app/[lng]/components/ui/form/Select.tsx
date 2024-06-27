@@ -1,5 +1,5 @@
 'use client';
-import { Select, SelectItem } from '@nextui-org/select';
+import { Select, SelectItem } from '@nextui-org/react';
 import type { TSelect, TSelectItem } from './types';
 
 const SelectUi: TSelect = ({ ...props }) => {

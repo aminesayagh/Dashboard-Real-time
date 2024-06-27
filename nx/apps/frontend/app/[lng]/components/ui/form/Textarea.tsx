@@ -1,5 +1,5 @@
 'use client';
-import {Textarea} from "@nextui-org/input";
+import {Textarea} from "@nextui-org/react";
 import type { TTextarea } from "./types";
 
 const TextareaUi: TTextarea = ({ ...props }) => {

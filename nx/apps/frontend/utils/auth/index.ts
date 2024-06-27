@@ -1,16 +1,16 @@
 import NextAuth, { NextAuthConfig } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import GithubProvider from "next-auth/providers/github";
-import { SECRET, NEXT_AUTH_URL } from "@utils/env";
+import { SECRET } from "@utils/env";
 import { MongoDBAdapter } from '@next-auth/mongodb-adapter';
-import EmailProvider from "next-auth/providers/email";
+// import EmailProvider from "next-auth/providers/email";
 
 import clientPromise from '@utils/mongodbConnect';
 import { generatePageUrl } from "@/app/i18n/settings";
 
 import {
-  GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, EMAIL_FROM,
-  EMAIL_SERVER_HOST, EMAIL_SERVER_PORT, EMAIL_SERVER_USER, EMAIL_SERVER_PASSWORD
+  GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, 
+  // EMAIL_FROM, EMAIL_SERVER_HOST, EMAIL_SERVER_PORT, EMAIL_SERVER_USER, EMAIL_SERVER_PASSWORD
 } from '../env';
 
 const authOptions: NextAuthConfig = {
@@ -32,17 +32,17 @@ const authOptions: NextAuthConfig = {
   },
   providers: [
     // https://next-auth.js.org/providers/email
-    EmailProvider({
-      server: {
-        host: EMAIL_SERVER_HOST,
-        port: EMAIL_SERVER_PORT,
-        auth: {
-          user: EMAIL_SERVER_USER,
-          pass: EMAIL_SERVER_PASSWORD,
-        },
-      },
-      from: EMAIL_FROM,
-    }),
+    // EmailProvider({
+    //   server: {
+    //     host: EMAIL_SERVER_HOST,
+    //     port: Number(EMAIL_SERVER_PORT),
+    //     auth: {
+    //       user: EMAIL_SERVER_USER,
+    //       pass: EMAIL_SERVER_PASSWORD,
+    //     },
+    //   },
+    //   from: EMAIL_FROM,
+    // }),
     GoogleProvider({
       clientId: GOOGLE_CLIENT_ID,
       clientSecret: GOOGLE_CLIENT_SECRET,
