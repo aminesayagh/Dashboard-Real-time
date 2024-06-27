@@ -24,7 +24,7 @@ async function handleResponse<T>(response: Response): Promise<ApiResponse<T>> {
     }
 }
 
-type validSendingData = Record<string, string | number | boolean>;
+type validSendingData = Record<string, string | number | boolean | undefined>;
 
 class Fetch {
     private _method: Method | null = null;
@@ -119,30 +119,30 @@ class Fetch {
         this._query = '';
         this._body = {};
     }
-    public get<T>(path: string, query: string|validSendingData, options: RequestInit) {
+    public get<T>(path: string, query: string|validSendingData, options: RequestInit = {}) {
         this.create(path);
         this.method = 'GET';
         this.query = query;
         return this.request<T>(options);
     }
-    public post<T>(path: string, body: validSendingData, options: RequestInit): Promise<ApiResponse<T>> {
+    public post<T>(path: string, body: validSendingData, options: RequestInit = {}): Promise<ApiResponse<T>> {
         this.create(path);
         this.method = 'POST';
         this.body = body;
         return this.request<T>(options);
     }
-    public put<T>(path: string, body: validSendingData, options: RequestInit): Promise<ApiResponse<T>> {
+    public put<T>(path: string, body: validSendingData, options: RequestInit = {}): Promise<ApiResponse<T>> {
         this.create(path);
         this.method = 'PUT';
         this.body = body;
         return this.request<T>(options);
     }
-    public delete<T>(path: string, options: RequestInit): Promise<ApiResponse<T>> {
+    public delete<T>(path: string, options: RequestInit = {}): Promise<ApiResponse<T>> {
         this.create(path);
         this.method = 'DELETE';
         return this.request<T>(options);
     }
-    public patch<T>(path: string, body: validSendingData, options: RequestInit): Promise<ApiResponse<T>> {
+    public patch<T>(path: string, body: validSendingData, options: RequestInit = {}): Promise<ApiResponse<T>> {
         this.create(path);
         this.method = 'PATCH';
         this.body = body;
@@ -150,6 +150,18 @@ class Fetch {
     }
 }
 
-export default function f() {
+// every time this const is called, a new instance of Fetch is created
+
+function f (): InstanceType<typeof Fetch>;
+function f <T>(method: Method, path: string, query: string|validSendingData, options: RequestInit = {}): Promise<ApiResponse<T>>;
+
+function f() {
     return new Fetch();
 }
+
+function f<T>(method: Method, path: string, query: string|validSendingData, options: RequestInit = {}): Promise<ApiResponse<T>> {
+    const fetch = new Fetch();
+    return fetch.get<T>(path, query, options);
+}
+
+export default f;

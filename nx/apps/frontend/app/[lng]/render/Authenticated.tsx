@@ -6,12 +6,15 @@ import type { Session } from '@/types/auth';
 import { signOut } from '@auth/helpers';
 import Loading from '@ui/Loading';
 import Error from '@ui/Error';
-import { Lang, RouteSettingPath, generatePageUrl } from '@i18n/settings';
+import { Lang } from '@i18n/settings';
 import { NonNullableType } from '@/utils/types/non-nullable';
+import DefaultRedirect, { RedirectComponent } from './DefaultRedirect';
 export type ValidatedSession = NonNullableType<Session<true>>;
-export default function Authenticated({ children, redirect, lng }: {
+
+
+export default function Authenticated({ children, Redirect = DefaultRedirect, lng }: {
     children: (session: ValidatedSession) => JSX.Element,
-    redirect: RouteSettingPath,
+    Redirect: RedirectComponent,
     lng: Lang
 }) {
     const router = useRouter();
@@ -19,9 +22,9 @@ export default function Authenticated({ children, redirect, lng }: {
 
     useEffect(() => {
         if (status === 'unauthenticated') {
-            router.push(generatePageUrl(lng, redirect));
+            Redirect({ link: 'auth.login', lng });
         }
-    }, [status, router, lng, redirect]);
+    }, [status, router, lng, Redirect]);
 
     
 
@@ -30,8 +33,7 @@ export default function Authenticated({ children, redirect, lng }: {
     }
 
     if (status === 'unauthenticated') {
-        router.push(generatePageUrl(lng, redirect));
-        return <Error lang={lng} message='unauthenticated' />
+        return Redirect({ link: 'auth.login', lng })
     }
 
     if (!session) {

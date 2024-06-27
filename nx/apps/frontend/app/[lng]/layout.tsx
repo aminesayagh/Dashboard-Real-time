@@ -8,6 +8,7 @@ import { Inter } from "next/font/google";
 import { languages } from "@i18n/settings";
 import NextUiProvider from "@providers/NextUiProvider";
 import SessionProvider from "@providers/SessionProvider";
+import QueryClientProvider from "@providers/QueryClientProvider";
 import { twMerge as tw } from "tailwind-merge";
 
 export async function generateStaticParams() {
@@ -35,11 +36,13 @@ export default function RootLayout({
     <html lang={lng} dir={dir(lng)} className="light">
       <body className={inter.className}>
         <SessionProvider>
-          <NextUiProvider>
-            <main className={tw("light bg-background text-foreground")}>
-              {children}
-            </main>
-          </NextUiProvider>
+          <QueryClientProvider>
+            <NextUiProvider>
+              <main className={tw("light bg-background text-foreground")}>
+                {children}
+              </main>
+            </NextUiProvider>
+          </QueryClientProvider>
         </SessionProvider>
       </body>
     </html>

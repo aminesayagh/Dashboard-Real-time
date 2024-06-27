@@ -14,7 +14,7 @@
     "@nextui-org/system": "^2.2.2",
     "@nextui-org/theme": "^2.2.6",
     "@svgr/webpack": "^8.1.0",
-    "@tanstack/react-query": "^5.45.1",
+    "@tanstack/react-query": "^5.48.0",
     "@types/qs": "^6.9.15",
     "accept-language": "^3.0.18",
     "class-variance-authority": "^0.7.0",

@@ -39,5 +39,5 @@ export type Postulation = Document<TPostulation>;
 export type Department = Document<TDepartment>;
 export type Location = Document<TLocation>;
 
-export type UserMeAggregate = Document<TUserMeAggregate>;
-export type UserAggregate = Document<TUserAggregate>;
+export type UserMeAggregate = TUserMeAggregate;
+export type UserAggregate = TUserAggregate;
