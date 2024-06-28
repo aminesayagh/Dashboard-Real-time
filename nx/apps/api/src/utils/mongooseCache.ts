@@ -27,7 +27,7 @@ export const disconnectRedis = async () => {
 }
 
 // Middleware to handle caching for GET requests
-export const cacheMiddleware = async (req: ApiRequest, res: ApiResponse, next: NextFunction) => {
+export const cacheMiddleware = async (req: ApiRequest, res: ApiResponse<unknown>, next: NextFunction) => {
   if (req.method === 'GET') {
     const key = req.originalUrl;
     try {
@@ -53,7 +53,7 @@ export const cacheMiddleware = async (req: ApiRequest, res: ApiResponse, next: N
 };
 
 // @ts-ignore
-export const invalidateCacheMiddleware = async (req: ApiRequest, res: ApiResponse, next: NextFunction) => {
+export const invalidateCacheMiddleware = async (req: ApiRequest, res: ApiResponse<unknown>, next: NextFunction) => {
   if (['POST', 'PUT', 'DELETE', 'PATCH'].includes(req.method)) {
     const baseUrl = req.baseUrl || req.url;
     const parts = baseUrl.split('/');
