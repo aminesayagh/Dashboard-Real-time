@@ -1,18 +1,32 @@
-import {
-    QueryClient,
-    QueryClientProvider,
-  } from '@tanstack/react-query'
+'use client'
+import { useState } from 'react'
+
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
 
 type QueryClientProviderProps = {
-    children: React.ReactNode;
+  children: React.ReactNode
 }
 
-const queryClient = new QueryClient()
-
 function AppQuery({ children }: QueryClientProviderProps) {
-    return <QueryClientProvider client={queryClient}>
-      {children}
-    </QueryClientProvider>
+  const [queryClient] = useState(() => new QueryClient({
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus: false,
+        retry: false,
+        staleTime: 60 * 1000,
+
+      },
+    },
+  }))
+  if (!queryClient) {
+    throw new Error('No query client found')
+  }
+
+  return (
+    <>
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    </>
+  )
 }
 
 export default AppQuery

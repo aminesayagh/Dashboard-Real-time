@@ -10,5 +10,7 @@
   },
   "type": "commonjs",
   "main": "./src/index.js",
+  "types": "./src/index.d.ts",
+  "module": "./src/index.mjs",
   "private": true
 }
