@@ -1,4 +1,12 @@
+import { MONGO_ATLAS } from '../env';
 import mongoose from 'mongoose';
+
+export function generateMongoUri(MONGO_USER='', MONGO_PASSWORD='', MONGO_URI='', MONGO_DB=''): string {
+  if (`${MONGO_USER}` != '' && `${MONGO_PASSWORD}` != '' && `${MONGO_URI}` != '' && `${MONGO_DB}` != '') {
+    return `mongodb://${MONGO_USER}:${encodeURIComponent(MONGO_PASSWORD)}@${MONGO_URI}/${MONGO_DB}?authSource=admin&retryWrites=true&w=majority`;
+  }
+    return MONGO_ATLAS;
+}
 
 
 export const dbConnect = async (uri: string): Promise<typeof mongoose> => {

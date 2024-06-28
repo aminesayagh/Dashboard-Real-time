@@ -3,6 +3,7 @@ import { ApiResponse, ApiRequest } from "types/Api";
 import compression from "compression" // compresses requests
 import cookieParser from "cookie-parser" // parses cookie header and populates req.cookies
 import apiRoutes from '../route/api';
+import { cacheMiddleware, invalidateCacheMiddleware } from '../utils/mongooseCache';
 
 import helmet from "helmet" // sets HTTP headers to protect from well-known web vulnerabilities
 import morgan from "morgan" // HTTP request logger middleware for node.js
@@ -91,6 +92,10 @@ const ExpressConfig = (): Application => {
   app.use(handlerInfoRoute);
   
   app.use(handlerError);
+
+  app.use(cacheMiddleware);
+
+  app.use(invalidateCacheMiddleware);
 
   app.use('/api', apiRoutes);
   
