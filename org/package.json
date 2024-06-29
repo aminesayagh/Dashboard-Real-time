@@ -1,0 +1,12 @@
+{
+  "name": "org",
+  "version": "0.0.0",
+  "license": "MIT",
+  "scripts": {},
+  "private": true,
+  "dependencies": {},
+  "devDependencies": {
+    "@nx/js": "19.3.2",
+    "nx": "19.3.2"
+  }
+}
