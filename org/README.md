@@ -10,27 +10,13 @@ Enhance your Nx experience by installing [Nx Console](https://nx.dev/nx-console)
 provides an interactive UI to view your projects, run tasks, generate code, and more! Available for VSCode, IntelliJ and
 comes with a LSP for Vim users.
 
-## Nx plugins and code generators
+## Start the application
 
-Add Nx plugins to leverage their code generators and automated, inferred tasks.
+Run `npx nx dev dash` to start the development server. Happy coding!
 
-```
-# Add plugin
-npx nx add @nx/react
+## Build for production
 
-# Use code generator
-npx nx generate @nx/react:app demo
-
-# Run development server
-npx nx serve demo
-
-# View project details
-npx nx show project demo --web
-```
-
-Run `npx nx list` to get a list of available plugins and whether they have generators. Then run `npx nx list <plugin-name>` to see what generators are available.
-
-Learn more about [code generators](https://nx.dev/features/generate-code) and [inferred tasks](https://nx.dev/concepts/inferred-tasks) in the docs.
+Run `npx nx build dash` to build the application. The build artifacts are stored in the output directory (e.g. `dist/` or `build/`), ready to be deployed.
 
 ## Running tasks
 
