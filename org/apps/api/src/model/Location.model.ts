@@ -3,16 +3,11 @@ import { MODEL_NAME } from '@org/shared-ts';
 import mongoosePagination from 'mongoose-paginate-v2';
 import { Location } from '../types/Models';
 
-type LocationMethods = never;
 
-type LocationStatics = never;
+export type LocationModel = Model<Location> & PaginateModel<Location>;
+export type HydratedLocation = HydratedDocument<Location>;  
 
-type LocationVirtual = never;
-
-export type LocationModel = Model<Location, unknown, LocationMethods, LocationVirtual> & LocationStatics & PaginateModel<Location>;
-export type HydratedLocation = HydratedDocument<Location, LocationMethods & LocationVirtual>;  
-
-const LocationSchema = new Schema<Location, LocationModel, LocationMethods, LocationVirtual>({
+const LocationSchema = new Schema<Location, LocationModel>({
     location_name: {
         type: String,
         required: true,
@@ -40,7 +35,8 @@ const LocationSchema = new Schema<Location, LocationModel, LocationMethods, Loca
     }
 });
 
-LocationSchema.plugin(mongoosePagination);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+LocationSchema.plugin(mongoosePagination as any);
 
 const Location = model<Location, LocationModel>(MODEL_NAME.LOCATION, LocationSchema, MODEL_NAME.LOCATION.toLowerCase());
 

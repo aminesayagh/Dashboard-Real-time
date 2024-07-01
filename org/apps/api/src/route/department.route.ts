@@ -9,6 +9,7 @@ import qs from 'qs';
 import PostulationModel, { HydratedPostulation } from '../model/Postulation.model';
 import { PublicDoc, toPublicDoc } from '../types/Mongoose';
 import { Department, Location, Postulation } from '../types/Models';
+import { Error } from 'mongoose';
 
 type PublicDepartment = PublicDoc<HydratedDepartment>;
 type PublicLocation = PublicDoc<HydratedLocation>;
@@ -268,21 +269,23 @@ router.put('/:id/postulations/:postulation_id', async (req: ApiRequest<Partial<P
 
 router.delete('/:id/postulations/:postulation_id', async (req: ApiRequest<unknown, unknown, { id: string; postulation_id: string; }>, res: IApiDeleteResponse): Promise<void> => {
     const { id, postulation_id } = req.params;
-    try {
-        const postulation = await PostulationModel.findOneAndDelete({ _id: postulation_id, postulation_department_id: id });
-        if (!postulation) {
-            res.status(404).json({ status: 'error', message: ERRORS.NOT_FOUND });
-            return;
-        }
-        res.json({
-            status: 'success',
-            data: {
-                deletedCount: 1
-            }
-        });
-    } catch (err: any) {
-        res.status(400).json({ status: 'error', message: err.message });
+    if (!id || !postulation_id) {
+        res.status(400).json({ status: 'error', message: ERRORS.BAD_REQUEST });
+        return;
     }
+    const postulation = await PostulationModel.findOneAndDelete({ _id: postulation_id, postulation_department_id: id }).catch((err: Error) => {
+        throw new Error(err.message);
+    });
+    if (!postulation) {
+        res.status(404).json({ status: 'error', message: ERRORS.NOT_FOUND });
+        return;
+    }
+    return res.status(200).json({
+        status: 'success',
+        data: {
+            deletedCount: 1
+        }
+    });
 });
 
 export default router;

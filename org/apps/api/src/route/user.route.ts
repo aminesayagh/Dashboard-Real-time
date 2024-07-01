@@ -1,43 +1,40 @@
-import express from 'express';
-import qs from 'qs';
+import express, { NextFunction } from 'express';
 import UserModel, { HydratedUser } from "../model/User.model";
-import { ApiResponsePagination, ApiRequest, ApiResponse, IApiDeleteResponse } from "types/Api";
+import { ApiResponsePagination, ApiRequest, ApiResponse } from "../types/Api";
 import { UserMeAggregate, User } from '../types/Models';
 import { PublicDoc, toPublicDoc } from '../types/Mongoose';
 import { ERRORS } from '../constants/MESSAGE';
-
+import { Error } from 'mongoose';
+import { badRequestError } from '../helpers/error/BadRequestError';
+import { paginationQuery, PaginationBody } from '../helpers/paginationQuery';
 const router = express.Router();
 
 type PublicUser = PublicDoc<HydratedUser>;
 
-// GET /api/v1/users
-router.get('/', async (req: ApiRequest, res: ApiResponsePagination<User>): Promise<void> => {
-    const { filter, ...options } = qs.parse(req.query) as any;
-    try {
-        const result = await UserModel.paginate(filter, options);
+
+router.get('/', paginationQuery, async (req: ApiRequest<PaginationBody>, res: ApiResponsePagination<User>, next: NextFunction): Promise<void> => {
+    const { filter, limit, page } = req.body;
+    UserModel.paginate(filter, { limit, page }).then((result) => {
         if (!result) {
-            res.status(404).json({ status: 'error', message: ERRORS.NOT_FOUND });
-            return;
-        }
-        
+            next(badRequestError({ message: ERRORS.BAD_REQUEST }));
+        } 
         res.status(200).json({ status: 'success', data: result });
-    } catch (err: any) {
-        res.status(400).json({ status: 'error', message: err.message });
-    }
+    }).catch((err: Error) => {
+        next(badRequestError({ message: err.message || ERRORS.BAD_REQUEST }));
+    });
 });
+
 // POST /api/v1/users
-router.post('/', async (req: ApiRequest, res: ApiResponse<PublicUser>): Promise<void> => {
-    try {
-        const user = new UserModel(req.body);
-        const result = await user.save();
+router.post('/', async (req: ApiRequest, res: ApiResponse<PublicUser>, next: NextFunction): Promise<void> => {
+    const user = new UserModel(req.body);
+    user.save().then((result) => {
         if (!result) {
-            res.status(500).json({ status: 'error', message: ERRORS.INTERNAL_SERVER_ERROR });
-            return;
+            next(badRequestError({ message: ERRORS.BAD_REQUEST }));
         }
         res.status(200).json({ status: 'success', data: toPublicDoc(result) });
-    } catch (err: any) {
-        res.status(400).json({ status: 'error', message: err.message });
-    }
+    }).catch((err: Error) => {
+        next(badRequestError({ message: err.message || ERRORS.BAD_REQUEST }));
+    });
 });
 
 // GET /api/v1/users/:id
@@ -71,7 +68,7 @@ router.put('/:id', async (req: ApiRequest<Partial<User>>, res: ApiResponse<Publi
 });
 
 // DELETE /api/v1/users/:id
-router.delete('/:id', async (req: ApiRequest, res: IApiDeleteResponse): Promise<void> => {
+router.delete('/:id', async (req: ApiRequest, res: ApiDeleteResponse): Promise<void> => {
     const { id } = req.params;
     try {
         const result = await UserModel.deleteOne({ _id: id });

@@ -3,8 +3,6 @@ import { MODEL_NAME, STATE_POSTULATION } from '@org/shared-ts';
 import { UniversityPeriod } from '../types/Models';
 import mongoosePagination from 'mongoose-paginate-v2';
 
-type UniversityMethods = unknown;
-
 interface UniversityStatics {
     findByPeriodName(period_name: string): Promise<HydratedUniversityPeriod | null>;
     findByDate(date: Date): Promise<HydratedUniversityPeriod | null>;
@@ -12,13 +10,10 @@ interface UniversityStatics {
     updateCurrentPeriod(): Promise<HydratedUniversityPeriod>;
 }
 
-type UniversityVirtual = unknown;
+export type UniversityPeriodModel = Model<UniversityPeriod, unknown> & UniversityStatics & PaginateModel<UniversityPeriod>;
+export type HydratedUniversityPeriod = HydratedDocument<UniversityPeriod>;
 
-
-export type UniversityPeriodModel = Model<UniversityPeriod, unknown, UniversityMethods, UniversityVirtual> & UniversityStatics & PaginateModel<UniversityPeriod>;
-export type HydratedUniversityPeriod = HydratedDocument<UniversityPeriod, UniversityMethods & UniversityVirtual>;
-
-const UniversityPeriodSchema = new Schema<UniversityPeriod, UniversityPeriodModel, UniversityMethods, UniversityVirtual>({
+const UniversityPeriodSchema = new Schema<UniversityPeriod, UniversityPeriodModel>({
     period_name: {
         type: String,
         required: true,
@@ -101,8 +96,8 @@ UniversityPeriodSchema.statics.updateCurrentPeriod = async function (newPeriod) 
     return this.create(newPeriod);
 };
 
-
-UniversityPeriodSchema.plugin(mongoosePagination);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+UniversityPeriodSchema.plugin(mongoosePagination as any);
 
 const UniversityPeriod = model<UniversityPeriod, UniversityPeriodModel>(MODEL_NAME.UNIVERSITY_PERIOD, UniversityPeriodSchema, MODEL_NAME.UNIVERSITY_PERIOD.toLocaleLowerCase());
 

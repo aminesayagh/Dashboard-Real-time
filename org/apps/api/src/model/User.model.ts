@@ -1,4 +1,4 @@
-import { PaginateModel, Schema, model, Types, HydratedDocument, Model } from 'mongoose';
+import { PaginateModel, Schema, model, Types, HydratedDocument, Model, InferRawDocType } from 'mongoose';
 import mongoosePagination from 'mongoose-paginate-v2';
 import { STATE_USER_ROLE, MODEL_NAME, GENDER_ARRAY, TStateUserRole, stateUserRole } from '@org/shared-ts';
 import { UserMeAggregate, UserAggregate, User } from '../types/Models';
@@ -6,10 +6,6 @@ import { UserMeAggregate, UserAggregate, User } from '../types/Models';
 interface UserMethods {
     addUserRole(role: TStateUserRole): Promise<HydratedUser>;
     removeUserRole(role: TStateUserRole): Promise<HydratedUser>;
-    resetPassword(password: string): Promise<HydratedUser>;
-    addLastPasswordReset(password: string): Promise<HydratedUser>;
-    verifyPasswordExist(password: string): Promise<boolean>;
-    verifyPassword(password: string): Promise<boolean>;
 }
 
 interface UserStatics {
@@ -17,13 +13,14 @@ interface UserStatics {
     findByEmail(email: string): Promise<HydratedUser | null>;
     me(id: string): Promise<UserMeAggregate>;
 }
-type UserVirtual = unknown;
 
 // export interface IUserDocument extends IUserDocumentExtended {}
-export type UserModel = Model<User, unknown, UserMethods, UserVirtual> & UserStatics & PaginateModel<User>;
-export type HydratedUser = HydratedDocument<User, UserMethods & UserVirtual>;
+export type UserModel = PaginateModel<User> & Model<User, unknown, UserMethods> & UserStatics;
+export type HydratedUser = HydratedDocument<User, UserMethods>;
 
-const userSchema = new Schema<User, UserModel, UserMethods, UserVirtual>({
+
+
+const schemaDefinition = {
     user_first_name: {
         type: String,
         required: false,
@@ -53,16 +50,15 @@ const userSchema = new Schema<User, UserModel, UserMethods, UserVirtual>({
         maxlength: 50,
         unique: true
     },
-    user_roles: {
-        type: [String],
+    user_roles: [{
+        type: String,
         required: true,
-        trim: true,
-        default: [STATE_USER_ROLE.VISITOR]
-    },
+        default: [STATE_USER_ROLE.VISITOR],
+        enum: Object.values(STATE_USER_ROLE)
+    }],
     user_avatar: {
         type: Schema.Types.ObjectId,
-        required: false,
-        ref: MODEL_NAME.RESOURCE
+        ref: MODEL_NAME.RESOURCE,
     },
     user_gender: {
         type: String,
@@ -106,7 +102,11 @@ const userSchema = new Schema<User, UserModel, UserMethods, UserVirtual>({
         type: String,
         required: false
     }
-}, {
+} as const;
+
+export type UserObject = InferRawDocType<typeof userSchema>;
+
+const userSchema = new Schema<User, UserModel, UserMethods>(schemaDefinition, {
     strict: true,
     timestamps: {
         createdAt: 'createdAt',
@@ -148,7 +148,7 @@ userSchema.methods.removeUserRole = async function (this, role) {
 };
 
 userSchema.statics.findByEmail = async function (this, email) {
-    return await this.findOne({ user_email: email }).exec();
+    return await this.findOne({ email }).exec();
 };
 
 userSchema.statics.me = async function (this, id) {
@@ -224,7 +224,8 @@ userSchema.statics.me = async function (this, id) {
     return userAggregate[0];
 };
 
-userSchema.plugin(mongoosePagination);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+userSchema.plugin(mongoosePagination as any);
 
 const UserModel = model<User, UserModel>(MODEL_NAME.USER, userSchema, MODEL_NAME.USER.toLowerCase());
 

@@ -3,8 +3,6 @@ import { MODEL_NAME, STATE_STUDENT_ARRAY, STATE_STUDENT, stateStudentRole } from
 import { ERRORS } from '../constants/MESSAGE';
 import { Student } from '../types/Models';
 
-interface StudentMethods {
-}
 
 interface StudentStatics {
     findByUserId(user_id: Types.ObjectId): Promise<HydratedStudent | null>;
@@ -12,12 +10,11 @@ interface StudentStatics {
     findByStudentNumber(student_number: string): Promise<HydratedStudent | null>;
     updateStudentRole(state_student: HydratedStudent): Promise<HydratedStudent>;
 }
-interface StudentVirtual {}
 
-export type StudentModel = Model<Student, {}, StudentMethods, StudentVirtual> & StudentStatics;
-export type HydratedStudent = HydratedDocument<Student, StudentMethods & StudentVirtual>;
+export type StudentModel = Model<Student> & StudentStatics;
+export type HydratedStudent = HydratedDocument<Student>;
 
-const studentSchema = new Schema<Student, StudentModel, StudentMethods, StudentVirtual>({
+const studentSchema = new Schema<Student, StudentModel>({
     user_id: {
         type: Schema.Types.ObjectId,
         required: true,

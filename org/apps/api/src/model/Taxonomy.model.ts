@@ -3,17 +3,12 @@ import { MODEL_NAME, STATE_POSTULATION } from '@org/shared-ts';
 import { Taxonomy } from '../types/Models';
 import mongoosePagination from 'mongoose-paginate-v2';
 
-type TaxonomyMethods = unknown;
 
-type TaxonomyStatics = unknown;
-
-type TaxonomyVirtual = unknown;
-
-export type TaxonomyModel = Model<Taxonomy, unknown, TaxonomyMethods, TaxonomyVirtual> & TaxonomyStatics & PaginateModel<Taxonomy>;
-export type HydratedTaxonomy = HydratedDocument<Taxonomy, TaxonomyMethods & TaxonomyVirtual>;
+export type TaxonomyModel = Model<Taxonomy, unknown> & PaginateModel<Taxonomy>;
+export type HydratedTaxonomy = HydratedDocument<Taxonomy>;
 
 
-const TaxonomySchema = new Schema<Taxonomy, TaxonomyModel, TaxonomyMethods, TaxonomyVirtual>({
+const TaxonomySchema = new Schema<Taxonomy, TaxonomyModel>({
     taxonomy_type: {
         type: String,
         required: true,
@@ -55,9 +50,9 @@ const TaxonomySchema = new Schema<Taxonomy, TaxonomyModel, TaxonomyMethods, Taxo
     }
 });
 
-TaxonomySchema.plugin(mongoosePagination);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+TaxonomySchema.plugin(mongoosePagination as any);
 
-const Taxonomy = model<Taxonomy, TaxonomyModel>(MODEL_NAME.TAXONOMY, TaxonomySchema);
-
+const Taxonomy = model<Taxonomy, TaxonomyModel>(MODEL_NAME.TAXONOMY, TaxonomySchema, MODEL_NAME.TAXONOMY.toLowerCase());
 
 export default Taxonomy;

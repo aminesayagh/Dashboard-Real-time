@@ -3,16 +3,10 @@ import { MODEL_NAME } from "@org/shared-ts";
 import mongoosePagination from "mongoose-paginate-v2";
 import { PostulationType } from "../types/Models";
 
-type PostulationTypeMethods = never;
+export type PostulationTypeModel = Model<PostulationType> &  PaginateModel<PostulationType>;
+export type HydratedPostulationType = HydratedDocument<PostulationType>;
 
-type PostulationTypeStatics = never;
-
-type PostulationTypeVirtual = never;
-
-export type PostulationTypeModel = Model<PostulationType, never, PostulationTypeMethods, PostulationTypeVirtual> & PostulationTypeStatics & PaginateModel<PostulationType>;
-export type HydratedPostulationType = HydratedDocument<PostulationType, PostulationTypeMethods & PostulationTypeVirtual>;
-
-const PostulationTypeSchema = new Schema<PostulationType, PostulationTypeModel, PostulationTypeMethods, PostulationTypeVirtual>({
+const PostulationTypeSchema = new Schema<PostulationType, PostulationTypeModel>({
     taxonomies_id: {
         type: [Schema.Types.ObjectId],
         required: true,
@@ -46,7 +40,8 @@ const PostulationTypeSchema = new Schema<PostulationType, PostulationTypeModel, 
     }
 });
 
-PostulationTypeSchema.plugin(mongoosePagination);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+PostulationTypeSchema.plugin(mongoosePagination as any);
 
 const PostulationType = model<PostulationType, PostulationTypeModel>(MODEL_NAME.POSTULATION_TYPE, PostulationTypeSchema, MODEL_NAME.POSTULATION_TYPE.toLowerCase());
 

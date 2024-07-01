@@ -3,16 +3,10 @@ import { MODEL_NAME, STATE_POSTULATION } from '@org/shared-ts';
 import { Postulation, PostulationContent } from '../types/Models';
 import mongoosePagination from 'mongoose-paginate-v2';
 
-type PostulationContentMethods = never;
+export type PostulationContentModel = Model<PostulationContent>;
+export type HydratedPostulationContent = HydratedDocument<PostulationContent>;
 
-type PostulationContentStatics = never;
-
-type PostulationContentVirtual = never;
-
-export type PostulationContentModel = Model<PostulationContent, never, PostulationContentMethods, PostulationContentVirtual> & PostulationContentStatics;
-export type HydratedPostulationContent = HydratedDocument<PostulationContent, PostulationContentMethods & PostulationContentVirtual>;
-
-const PostulationContentSchema = new Schema<PostulationContent, PostulationContentModel, PostulationContentMethods, PostulationContentVirtual>({
+const PostulationContentSchema = new Schema<PostulationContent, PostulationContentModel>({
     postulation_content_body: {
         type: Schema.Types.ObjectId,
         required: true,
@@ -30,18 +24,11 @@ const PostulationContentSchema = new Schema<PostulationContent, PostulationConte
     }
 });
 
-
-type PostulationMethods = never;
-
-type PostulationStatics = never;
-
-type PostulationVirtual = never; 
-
-export type PostulationModel = Model<Postulation, never, PostulationMethods, PostulationVirtual> & PostulationStatics & PaginateModel<Postulation>;
-export type HydratedPostulation = HydratedDocument<Postulation, PostulationMethods & PostulationVirtual>;
+export type PostulationModel = Model<Postulation> & PaginateModel<Postulation>;
+export type HydratedPostulation = HydratedDocument<Postulation>;
 
 
-const PostulationSchema = new Schema<Postulation, PostulationModel, PostulationMethods, PostulationVirtual>({
+const PostulationSchema = new Schema<Postulation, PostulationModel>({
     resources_id: {
         type: [Schema.Types.ObjectId],
         ref: MODEL_NAME.RESOURCE,
@@ -76,8 +63,9 @@ const PostulationSchema = new Schema<Postulation, PostulationModel, PostulationM
     }
 });
 
-PostulationSchema.plugin(mongoosePagination);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+PostulationSchema.plugin(mongoosePagination as any);
 
-const Postulation = model<Postulation, PostulationModel>(MODEL_NAME.POSTULATION, PostulationSchema);
+const Postulation = model<Postulation, PostulationModel>(MODEL_NAME.POSTULATION, PostulationSchema, MODEL_NAME.POSTULATION.toLowerCase());
 
 export default Postulation;

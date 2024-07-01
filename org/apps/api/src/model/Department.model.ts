@@ -29,7 +29,8 @@ const DepartmentSchema = new Schema<Department, DepartmentModel>({
     }
 });
 
-DepartmentSchema.plugin(mongoosePagination);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+DepartmentSchema.plugin(mongoosePagination as any);
 
 const Department = model<Department, DepartmentModel>(MODEL_NAME.DEPARTMENT, DepartmentSchema, MODEL_NAME.DEPARTMENT.toLowerCase());
 

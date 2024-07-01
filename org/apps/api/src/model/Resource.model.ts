@@ -3,14 +3,10 @@ import { MODEL_NAME, STATE_RESOURCE_ARRAY, STATE_RESOURCE, STATE_ATTACHMENT_ARRA
 import { Attachment, Media, Resource } from '../types/Models';
 
 
-// Attachment
-interface AttachmentMethods {}
-interface AttachmentStatics {}
-interface AttachmentVirtual {}
-export type AttachmentModel = Model<Attachment, {}, AttachmentMethods, AttachmentVirtual> & AttachmentStatics;
-export type HydratedAttachment = HydratedDocument<Attachment, AttachmentMethods & AttachmentVirtual>;
+export type AttachmentModel = Model<Attachment>;
+export type HydratedAttachment = HydratedDocument<Attachment>;
 
-const attachmentSchema = new Schema<Attachment, AttachmentModel, AttachmentMethods, AttachmentVirtual>({
+const attachmentSchema = new Schema<Attachment, AttachmentModel>({
     attachment_reference: {
         type: Schema.Types.ObjectId,
         required: true,
@@ -43,18 +39,14 @@ interface ResourceMethods {
 interface ResourceStatics {
     generateResourceName: (resource_name: string, owner_id: string) => string;
 }
-interface ResourceVirtual {}
 
-export type ResourceModel = Model<Resource, {}, ResourceMethods, ResourceVirtual> & PaginateModel<Resource> & ResourceStatics;
-export type HydratedResource = HydratedDocument<Resource, ResourceMethods & ResourceVirtual>;
+export type ResourceModel = Model<Resource, unknown, ResourceMethods> & PaginateModel<Resource> & ResourceStatics;
+export type HydratedResource = HydratedDocument<Resource, ResourceMethods>;
 
 
-interface MediaMethods {}
-interface MediaStatics {}
-interface MediaVirtual {}
 
-export type MediaModel = Model<Media, {}, MediaMethods, MediaVirtual> & MediaStatics;
-export type HydratedMedia = HydratedDocument<Media, MediaMethods & MediaVirtual>;
+export type MediaModel = Model<Media>;
+export type HydratedMedia = HydratedDocument<Media>;
 
 const mediaSchema = new Schema<Media, MediaModel>({
     media_source: {
@@ -85,7 +77,7 @@ const mediaSchema = new Schema<Media, MediaModel>({
     }
 });
 
-const resourceSchema = new Schema<Resource, ResourceModel, ResourceMethods, ResourceVirtual>({
+const resourceSchema = new Schema<Resource, ResourceModel, ResourceMethods>({
     resource_name: {
         type: String,
         required: true,

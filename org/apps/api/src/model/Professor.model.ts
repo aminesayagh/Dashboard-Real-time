@@ -3,14 +3,11 @@ import { MODEL_NAME, STATE_PROFESSOR_ARRAY, STATE_PROFESSOR } from '@org/shared-
 import { ERRORS } from '../constants/MESSAGE';
 import { Professor } from '../types/Models';
 
-type ProfessorMethods = unknown;
-type ProfessorStatics = unknown;
-type ProfessorVirtual = unknown;
 
-export type ProfessorModel = Model<Professor, unknown, ProfessorMethods, ProfessorVirtual> & ProfessorStatics;
-export type HydratedProfessor = HydratedDocument<Professor, ProfessorMethods & ProfessorVirtual>;
+export type ProfessorModel = Model<Professor>;
+export type HydratedProfessor = HydratedDocument<Professor>;
 
-const professorSchema = new Schema<Professor, ProfessorModel, ProfessorMethods, ProfessorVirtual>({
+const professorSchema = new Schema<Professor, ProfessorModel>({
     user_id: {
         type: Schema.Types.ObjectId,
         required: true,

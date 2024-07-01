@@ -1,5 +1,5 @@
 import { MONGO_USER, MONGO_PASSWORD, MONGO_URI, MONGO_TEST_DB } from '../env';
-import { connectRedis, disconnectRedis } from './mongooseCache';
+import { connectRedis, disconnectRedis } from '../middlewares/mongooseCache';
 import { dbConnect, dbDisconnect, clearDatabase, generateMongoUri } from './mongooseConnect';
 
 export const setupTestDB = async () => {

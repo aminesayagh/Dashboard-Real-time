@@ -2,18 +2,10 @@ import { Schema ,Model, model, HydratedDocument } from "mongoose";
 import { MODEL_NAME,  } from "@org/shared-ts";
 import { PostulationTypeContent } from '../types/Models';
 
-type PostulationTypeContentMethods = never;
-
-type PostulationTypeStatics = never;
-
-type PostulationTypeContentVirtual = never;
-
-export type PostulationTypeContentModel = Model<PostulationTypeContent, never, PostulationTypeContentMethods, PostulationTypeContentVirtual> & PostulationTypeStatics;
+export type PostulationTypeContentModel = Model<PostulationTypeContent>;
 export type HydratedPostulationTypeContent = HydratedDocument<PostulationTypeContent>;
 
-// export interface IPostulationTypeModel extends PaginateModel<IPostulationTypeContentDocument> {};
-
-const PostulationTypeContentSchema = new Schema<PostulationTypeContent, PostulationTypeContentModel, PostulationTypeContentMethods, PostulationTypeContentVirtual>({
+const PostulationTypeContentSchema = new Schema<PostulationTypeContent, PostulationTypeContentModel>({
     postulation_type_content_name: {
         type: String,
         required: true,

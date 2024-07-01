@@ -1,31 +1,16 @@
-import express, { Application, NextFunction, Express } from "express";
-import { ApiResponse, ApiRequest } from "types/Api";
+import express, { Application, NextFunction } from "express";
+import { ApiResponse, ApiRequest } from "../types/Api";
 import compression from "compression" // compresses requests
 import cookieParser from "cookie-parser" // parses cookie header and populates req.cookies
 import apiRoutes from '../route/api';
-import { cacheMiddleware, invalidateCacheMiddleware } from '../utils/mongooseCache';
+import { cacheMiddleware, invalidateCacheMiddleware } from '../middlewares/mongooseCache';
+import { errorHandler} from '../middlewares/errors';
 
 import helmet from "helmet" // sets HTTP headers to protect from well-known web vulnerabilities
 import morgan from "morgan" // HTTP request logger middleware for node.js
 import cors from 'cors';
 import rateLimit from "express-rate-limit"; // rate limiting middleware
 
-const handlerError = (error: any, req: ApiRequest, res: ApiResponse<unknown>) => {
-  console.error({
-    message: error.message,
-    stack: error.stack,
-    path: req.path,
-    method: req.method,
-    body: req.body,
-    query: req.query, 
-    params: req.params
-  });
-
-  res.status(500).json({
-    message: "Internal server error",
-    status: "error"
-  })
-}
 
 const handlerInfoRoute = (req: ApiRequest, _: ApiResponse<unknown>, next: NextFunction) => {
   console.log({
@@ -45,28 +30,6 @@ const handlerNotFound = (_: ApiRequest, res: ApiResponse<unknown>) => {
     status: "error"
   });
 }
-
-const handlerPath = (app: Express) => (_: ApiRequest, res: ApiResponse<{
-  path: string 
-}>) => {
-  try{
-    const routes = getRoutes(app);
-    const typeString = generateTypeString(routes);
-    res.status(200).json({
-      status: "success",
-      data: {
-        path: typeString
-      }
-    });
-  } catch(err) {
-    console.error(err);
-    res.status(500).json({
-      message: "Internal server error",
-      status: "error"
-    });
-  }
-};
-
 
 const ExpressConfig = (): Application => {
   const app = express()
@@ -90,15 +53,13 @@ const ExpressConfig = (): Application => {
   
   app.use(handlerInfoRoute);
   
-  app.use(handlerError);
+  app.use(errorHandler);
 
   app.use(cacheMiddleware);
 
   app.use(invalidateCacheMiddleware);
 
   app.use('/api', apiRoutes);
-  
-  app.get('/api/v1/path', handlerPath(app));
 
   app.use(handlerNotFound);
 
