@@ -23,11 +23,7 @@ const attachmentSchema = new Schema<Attachment, AttachmentModel>({
         default: STATE_ATTACHMENT.ATTACHED,
     },
 }, {
-    strict: true,
-    timestamps: {
-        createdAt: 'createdAt',
-        updatedAt: 'createdAt',
-    }
+    strict: true
 });
 
 // Resource
@@ -70,11 +66,7 @@ const mediaSchema = new Schema<Media, MediaModel>({
         trim: true,
     },
 }, {
-    strict: true,
-    timestamps: {
-        createdAt: 'createdAt',
-        updatedAt: 'updatedAt',
-    }
+    strict: true
 });
 
 const resourceSchema = new Schema<Resource, ResourceModel, ResourceMethods>({
@@ -104,11 +96,7 @@ const resourceSchema = new Schema<Resource, ResourceModel, ResourceMethods>({
     },
     resource_attachments: [attachmentSchema],
 }, {
-    strict: true,
-    timestamps: {
-        createdAt: 'createdAt',
-        updatedAt: 'updatedAt',
-    }
+    strict: true
 });
 
 // add a static method to the schema to generate name of an resource

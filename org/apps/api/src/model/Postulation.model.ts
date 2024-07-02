@@ -17,11 +17,7 @@ const PostulationContentSchema = new Schema<PostulationContent, PostulationConte
         ref: MODEL_NAME.POSTULATION_TYPE_CONTENT,
     }
 }, {
-    strict: true,
-    timestamps: {
-        createdAt: 'createdAt',
-        updatedAt: 'updatedAt',
-    }
+    strict: true
 });
 
 export type PostulationModel = Model<Postulation> & PaginateModel<Postulation>;
@@ -56,11 +52,7 @@ const PostulationSchema = new Schema<Postulation, PostulationModel>({
     },
     postulation_content: [PostulationContentSchema]
 }, {
-    strict: true,
-    timestamps: {
-        createdAt: 'createdAt',
-        updatedAt: 'updatedAt',
-    }
+    strict: true
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

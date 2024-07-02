@@ -3,7 +3,7 @@ import Mail from "nodemailer/lib/mailer";
 import { z } from 'zod';
 
 import express from 'express';
-import { ApiResponse, ApiRequest } from "types/Api";
+import { ApiResponse, ApiRequest } from "../../types/Api";
 
 const router = express.Router();
 

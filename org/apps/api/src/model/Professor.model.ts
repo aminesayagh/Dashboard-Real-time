@@ -28,10 +28,6 @@ const professorSchema = new Schema<Professor, ProfessorModel>({
     },
 }, {
     strict: true,
-    timestamps: {
-        createdAt: 'createdAt',
-        updatedAt: 'updatedAt',
-    },
 });
 
 professorSchema.pre('save', async function (this, next) {

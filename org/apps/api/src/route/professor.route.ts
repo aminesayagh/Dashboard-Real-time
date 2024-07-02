@@ -1,7 +1,7 @@
 import express from 'express';
 import { ERRORS } from '../constants/MESSAGE';
 import ProfessorModel, { HydratedProfessor } from '../model/Professor.model';
-import { ApiRequest, ApiResponse } from 'types/Api';
+import { ApiRequest, ApiResponse } from '../types/Api';
 import { Professor } from '../types/Models';
 import { PublicDoc, toPublicDoc } from '../types/Mongoose';
 

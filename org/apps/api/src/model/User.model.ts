@@ -108,10 +108,6 @@ export type UserObject = InferRawDocType<typeof userSchema>;
 
 const userSchema = new Schema<User, UserModel, UserMethods>(schemaDefinition, {
     strict: true,
-    timestamps: {
-        createdAt: 'createdAt',
-        updatedAt: 'createdAt'
-    }
 });
 
 userSchema.pre(['find', 'findOne'], function () {

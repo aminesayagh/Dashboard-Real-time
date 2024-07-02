@@ -28,11 +28,7 @@ const LocationSchema = new Schema<Location, LocationModel>({
         ref: MODEL_NAME.DEPARTMENT,
     }
 }, {
-    strict: true,
-    timestamps: {
-        createdAt: 'createdAt',
-        updatedAt: 'updatedAt',
-    }
+    strict: true
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

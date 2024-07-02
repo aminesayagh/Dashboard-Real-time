@@ -1,4 +1,4 @@
-import { Schema, PaginateModel, model, Model, HydratedDocument } from 'mongoose';
+import { Schema, PaginateModel, model, Model, HydratedDocument, InferRawDocType } from 'mongoose';
 import { MODEL_NAME, STATE_POSTULATION } from '@org/shared-ts';
 import { UniversityPeriod } from '../types/Models';
 import mongoosePagination from 'mongoose-paginate-v2';
@@ -7,13 +7,13 @@ interface UniversityStatics {
     findByPeriodName(period_name: string): Promise<HydratedUniversityPeriod | null>;
     findByDate(date: Date): Promise<HydratedUniversityPeriod | null>;
     findCurrentPeriod(): Promise<HydratedUniversityPeriod | null>;
-    updateCurrentPeriod(): Promise<HydratedUniversityPeriod>;
+    updateCurrentPeriod(period: Partial<HydratedUniversityPeriod>): Promise<HydratedUniversityPeriod>;
 }
 
-export type UniversityPeriodModel = Model<UniversityPeriod, unknown> & UniversityStatics & PaginateModel<UniversityPeriod>;
+export type UniversityPeriodModel = PaginateModel<UniversityPeriod> & Model<UniversityPeriod> & UniversityStatics;
 export type HydratedUniversityPeriod = HydratedDocument<UniversityPeriod>;
 
-const UniversityPeriodSchema = new Schema<UniversityPeriod, UniversityPeriodModel>({
+const schemaDefinition = {
     period_name: {
         type: String,
         required: true,
@@ -42,13 +42,12 @@ const UniversityPeriodSchema = new Schema<UniversityPeriod, UniversityPeriodMode
         type: Schema.Types.ObjectId,
         ref: MODEL_NAME.UNIVERSITY_PERIOD,
     },
-    
-}, {
-    strict: true,
-    timestamps: {
-        createdAt: 'createdAt',
-        updatedAt: 'updatedAt',
-    }
+} as const;
+
+export type UniversityPeriodObject = InferRawDocType<typeof schemaDefinition>;
+
+const UniversityPeriodSchema = new Schema<UniversityPeriod, UniversityPeriodModel>(schemaDefinition, {
+    strict: true
 });
 
 // override the saving method to add the next and previous period to the current period

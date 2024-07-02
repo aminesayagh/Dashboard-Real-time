@@ -3,7 +3,7 @@ import { MODEL_NAME } from "@org/shared-ts";
 import mongoosePagination from "mongoose-paginate-v2";
 import { PostulationType } from "../types/Models";
 
-export type PostulationTypeModel = Model<PostulationType> &  PaginateModel<PostulationType>;
+export type PostulationTypeModel = PaginateModel<PostulationType> & Model<PostulationType>;
 export type HydratedPostulationType = HydratedDocument<PostulationType>;
 
 const PostulationTypeSchema = new Schema<PostulationType, PostulationTypeModel>({
@@ -33,11 +33,7 @@ const PostulationTypeSchema = new Schema<PostulationType, PostulationTypeModel>(
         ref: MODEL_NAME.POSTULATION_TYPE_CONTENT,
     }
 }, {
-    strict: true,
-    timestamps: {
-        createdAt: 'createdAt',
-        updatedAt: 'updatedAt',
-    }
+    strict: true
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

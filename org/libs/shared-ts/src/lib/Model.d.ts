@@ -1,9 +1,9 @@
 import { TStateUserRole, TGender, TStatePostulation, TStateStudent, TModelName, TStateAttachment, TStateResource, TStateProfessor,  } from "./DB";
 
-interface DocumentBase<ObjectId> {
+export interface DocumentBase<ObjectId> {
     _id: ObjectId;
-    updatedAt: Date;
-    createdAt: Date;
+    updatedAt: number;
+    createdAt: number;
 }
 
 export interface User<ObjectId = string> extends DocumentBase<ObjectId> {
@@ -80,7 +80,7 @@ export interface Professor<ObjectId = string> extends DocumentBase<ObjectId> {
   professor_state: TStateProfessor;
 }
 
-export interface PostulationTypeContent extends DocumentBase<string> {
+export interface PostulationTypeContent<ObjectId = string> extends DocumentBase<ObjectId> {
   postulation_type_content_name: string;
   postulation_type_content_description: string;
   postulation_type_content_type: TModelName;

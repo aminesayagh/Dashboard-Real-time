@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { NextFunction } from 'express';
 const router = express.Router();
 import qs from 'qs';
 import { ERRORS } from '../constants/MESSAGE';
@@ -7,191 +7,202 @@ import TaxonomyModel, { HydratedTaxonomy } from '../model/Taxonomy.model';
 import { PublicDoc, toPublicDoc } from '../types/Mongoose';
 
 
-import { ApiResponse, ApiRequest, ApiResponsePagination, IApiDeleteResponse } from "types/Api";
+import { ApiResponse, ApiRequest, ApiResponsePagination, ApiDeleteResponse } from "../types/Api";
 import PostulationTypeModel, { HydratedPostulationType } from '../model/PostulationType.model';
 import { Types } from 'mongoose';
 import PostulationTypeContentModel, { HydratedPostulationTypeContent } from '../model/PostulationTypeContent.model';
 import { PostulationType, PostulationTypeContent, Taxonomy } from '../types/Models';
+import { idQuery, PaginationBody, paginationQuery } from '../middlewares/query';
+import { badRequestError } from '../helpers/error/BadRequestError';
 
 type PublicTaxonomy = PublicDoc<HydratedTaxonomy>;
 type PublicPostulationType = PublicDoc<HydratedPostulationType>;
 type PublicPostulationTypeContent = PublicDoc<HydratedPostulationTypeContent>;
 
-router.get('/', async (req: ApiRequest, res: ApiResponsePagination<Taxonomy>): Promise<void> => {
-    try {
-        const { filter, ...options } = qs.parse(req.query) as any;
-        const result = await TaxonomyModel.paginate(filter, options);
-        res.status(200).json({
-            status: 'success',
-            data: result
-        });
-    } catch (err:any) {
-        res.status(400).json({ status: 'error', message: err.message });
-    }
+// GET /api/v1/taxonomies
+router.get('/', paginationQuery, async (req: ApiRequest<PaginationBody>, res: ApiResponsePagination<Taxonomy>, next: NextFunction): Promise<void> => {
+    const { filter, limit, page } = req.body;
+    TaxonomyModel.paginate(filter, { limit, page }).then((result) => {
+        if (!result) {
+            next(badRequestError({ message: ERRORS.BAD_REQUEST }));
+            return;
+        } 
+        res.status(200).json({ status: 'success', data: result });
+    }).catch((err: Error) => {
+        next(badRequestError({ message: err.message || ERRORS.BAD_REQUEST }));
+    });
 });
 
-router.post('/', async (req: ApiRequest, res: ApiResponse<PublicTaxonomy>): Promise<void> => {
-    try {
-        const taxonomy = new TaxonomyModel(req.body);
-        const result = await taxonomy.save();
-        res.status(200).json({
-            status: 'success',
-            data: toPublicDoc(result)
-        });
-    } catch (err:any) {
-        res.status(400).json({ status: 'error', message: err.message });
-    }
+// POST /api/v1/taxonomies
+router.post('/', async (req: ApiRequest, res: ApiResponse<PublicTaxonomy>, next: NextFunction): Promise<void> => {
+    const taxonomy = new TaxonomyModel(req.body);
+    taxonomy.save().then((result) => {
+        if (!result) {
+            next(badRequestError({ message: ERRORS.BAD_REQUEST }));
+            return;
+        }
+        res.status(200).json({ status: 'success', data: toPublicDoc(result) });
+    }).catch((err: Error) => {
+        next(badRequestError({ message: err.message || ERRORS.BAD_REQUEST }));
+    });
 });
 
-router.get('/:id', async (req: ApiRequest<{}, {}, { id: string }>, res: ApiResponse<PublicTaxonomy>) => {
-    try {
-        const { id } = req.params;
-        const result = await TaxonomyModel.findById(id);
+// GET /api/v1/taxonomies/:id
+router.get('/:id', idQuery(), async (req: ApiRequest<{ id: Types.ObjectId }>, res: ApiResponse<PublicTaxonomy>, next: NextFunction) => {
+    const { id } = req.body;
+    TaxonomyModel.findById(id).then((result) => {   
         if (!result) {
-            res.status(404).json({ status: 'error', message: ERRORS.NOT_FOUND });
+            next(badRequestError({ message: ERRORS.NOT_FOUND }));
             return;
         }
-        res.status(200).json({
-            status: 'success',
-            data: toPublicDoc(result)
-        });
-    } catch (err:any) {
-        res.status(400).json({ status: 'error', message: err.message });
-    }
+        res.status(200).json({ status: 'success', data: toPublicDoc(result) });
+    }).catch((err: Error) => {
+        next(badRequestError({ message: err.message || ERRORS.BAD_REQUEST }));
+    });
 });
 
-router.put('/:id', async (req: ApiRequest<Partial<Taxonomy>, {}, { id: string }>, res: ApiResponse<PublicTaxonomy>) => {
-    const { id } = req.params;
-    try{
-        const result = await TaxonomyModel.findByIdAndUpdate(id, req.body, {new: true})
+// PUT /api/v1/taxonomies/:id
+router.put('/:id', idQuery(), async (req: ApiRequest<Partial<Taxonomy> & { id: Types.ObjectId }>, res: ApiResponse<PublicTaxonomy>, next: NextFunction) => {
+    const { id } = req.body;
+    TaxonomyModel.findByIdAndUpdate(id, req.body, {new: true}).then((result) => {
         if (!result) {
-            res.status(404).json({ status: 'error', message: ERRORS.NOT_FOUND });
+            next(badRequestError({ message: ERRORS.NOT_FOUND }));
             return;
         }
-        res.status(200).json({
-            status: 'success',
-            data: toPublicDoc(result)
-        });
-    }catch (err:any) {
-        res.status(400).json({ status: 'error', message: err.message });
-    }
-});
-router.delete('/:id', async (req: ApiRequest<{}, {}, { id: string }>, res: IApiDeleteResponse) => {
-    const { id } = req.params;
-    try{
-        const result = await TaxonomyModel.deleteOne({ _id: id });
-        if (!result) {
-            res.status(404).json({ status: 'error', message: ERRORS.NOT_FOUND });
-            return;
-        }
-        res.status(200).json({
-            status: 'success',
-            data: { deletedCount: result.deletedCount }
-        });
-    }catch (err:any) {
-        res.status(400).json({ status: 'error', message: err.message });
-    }
+        res.status(200).json({ status: 'success', data: toPublicDoc(result) });
+    }).catch((err: Error) => {
+        next(badRequestError({ message: err.message || ERRORS.BAD_REQUEST }));
+    });
 });
 
-router.get('/:id/postulation_types', async (req: ApiRequest, res: ApiResponsePagination<PostulationType>): Promise<void> => {
-    const { filter, ...options } = qs.parse(req.query) as any;
-    try{
-        const result = await PostulationTypeModel.paginate(filter, options)
+// DELETE /api/v1/taxonomies/:id
+router.delete('/:id', async (req: ApiRequest<{ id: Types.ObjectId }>, res: ApiDeleteResponse, next: NextFunction) => {
+    const { id } = req.body;
+    TaxonomyModel.deleteOne({ _id: id }).then((result) => {
         if (!result) {
-            res.status(404).json({ status: 'error', message: ERRORS.NOT_FOUND });
+            next(badRequestError({ message: ERRORS.NOT_FOUND }));
             return;
         }
-        res.status(200).json({
-            status: 'success',
-            data: result
-        });
-    }catch (err:any) {
-        res.status(400).json({ status: 'error', message: err.message });
-    }
+        res.status(200).json({ status: 'success', data: { deletedCount: result.deletedCount } });
+    }).catch((err: Error) => {
+        next(badRequestError({ message: err.message || ERRORS.BAD_REQUEST }));
+    });
 });
-router.post('/:id/postulation_types', async (req: ApiRequest, res: ApiResponse<PublicPostulationType>): Promise<void> => {
-    try{
-        // with the id of the taxonomy
-        const taxonomy = await TaxonomyModel.findById(req.params.id)
+
+// GET /api/v1/taxonomies/:id/postulation_types
+router.get('/:id/postulation_types', paginationQuery, async (req: ApiRequest<PaginationBody>, res: ApiResponsePagination<PostulationType>, next: NextFunction): Promise<void> => {
+    const { filter, limit, page } = req.body;
+    PostulationTypeModel.paginate(filter, { limit, page }).then((result) => {
+        if (!result) {
+            next(badRequestError({ message: ERRORS.BAD_REQUEST }));
+            return;
+        } 
+        res.status(200).json({ status: 'success', data: result });
+    }).catch((err: Error) => {
+        next(badRequestError({ message: err.message || ERRORS.BAD_REQUEST }));
+    });
+});
+
+// POST /api/v1/taxonomies/:id/postulation_types
+router.post('/:id/postulation_types', idQuery(), async (req: ApiRequest<{ id: Types.ObjectId; }>, res: ApiResponse<PublicPostulationType>, next: NextFunction): Promise<void> => {
+    const { id, ...bodyPostulationType } = req.body;
+    TaxonomyModel.findById(id).then(async (taxonomy) => {
         if (!taxonomy) {
-            res.status(404).json({ status: 'error', message: ERRORS.NOT_FOUND });
+            next(badRequestError({ message: ERRORS.NOT_FOUND }));
             return;
         }
-        const postulationType = new PostulationTypeModel(
-            {
-                ...req.body,
-                taxonomies_id: [taxonomy._id]
+        const postulationType = new PostulationTypeModel({
+            ...bodyPostulationType,
+            taxonomies_id: [taxonomy._id]
+        });
+        postulationType.save().then((result) => {
+            if (!result) {
+                next(badRequestError({ message: ERRORS.BAD_REQUEST }));
+                return;
             }
-        );
-        const result = await postulationType.save()
-        if (!result) {
-            res.status(500).json({ status: 'error', message: ERRORS.INTERNAL_SERVER_ERROR });
-            return;
-        }
-        res.status(200).json({
-            status: 'success',
-            data: toPublicDoc(result)
+            res.status(200).json({ status: 'success', data: toPublicDoc(result) });
+        }).catch((err: Error) => {
+            next(badRequestError({ message: err.message || ERRORS.BAD_REQUEST }));
         });
-    }catch (err:any) {
-        res.status(400).json({ status: 'error', message: err.message });
-    }
+    }).catch((err: Error) => {
+        next(badRequestError({ message: err.message || ERRORS.BAD_REQUEST }));
+    });
 });
 
-router.get('/:id/postulation_types/:postulation_type_id', async (req: ApiRequest<{}, {}, { id: string, postulation_type_id: string }>, res: ApiResponse<PublicPostulationType>): Promise<void> => {
-    try{
-        const result = await PostulationTypeModel.findById(req.params.postulation_type_id)
+// GET /api/v1/taxonomies/:id/postulation_types/:postulation_type_id
+router.get('/:id/postulation_types/:postulation_type_id', idQuery('id', 'postulation_type_id'), async (req: ApiRequest<{ id: Types.ObjectId, postulation_type_id: Types.ObjectId }>, res: ApiResponse<PublicPostulationType>, next: NextFunction): Promise<void> => {
+    const { id, postulation_type_id } = req.body;
+    PostulationTypeModel.findOne({ taxonomies_id: { $in: [id] }, _id: postulation_type_id }).then((result) => {
         if (!result) {
-            res.status(404).json({ status: 'error', message: ERRORS.NOT_FOUND });
+            next(badRequestError({ message: ERRORS.NOT_FOUND }));
             return;
         }
-        res.status(200).json({
-            status: 'success',
-            data: toPublicDoc(result)
-        });
-    }catch (err:any) {
-        res.status(400).json({ status: 'error', message: err.message });
-    }
+        res.status(200).json({ status: 'success', data: toPublicDoc(result) });
+    }).catch((err: Error) => {
+        next(badRequestError({ message: err.message || ERRORS.BAD_REQUEST }));
+    });
 });
 
-router.put('/:id/postulation_types/:postulation_type_id', async (req: ApiRequest<Partial<PublicPostulationType>, {}, { id: string, postulation_type_id: string }>, res: ApiResponse<PublicPostulationType>) => {
-    const { id, postulation_type_id } = req.params;
-    try{
-        const result = await PostulationTypeModel.findOneAndUpdate({ taxonomies_id: { $in: [new Types.ObjectId(id)] }, _id:  new Types.ObjectId(postulation_type_id) }, req.body, {new: true})
+// PUT /api/v1/taxonomies/:id/postulation_types/:postulation_type_id
+router.put('/:id/postulation_types/:postulation_type_id', idQuery('id', 'postulation_type_id'), async (req: ApiRequest<Partial<PublicPostulationType> & { id: Types.ObjectId, postulation_type_id: Types.ObjectId }>, res: ApiResponse<PublicPostulationType>, next: NextFunction) => {
+    const { id, postulation_type_id } = req.body;
+    PostulationTypeModel.findOneAndUpdate({ taxonomies_id: { $in: [id] }, _id: postulation_type_id }, req.body, {new: true}).then((result) => {
         if (!result) {
-            res.status(404).json({ status: 'error', message: ERRORS.NOT_FOUND });
+            next(badRequestError({ message: ERRORS.NOT_FOUND }));
             return;
         }
-        res.status(200).json({
-            status: 'success',
-            data: toPublicDoc(result)
-        });
-    }catch (err:any) {
-        res.status(400).json({ status: 'error', message: err.message });
-    }
-});
-router.delete('/:id/postulation_types/:postulation_type_id', async (req: ApiRequest<{}, {}, { id: string, postulation_type_id: string }>, res: IApiDeleteResponse) => {
-    const { id, postulation_type_id } = req.params;
-    try{
-        const result = await PostulationTypeModel.deleteOne({ taxonomies_id: { $in: [new Types.ObjectId(id)] }, _id: new Types.ObjectId(postulation_type_id) })
-        if (!result) {
-            res.status(404).json({ status: 'error', message: ERRORS.NOT_FOUND });
-            return;
-        }
-        res.status(200).json({
-            status: 'success',
-            data: { deletedCount: result.deletedCount}
-        });
-    }catch (err:any) {
-        res.status(400).json({ status: 'error', message: err.message });
-    }
+        res.status(200).json({ status: 'success', data: toPublicDoc(result) });
+    }).catch((err: Error) => {
+        next(badRequestError({ message: err.message || ERRORS.BAD_REQUEST }));
+    });
 });
 
+// DELETE /api/v1/taxonomies/:id/postulation_types/:postulation_type_id
+router.delete('/:id/postulation_types/:postulation_type_id', idQuery('id', 'postulation_type_content'),async (req: ApiRequest<{ id: Types.ObjectId, postulation_type_id: Types.ObjectId }>, res: ApiDeleteResponse, next: NextFunction) => {
+    const { id, postulation_type_id } = req.body;
+    PostulationTypeModel.deleteOne({ taxonomies_id: { $in: [id] }, _id: postulation_type_id }).then((result) => {
+        if (!result) {
+            next(badRequestError({ message: ERRORS.NOT_FOUND }));
+            return;
+        }
+        res.status(200).json({ status: 'success', data: { deletedCount: result.deletedCount } });
+    }).catch((err: Error) => {
+        next(badRequestError({ message: err.message || ERRORS.BAD_REQUEST }));
+    });
+});
+
+// GET /api/v1/taxonomies/:id/postulation_types/:postulation_type_id/postulation_type_content
 router.post('/:id/postulation_types/:postulation_type_id/postulation_type_content', 
+    idQuery('id', 'postulation_type_id'),
     async (
-        req: ApiRequest<Partial<PublicPostulationTypeContent>, {}, { id: string, postulation_type_id: string }>, 
-        res: ApiResponse<PublicPostulationTypeContent>
+        req: ApiRequest<Partial<PublicPostulationTypeContent> & { id: Types.ObjectId, postulation_type_id: Types.ObjectId }>, 
+        res: ApiResponse<PublicPostulationTypeContent>,
+        next: NextFunction
     ) => {
-    const { postulation_type_id } = req.params;
+    const { postulation_type_id, id } = req.body;
+    PostulationTypeModel.findOne({ taxonomies_id: { $in: [id] }, _id: postulation_type_id }).then((result) => {
+        if (!result) {
+            next(badRequestError({ message: ERRORS.NOT_FOUND }));
+            return;
+        }
+        const postulation_type_content = new PostulationTypeContentModel(req.body);
+        result.postulation_type_content.push(
+            postulation_type_content._id
+        );
+        result.save().then(() => {
+            postulation_type_content.save().then((result) => {
+                if (!result) {
+                    next(badRequestError({ message: ERRORS.BAD_REQUEST }));
+                    return;
+                }
+                res.status(200).json({ status: 'success', data: toPublicDoc(result) });
+            }).catch((err: Error) => {
+                next(badRequestError({ message: err.message || ERRORS.BAD_REQUEST }));
+            });
+        }).catch((err: Error) => {
+            next(badRequestError({ message: err.message || ERRORS.BAD_REQUEST }));
+        });
+    });
     try{
         const postulationType = await PostulationTypeModel.findOne({_id: new Types.ObjectId(postulation_type_id) })
         if (!postulationType) {
@@ -217,106 +228,116 @@ router.post('/:id/postulation_types/:postulation_type_id/postulation_type_conten
     }
 });
 
-router.get('/:id/postulation_types/:postulation_type_id/postulation_type_content/:content_id', async (req: ApiRequest<{}, {}, { id: string, postulation_type_id: string, content_id: string }>, res: ApiResponse<PublicPostulationTypeContent>) => {
+// GET /api/v1/taxonomies/:id/postulation_types/:postulation_type_id/postulation_type_content
+router.get('/:id/postulation_types/:postulation_type_id/postulation_type_content/:content_id', 
+    idQuery('id', 'postulation_type_id', 'content_id'),
+    async (
+        req: ApiRequest<{ id: Types.ObjectId, postulation_type_id: Types.ObjectId, content_id: Types.ObjectId }>, 
+        res: ApiResponse<PublicPostulationTypeContent>, 
+        next: NextFunction
+    ) => {
     const { content_id } = req.params;
-    try{
-        const result = await PostulationTypeContentModel.findOne({ _id: new Types.ObjectId(content_id) })
+    PostulationTypeContentModel.findOne({ _id: content_id }).then((result) => {
         if (!result) {
-            res.status(404).json({ status: 'error', message: ERRORS.NOT_FOUND });
+            next(badRequestError({ message: ERRORS.NOT_FOUND }));
             return;
         }
-        res.status(200).json({
-            status: 'success',
-            data: toPublicDoc(result)
-        });
-    }catch (err:any) {
-        res.status(400).json({ status: 'error', message: err.message });
-    }
-});
-router.put('/:id/postulation_types/:postulation_type_id/postulation_type_content/:content_id', async (req: ApiRequest<Partial<PostulationTypeContent>, {}, { id: string, postulation_type_id: string, content_id: string }>, res: ApiResponse<PublicPostulationTypeContent>) => {
-    const { content_id } = req.params;
-    try{
-        const result = await PostulationTypeContentModel.findByIdAndUpdate(content_id, req.body, {new: true})
-        if (!result) {
-            res.status(404).json({ status: 'error', message: ERRORS.NOT_FOUND });
-            return;
-        }
-        res.status(200).json({
-            status: 'success',
-            data: toPublicDoc(result)
-        });
-    }catch (err:any) {
-        res.status(400).json({ status: 'error', message: err.message });
-    }
-});
-router.delete('/:id/postulation_types/:postulation_type_id/postulation_type_content/:content_id', async (req: ApiRequest<{}, {}, { id: string, postulation_type_id: string, content_id: string }>, res: IApiDeleteResponse) => {
-    const { content_id } = req.params;
-    try{
-        const result = await PostulationTypeContentModel.deleteOne({_id: content_id})
-        if (!result) {
-            res.status(404).json({ status: 'error', message: ERRORS.NOT_FOUND });
-            return;
-        }
-        res.status(200).json({
-            status: 'success',
-            data: { deletedCount: result.deletedCount}
-        });
-    }catch (err:any) {
-        res.status(400).json({ status: 'error', message: err.message });
-    }
+        res.status(200).json({ status: 'success', data: toPublicDoc(result) });
+    }).catch((err: Error) => {
+        next(badRequestError({ message: err.message || ERRORS.BAD_REQUEST }));
+    });
 });
 
-
-router.get('/types/:type', async (req: ApiRequest, res: ApiResponsePagination<Taxonomy>): Promise<void> => {
-    let { filter, ...options } = qs.parse(req.query) as any;
-    filter = { ...filter, taxonomy_type: req.params.type };
-    try{
-        const result = await TaxonomyModel.paginate(filter, options)
+// PUT /api/v1/taxonomies/:id/postulation_types/:postulation_type_id/postulation_type_content/:content_id
+router.put('/:id/postulation_types/:postulation_type_id/postulation_type_content/:content_id', async (req: ApiRequest<Partial<PostulationTypeContent> & { id: Types.ObjectId, postulation_type_id: Types.ObjectId, content_id: Types.ObjectId }, unknown>, res: ApiResponse<PublicPostulationTypeContent>, next: NextFunction) => {
+    const { content_id } = req.body;
+    PostulationTypeContentModel.findByIdAndUpdate(content_id, req.body, {new: true}).then((result) => {
         if (!result) {
-            res.status(404).json({ status: 'error', message: ERRORS.NOT_FOUND });
+            next(badRequestError({ message: ERRORS.NOT_FOUND }));
             return;
         }
-        res.status(200).json({
-            status: 'success',
-            data: result
-        });
-    }catch (err:any) {
-        res.status(400).json({ status: 'error', message: err.message });
-    }
+        res.status(200).json({ status: 'success', data: toPublicDoc(result) });
+    }).catch((err: Error) => {
+        next(badRequestError({ message: err.message || ERRORS.BAD_REQUEST }));
+    });
 });
-router.put('/types/:type', async (req: ApiRequest<Partial<Taxonomy>, {}, { type: string }>, res: ApiResponse<{
-    count: number;
-}>) => {
+
+// DELETE /api/v1/taxonomies/:id/postulation_types/:postulation_type_id/postulation_type_content/:content_id
+router.delete('/:id/postulation_types/:postulation_type_id/postulation_type_content/:content_id',
+    idQuery('id', 'postulation_type_id', 'content_id'),
+    async (
+        req: ApiRequest<{ id: Types.ObjectId, postulation_type_id: Types.ObjectId, content_id: Types.ObjectId }>, 
+        res: ApiDeleteResponse,
+        next: NextFunction
+    ) => {
+    const { content_id } = req.body;
+    PostulationTypeContentModel.deleteOne({ _id: content_id }).then((result) => {
+        if (!result) {
+            next(badRequestError({ message: ERRORS.NOT_FOUND }));
+            return;
+        }
+        res.status(200).json({ status: 'success', data: { deletedCount: result.deletedCount } });
+    }).catch((err: Error) => {
+        next(badRequestError({ message: err.message || ERRORS.BAD_REQUEST }));
+    });
+});
+
+// GET /api/v1/taxonomies/types/:type
+router.get('/types/:type', paginationQuery, 
+    async (
+        req: ApiRequest<PaginationBody, unknown, {
+            type: string;
+        }>,
+        res: ApiResponsePagination<Taxonomy>,
+        next: NextFunction
+    ): Promise<void> => {
+    const { filter, limit, page } = req.body;
     const { type } = req.params;
-    try{
-        const result = await TaxonomyModel.updateMany({ taxonomy_type: type }, req.body, {new: true})
+    TaxonomyModel.paginate({ ...filter, taxonomy_type: type }, { limit, page }).then((result) => {
         if (!result) {
-            res.status(404).json({ status: 'error', message: ERRORS.NOT_FOUND });
+            next(badRequestError({ message: ERRORS.BAD_REQUEST }));
+            return;
+        } 
+        res.status(200).json({ status: 'success', data: result });
+    }).catch((err: Error) => {
+        next(badRequestError({ message: err.message || ERRORS.BAD_REQUEST }));
+    });
+});
+
+// POST /api/v1/taxonomies/types/:type
+router.put('/types/:type', async (req: ApiRequest<Partial<Taxonomy>, unknown, { type: string }>, res: ApiResponse<{
+    count: number;
+}>, next: NextFunction) => {
+    const { type } = req.params;
+    TaxonomyModel.updateMany({ taxonomy_type: type }, req.body, {new: true}).then((result) => {
+        if (!result) {
+            next(badRequestError({ message: ERRORS.NOT_FOUND }));
             return;
         }
         res.status(200).json({
             status: 'success',
             data: {count: result.modifiedCount}
         });
-    }catch (err:any) {
-        res.status(400).json({ status: 'error', message: err.message });
-    }
+    }).catch((err: Error) => {
+        next(badRequestError({ message: err.message || ERRORS.BAD_REQUEST }));
+    });
 });
-router.delete('/types/:type', async (req: ApiRequest, res: IApiDeleteResponse) => {
+
+// DELETE /api/v1/taxonomies/types/:type
+router.delete('/types/:type', async (req: ApiRequest, res: ApiDeleteResponse, next: NextFunction) => {
     const { type } = req.params;
-    try{
-        const result = await TaxonomyModel.deleteMany({ taxonomy_type: type })
+    TaxonomyModel.deleteMany({ taxonomy_type: type }).then((result) => {
         if (!result) {
-            res.status(404).json({ status: 'error', message: ERRORS.NOT_FOUND });
+            next(badRequestError({ message: ERRORS.NOT_FOUND }));
             return;
         }
         res.status(200).json({
             status: 'success',
             data: {deletedCount: result.deletedCount}
         });
-    }catch (err:any) {
-        res.status(400).json({ status: 'error', message: err.message });
-    }
+    }).catch((err: Error) => {
+        next(badRequestError({ message: err.message || ERRORS.BAD_REQUEST }));
+    });
 });
 
 export default router;

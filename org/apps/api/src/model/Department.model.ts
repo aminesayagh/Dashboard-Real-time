@@ -22,11 +22,7 @@ const DepartmentSchema = new Schema<Department, DepartmentModel>({
         ref: MODEL_NAME.USER,
     }
 }, {
-    strict: true,
-    timestamps: {
-        createdAt: 'createdAt',
-        updatedAt: 'updatedAt',
-    }
+    strict: true
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

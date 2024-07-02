@@ -43,11 +43,7 @@ const TaxonomySchema = new Schema<Taxonomy, TaxonomyModel>({
         default: STATE_POSTULATION.ON_HOLD,
     }
 }, {
-    strict: true,
-    timestamps: {
-        createdAt: 'createdAt',
-        updatedAt: 'updatedAt',
-    }
+    strict: true
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

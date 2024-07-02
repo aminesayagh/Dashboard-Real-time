@@ -18,6 +18,7 @@ router.get('/', paginationQuery, async (req: ApiRequest<PaginationBody>, res: Ap
     UserModel.paginate(filter, { limit, page }).then((result) => {
         if (!result) {
             next(badRequestError({ message: ERRORS.BAD_REQUEST }));
+            return;
         } 
         res.status(200).json({ status: 'success', data: result });
     }).catch((err: Error) => {
@@ -31,6 +32,7 @@ router.post('/', async (req: ApiRequest, res: ApiResponse<PublicUser>, next: Nex
     user.save().then((result) => {
         if (!result) {
             next(badRequestError({ message: ERRORS.BAD_REQUEST }));
+            return;
         }
         res.status(200).json({ status: 'success', data: toPublicDoc(result) });
     }).catch((err: Error) => {

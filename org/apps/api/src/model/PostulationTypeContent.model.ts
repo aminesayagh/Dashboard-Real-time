@@ -31,11 +31,7 @@ const PostulationTypeContentSchema = new Schema<PostulationTypeContent, Postulat
         required: false
     }
 }, {
-    strict: true,
-    timestamps: {
-        createdAt: 'createdAt',
-        updatedAt: 'updatedAt',
-    }
+    strict: true
 });
 
 export default model<PostulationTypeContent, PostulationTypeContentModel>(MODEL_NAME.POSTULATION_TYPE_CONTENT, PostulationTypeContentSchema, MODEL_NAME.POSTULATION_TYPE_CONTENT.toLowerCase());

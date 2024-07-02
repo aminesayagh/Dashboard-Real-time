@@ -3,7 +3,7 @@ import { ERRORS } from '../constants/MESSAGE';
 import StudentModel, { HydratedStudent } from '../model/Student.model';
 import { Student } from '../types/Models';
 import { PublicDoc, toPublicDoc } from '../types/Mongoose';
-import { ApiRequest, ApiResponse } from 'types/Api';
+import { ApiRequest, ApiResponse } from '../types/Api';
 const router = express.Router();
 
 type PublicStudent = PublicDoc<HydratedStudent>;

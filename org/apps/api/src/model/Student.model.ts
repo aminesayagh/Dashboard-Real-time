@@ -43,11 +43,7 @@ const studentSchema = new Schema<Student, StudentModel>({
         default: STATE_STUDENT.ON_HOLD,
     },
 }, {
-    strict: true,
-    timestamps: {
-        createdAt: 'createdAt',
-        updatedAt: 'updatedAt',
-    }
+    strict: true
 });
 
 // override the default save method to check if the user_id exist in the database user before saving

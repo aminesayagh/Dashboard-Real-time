@@ -16,19 +16,19 @@ import {
     UserMeAggregate as TUserMeAggregate,
     UserAggregate as TUserAggregate,
 } from '@org/shared-ts';
-import { Types, HydratedDocument, Schema } from 'mongoose';
+import { Types, HydratedDocument } from 'mongoose';
 
 type Document<T> = HydratedDocument<T>;
 
 export type User = TUser<Types.ObjectId>;
-export type UniversityPeriod = TUniversityPeriod<Schema<TUniversityPeriod<Types.ObjectId>>>;
+export type UniversityPeriod = TUniversityPeriod<Types.ObjectId>;
 export type Taxonomy = TTaxonomy<Types.ObjectId>;
 export type Student = TStudent<Types.ObjectId>; 
 export type Media = TMedia;
 export type Attachment = TAttachment<Types.ObjectId>;
 export type Resource = TResource<Types.ObjectId, Document<Attachment>, Document<Media>>;
 export type Professor = TProfessor<Types.ObjectId>;
-export type PostulationTypeContent = TPostulationTypeContent;
+export type PostulationTypeContent = TPostulationTypeContent<Types.ObjectId>;
 export type PostulationType = TPostulationType<Types.ObjectId>;
 export type PostulationContent = TPostulationContent<Types.ObjectId>;
 export type Postulation = TPostulation<Types.ObjectId>;
