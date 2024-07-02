@@ -1,6 +1,6 @@
-import express from 'express';
+import express, { Multer } from 'express';
 import { ERRORS } from '../constants/MESSAGE';
-import { ApiRequest, ApiResponse, IApiDeleteResponse } from 'types/Api';
+import { ApiRequest, ApiResponse, ApiDeleteResponse } from '../types/Api';
 import multer from 'multer';
 import { v2 as cloud } from 'cloudinary';
 import DataUriParser from 'datauri/parser';
@@ -22,7 +22,7 @@ import {
     CLOUDINARY_API_SECRET,
     CLOUDINARY_CLOUD_NAME
 } from '../env';
-import { PublicDoc, toPublicDoc } from '@/types/Mongoose';
+import { PublicDoc, toPublicDoc } from '../types/Mongoose';
 cloud.config({
     cloud_name: CLOUDINARY_CLOUD_NAME,
     api_key: CLOUDINARY_API_KEY,
@@ -30,7 +30,7 @@ cloud.config({
 })
 
 const generateRandomNumber = () => Math.floor(Math.random() * 1000);
-const createMedia = async (file: Express.Multer.File, resource_type: ResourceTypes, resource_folder: string) => {
+const createMedia = async (file: Multer.File, resource_type: ResourceTypes, resource_folder: string) => {
     const parser = new DataUriParser();
     const base64Image = parser.format(path.extname(`${file.originalname}_${generateRandomNumber()}`).toString(), file.buffer);
     if (!base64Image || !base64Image.content) {

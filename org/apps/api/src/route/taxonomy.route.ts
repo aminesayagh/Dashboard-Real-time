@@ -1,6 +1,5 @@
 import express, { NextFunction } from 'express';
 const router = express.Router();
-import qs from 'qs';
 import { ERRORS } from '../constants/MESSAGE';
 import TaxonomyModel, { HydratedTaxonomy } from '../model/Taxonomy.model';
 

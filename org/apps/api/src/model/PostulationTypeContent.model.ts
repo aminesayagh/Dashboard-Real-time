@@ -5,7 +5,7 @@ import { PostulationTypeContent } from '../types/Models';
 export type PostulationTypeContentModel = Model<PostulationTypeContent>;
 export type HydratedPostulationTypeContent = HydratedDocument<PostulationTypeContent>;
 
-const PostulationTypeContentSchema = new Schema<PostulationTypeContent, PostulationTypeContentModel>({
+const postulationTypeContent = {
     postulation_type_content_name: {
         type: String,
         required: true,
@@ -30,7 +30,9 @@ const PostulationTypeContentSchema = new Schema<PostulationTypeContent, Postulat
         type: [String],
         required: false
     }
-}, {
+} as const;
+
+const PostulationTypeContentSchema = new Schema<PostulationTypeContent, PostulationTypeContentModel>(postulationTypeContent, {
     strict: true
 });
 
