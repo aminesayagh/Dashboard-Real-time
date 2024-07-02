@@ -11,7 +11,7 @@ interface UserMethods {
 interface UserStatics {
     profile(id: string): Promise<UserAggregate>;
     findByEmail(email: string): Promise<HydratedUser | null>;
-    me(id: string): Promise<UserMeAggregate>;
+    me(id: Types.ObjectId): Promise<UserMeAggregate>;
 }
 
 // export interface IUserDocument extends IUserDocumentExtended {}
