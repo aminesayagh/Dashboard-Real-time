@@ -8,6 +8,18 @@ importers:
 
   .:
     dependencies:
+      '@types/compression':
+        specifier: ^1.7.5
+        version: 1.7.5
+      '@types/cookie-parser':
+        specifier: ^1.4.7
+        version: 1.4.7
+      '@types/morgan':
+        specifier: ^1.9.9
+        version: 1.9.9
+      '@types/multer':
+        specifier: ^1.4.11
+        version: 1.4.11
       axios:
         specifier: ^1.6.0
         version: 1.7.2
@@ -44,9 +56,6 @@ importers:
       mongoose-paginate-v2:
         specifier: ^1.8.2
         version: 1.8.2
-      morgan:
-        specifier: ^1.10.0
-        version: 1.10.0
       multer:
         specifier: 1.4.5-lts.1
         version: 1.4.5-lts.1
@@ -120,12 +129,18 @@ importers:
       '@swc/helpers':
         specifier: ~0.5.11
         version: 0.5.11
+      '@types/cors':
+        specifier: ^2.8.17
+        version: 2.8.17
       '@types/jest':
         specifier: ^29.4.0
         version: 29.5.12
       '@types/node':
         specifier: 18.16.9
         version: 18.16.9
+      '@types/nodemailer':
+        specifier: ^6.4.15
+        version: 6.4.15
       '@types/react':
         specifier: 18.3.1
         version: 18.3.1
@@ -144,6 +159,9 @@ importers:
       babel-jest:
         specifier: ^29.4.1
         version: 29.7.0(@babel/core@7.24.7)
+      compression:
+        specifier: ^1.7.4
+        version: 1.7.4
       eslint:
         specifier: ~8.57.0
         version: 8.57.0
@@ -174,6 +192,9 @@ importers:
       jest-environment-node:
         specifier: ^29.4.1
         version: 29.7.0
+      morgan:
+        specifier: ^1.10.0
+        version: 1.10.0
       nx:
         specifier: 19.3.2
         version: 19.3.2(@swc-node/register@1.9.2(@swc/core@1.5.29(@swc/helpers@0.5.11))(@swc/types@0.1.9)(typescript@5.4.5))(@swc/core@1.5.29(@swc/helpers@0.5.11))
@@ -1554,11 +1575,20 @@ packages:
   '@types/bonjour@3.5.13':
     resolution: {integrity: sha512-z9fJ5Im06zvUL548KvYNecEVlA7cVDkGUi6kZusb04mpyEFKCIZJvloCcmpmLaIahDpOQGHaHmG6imtPMmPXGQ==}
 
+  '@types/compression@1.7.5':
+    resolution: {integrity: sha512-AAQvK5pxMpaT+nDvhHrsBhLSYG5yQdtkaJE1WYieSNY2mVFKAgmU4ks65rkZD5oqnGCFLyQpUr1CqI4DmUMyDg==}
+
   '@types/connect-history-api-fallback@1.5.4':
     resolution: {integrity: sha512-n6Cr2xS1h4uAulPRdlw6Jl6s1oG8KrVilPN2yUITEs+K48EzMJJ3W1xy8K5eWuFvjp3R74AOIGSmp2UfBJ8HFw==}
 
   '@types/connect@3.4.38':
     resolution: {integrity: sha512-K6uROf1LD88uDQqJCktA4yzL1YYAK6NgfsI0v/mTgyPKWsX1CnJ0XPSDhViejru1GcRkLWb8RlzFYJRqGUbaug==}
+
+  '@types/cookie-parser@1.4.7':
+    resolution: {integrity: sha512-Fvuyi354Z+uayxzIGCwYTayFKocfV7TuDYZClCdIP9ckhvAu/ixDtCB6qx2TT0FKjPLf1f3P/J1rgf6lPs64mw==}
+
+  '@types/cors@2.8.17':
+    resolution: {integrity: sha512-8CGDvrBj1zgo2qE+oS3pOCyYNqCPryMWY2bGfwA0dcfopWGgxs+78df0Rs3rc9THP4JkOhLsAa+15VdpAqkcUA==}
 
   '@types/eslint-scope@3.7.7':
     resolution: {integrity: sha512-MzMFlSLBqNF2gcHWO0G1vP/YQyfvrxZ0bF+u7mzUdZ1/xK4A4sru+nraZz5i3iEIk1l1uyicaDVTB4QbbEkAYg==}
@@ -1608,11 +1638,20 @@ packages:
   '@types/mime@1.3.5':
     resolution: {integrity: sha512-/pyBZWSLD2n0dcHE3hq8s8ZvcETHtEuF+3E7XVt0Ig2nvsVQXdghHVcEkIWjy9A0wKfTn97a/PSDYohKIlnP/w==}
 
+  '@types/morgan@1.9.9':
+    resolution: {integrity: sha512-iRYSDKVaC6FkGSpEVVIvrRGw0DfJMiQzIn3qr2G5B3C//AWkulhXgaBd7tS9/J79GWSYMTHGs7PfI5b3Y8m+RQ==}
+
+  '@types/multer@1.4.11':
+    resolution: {integrity: sha512-svK240gr6LVWvv3YGyhLlA+6LRRWA4mnGIU7RcNmgjBYFl6665wcXrRfxGp5tEPVHUNm5FMcmq7too9bxCwX/w==}
+
   '@types/node-forge@1.3.11':
     resolution: {integrity: sha512-FQx220y22OKNTqaByeBGqHWYz4cl94tpcxeFdvBo3wjG6XPBuZ0BNgNZRV5J5TFmmcsJ4IzsLkmGRiQbnYsBEQ==}
 
   '@types/node@18.16.9':
     resolution: {integrity: sha512-IeB32oIV4oGArLrd7znD2rkHQ6EDCM+2Sr76dJnrHwv9OHBTTM6nuDLK9bmikXzPa0ZlWMWtRGo/Uw4mrzQedA==}
+
+  '@types/nodemailer@6.4.15':
+    resolution: {integrity: sha512-0EBJxawVNjPkng1zm2vopRctuWVCxk34JcIlRuXSf54habUWdz1FB7wHDqOqvDa8Mtpt0Q3LTXQkAs2LNyK5jQ==}
 
   '@types/parse-json@4.0.2':
     resolution: {integrity: sha512-dISoDXWWQwUquiKsyZ4Ng+HX2KsPL7LyHKHQwgGFEA3IaKac4Obd+h2a/a6waisAoepJlBcx9paWqjA8/HVjCw==}
@@ -7933,12 +7972,24 @@ snapshots:
     dependencies:
       '@types/node': 18.16.9
 
+  '@types/compression@1.7.5':
+    dependencies:
+      '@types/express': 4.17.21
+
   '@types/connect-history-api-fallback@1.5.4':
     dependencies:
       '@types/express-serve-static-core': 4.19.5
       '@types/node': 18.16.9
 
   '@types/connect@3.4.38':
+    dependencies:
+      '@types/node': 18.16.9
+
+  '@types/cookie-parser@1.4.7':
+    dependencies:
+      '@types/express': 4.17.21
+
+  '@types/cors@2.8.17':
     dependencies:
       '@types/node': 18.16.9
 
@@ -8005,11 +8056,23 @@ snapshots:
 
   '@types/mime@1.3.5': {}
 
+  '@types/morgan@1.9.9':
+    dependencies:
+      '@types/node': 18.16.9
+
+  '@types/multer@1.4.11':
+    dependencies:
+      '@types/express': 4.17.21
+
   '@types/node-forge@1.3.11':
     dependencies:
       '@types/node': 18.16.9
 
   '@types/node@18.16.9': {}
+
+  '@types/nodemailer@6.4.15':
+    dependencies:
+      '@types/node': 18.16.9
 
   '@types/parse-json@4.0.2': {}
 

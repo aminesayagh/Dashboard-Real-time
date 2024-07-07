@@ -16,11 +16,14 @@ const zodPostEmail = z.object({
 
 import { USER_MAILER_USER, USER_MAILER_PASSWORD } from '../../env';   
 import { ERRORS, MESSAGE } from '../../constants/MESSAGE';
+import SMTPTransport from 'nodemailer/lib/smtp-transport';
 
 interface EmailResponse {
     message: typeof MESSAGE.EMAIL_SENT;
-    info: any;
+    info: SMTPTransport.SentMessageInfo;
 }
+
+// POST /api/v1/notification/email/send
 router.post('/send', async (req: ApiRequest<z.infer<typeof zodPostEmail>>, res: ApiResponse<EmailResponse>) => {
     try {
         const { to, subject, body, text } = zodPostEmail.parse(req.body);

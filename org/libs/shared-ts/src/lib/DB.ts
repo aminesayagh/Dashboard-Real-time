@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { zodEnum } from './helpersZod';
 import { StateController } from "./StateController";
 
 export const STATE_USER_ROLE = {
@@ -44,9 +45,10 @@ export const MODEL_NAME = {
     UNIVERSITY_PERIOD: "UniversityPeriods",
 } as const;
 
-export const zModelName = z.enum(['Users', 'Students', 'Professors', 'Locations', 'Departments', 'ResetPasswords', 'Resources', 'Attachments', 'Media', 'Postulations', 'PostulationTypes', 'PostulationTypeContents', 'Taxonomies', 'UniversityPeriods']);
 export type TModelName = (typeof MODEL_NAME)[keyof typeof MODEL_NAME];
 export const MODEL_NAME_ARRAY = Object.values(MODEL_NAME);
+
+export const zModelName = z.enum(zodEnum(MODEL_NAME_ARRAY));
 
 export const AUTH_PROVIDERS = {
     GOOGLE: "google",
@@ -128,7 +130,9 @@ export const zBodyMedia = z.object({
     resource_folder: z.enum(['postulation', 'user', 'department', 'taxonomy', 'university_period', 'resource', 'email']).default('resource'),
 });
 
+// export const zModelName = 
+
 export const zAttachmentBody = z.object({
-    attachment_reference: z.string(),
     attachment_collection: zModelName,
+    attachment_state: z.enum(STATE_ATTACHMENT_ARRAY as [string, ...string[]]).default(STATE_ATTACHMENT.UNATTACHED),
 });

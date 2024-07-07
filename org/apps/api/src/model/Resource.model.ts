@@ -1,6 +1,7 @@
 import { PaginateModel, Schema, model, Model, HydratedDocument } from 'mongoose';
 import { MODEL_NAME, STATE_RESOURCE_ARRAY, STATE_RESOURCE, STATE_ATTACHMENT_ARRAY, STATE_ATTACHMENT, MODEL_NAME_ARRAY } from '@org/shared-ts';
 import { Attachment, Media, Resource } from '../types/Models';
+import { DocumentNotInit } from '../types/Mongoose';
 
 
 export type AttachmentModel = Model<Attachment>;
@@ -28,8 +29,8 @@ const attachmentSchema = new Schema<Attachment, AttachmentModel>({
 
 // Resource
 interface ResourceMethods {
-    assignMedia: (media: Media) => Promise<Resource>;
-    assignAttachment: (attachment: Attachment) => Promise<Resource>;
+    assignMedia: (media: DocumentNotInit<Media>) => Promise<Resource>;
+    assignAttachment: (attachment: DocumentNotInit<Attachment>) => Promise<Resource>;
     findAttachmentById: (attachment_id: string) => HydratedAttachment | undefined;
 }
 interface ResourceStatics {
@@ -105,14 +106,14 @@ resourceSchema.static('generateResourceName', (resource_name: string, owner_id: 
 });
 
 // add a new method to resourceSchema.methods, helping to assign a new resource_media 
-resourceSchema.methods.assignMedia = function (media: Media) {
+resourceSchema.methods.assignMedia = function (media) {
     const mediaDoc = new MediaModel(media);
     this.resource_media.push(mediaDoc);
     return this.save();
 };
 
 // add a attachment to resource
-resourceSchema.methods.assignAttachment = function (attachment: Attachment) {
+resourceSchema.methods.assignAttachment = function (attachment) {
     const attachmentDoc = new AttachmentModel(attachment);
     this.resource_attachments.push(attachmentDoc);
     return this.save();

@@ -1,7 +1,7 @@
 import express, { Application, NextFunction } from "express";
 import { ApiResponse, ApiRequest } from "../types/Api";
-import compression from "compression" // compresses requests
-import cookieParser from "cookie-parser" // parses cookie header and populates req.cookies
+import compression from "compression"; // compresses requests
+import cookieParser from "cookie-parser"; // parses cookie header and populates req.cookies
 import apiRoutes from '../route/api';
 import { cacheMiddleware, invalidateCacheMiddleware } from '../middlewares/mongooseCache';
 import { errorHandler} from '../middlewares/errors';
@@ -53,13 +53,14 @@ const ExpressConfig = (): Application => {
   
   app.use(handlerInfoRoute);
   
-  app.use(errorHandler);
-
+  
   app.use(cacheMiddleware);
-
+  
   app.use(invalidateCacheMiddleware);
-
+  
   app.use('/api', apiRoutes);
+  
+  app.use(errorHandler);
 
   app.use(handlerNotFound);
 
