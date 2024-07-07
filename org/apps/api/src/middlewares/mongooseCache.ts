@@ -37,7 +37,7 @@ export const cacheMiddleware = async (req: ApiRequest, res: ApiResponse<unknown>
         res.send(JSON.parse(data));
       } else {
         const originalSend = res.send.bind(res);
-        res.send = (body: unknown) => {
+        res.send = (body) => {
           redisClient.setEx(key, 3600, JSON.stringify(body)); // Cache for 1 hour
           return originalSend(body);
         };
@@ -52,7 +52,7 @@ export const cacheMiddleware = async (req: ApiRequest, res: ApiResponse<unknown>
   }
 };
 
-export const invalidateCacheMiddleware = async (req: ApiRequest, res: ApiResponse<unknown>, next: NextFunction) => {
+export const invalidateCacheMiddleware = async (req: ApiRequest, _: ApiResponse<unknown>, next: NextFunction) => {
   if (['POST', 'PUT', 'DELETE', 'PATCH'].includes(req.method)) {
     const baseUrl = req.baseUrl || req.url;
     const parts = baseUrl.split('/');

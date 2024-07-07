@@ -4,7 +4,7 @@ import { CustomError, usedCodesErrors } from '../helpers/error/CustomError';
 import { Error } from 'mongoose';
 
 
-export const errorHandler = (error: Error, req: ApiRequest, res: ApiResponse<undefined>) => {
+export const errorHandler = (error: Error, req: ApiRequest, res: ApiResponse<undefined>): void => {
   if (error instanceof CustomError) {
     const { statusCode, errors, logging } = error;
     if (logging && usedCodesErrors.includes(statusCode)) {
@@ -20,10 +20,11 @@ export const errorHandler = (error: Error, req: ApiRequest, res: ApiResponse<und
       }, null, 2));
     }
 
-    return res.status(statusCode).json({
+    res.status(statusCode).json({
       message: errors[0].message,
       status: "error"
     });
+    return;
   }
 
   
