@@ -1,5 +1,4 @@
 import { Schema, model, Model, HydratedDocument, PaginateModel } from 'mongoose';
-import { } from '@org/shared-ts';
 import mongoosePagination from 'mongoose-paginate-v2';
 import { Department } from '../types/Models';
 import { MODEL_NAME } from '@org/shared-ts';
