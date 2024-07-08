@@ -48,6 +48,6 @@ export type ApiResponsePagination<T> = Response<IApiResponsePagination<T>>;
 
 // Generic type alias for an API request with optional body, query, and URL parameters
 type DefaultB = Record<string, object>;
-type DefaultQ = string | (Record<string, string>);
+type DefaultQ = qs.ParsedQs;
 type DefaultP = Record<string, string>;
 export type ApiRequest<B = DefaultB, Q = DefaultQ, P = DefaultP> = Request<P, unknown, B, Q>;
