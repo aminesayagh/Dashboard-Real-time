@@ -44,3 +44,10 @@ Thumbs.db
 # Next.js
 .next
 out
+
+# pnpm store
+pnpm-lock.yaml
+.pnpm
+pnpm-debug.log
+.pnpm-store
+.pnpm-store/*

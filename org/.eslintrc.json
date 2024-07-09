@@ -18,13 +18,44 @@
               }
             ]
           }
-        ]
+        ],
+        "@typescript-eslint/consistent-type-imports": "error", // Enforce consistent usage of type imports
+        "@typescript-eslint/no-unsafe-assignment": "error", // Disallows assigning any to variables and properties
+        "@typescript-eslint/no-unused-vars": "error",
+        "@typescript-eslint/explicit-module-boundary-types": "warn",
+        "@typescript-eslint/no-explicit-any": "warn",
+        "no-console": "warn", // Disallow console (off by default in the node environment)
+        "no-debugger": "error", // Disallow debugger (off by default in the node environment)
+        "eqeqeq": ["error", "always"], // Require the use of === and !==
+        "curly": ["error", "all"], // Require curly braces for control flow statements
+        "dot-notation": "warn", // Encourages use of dot notation whenever possible
+        "guard-for-in": "warn", // Make sure for-in loops have an if statement
+        "object-shorthand": "error", // Require method and property shorthand syntax for object literals
+        "no-empty": ["error", { "allowEmptyCatch": true }], // Disallow empty block statements
+        "import/no-duplicates": "error",
+        "import/no-empty-named-blocks": "error"
       }
     },
     {
       "files": ["*.ts", "*.tsx"],
       "extends": ["plugin:@nx/typescript"],
-      "rules": {}
+      "rules": {
+        "@typescript-eslint/no-floating-promises": "error", // Disallows awaiting a non-Promise
+        "@typescript-eslint/no-misused-promises": "error", // Disallows Promise-like values that are not of type Promise
+        "@typescript-eslint/no-unnecessary-type-assertion": "error", // Disallows unnecessary type assertions
+        "@typescript-eslint/prefer-includes": "error", // Enforce the use of String#includes() method instead of String#indexOf() method
+
+        "@typescript-eslint/consistent-type-definitions": ["error", "interface"], // Consistent with type definition either interface or type
+        "@typescript-eslint/explicit-function-return-type": [
+          "warn",
+          {
+            "allowExpressions": true,
+            "allowConciseArrowFunctionExpressionsStartingWithVoid": true,
+            "allowTypedFunctionExpressions": true,
+            "allowHigherOrderFunctions": true
+          }
+        ] // Require explicit return types on functions and class methods
+      }
     },
     {
       "files": ["*.js", "*.jsx"],
@@ -36,7 +67,8 @@
       "env": {
         "jest": true
       },
-      "rules": {}
+      "rules": {
+      }
     }
   ]
 }

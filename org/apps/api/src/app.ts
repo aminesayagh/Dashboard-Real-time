@@ -152,19 +152,3 @@ class App {
 }
 
 export default App;
-
-class A {
-    public hello(){
-        console.log('Hello from A');
-    }
-}
-
-class B extends A {
-
-}
-
-function giveMeB(para: A) {
-    para.hello();
-}
-
-giveMeB(new B());
