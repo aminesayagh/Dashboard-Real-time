@@ -1,7 +1,6 @@
-import express, { NextFunction } from 'express';
+import { NextFunction } from 'express';
 import { Error, Types } from 'mongoose';
 
-const router = express.Router();
 import { ApiResponsePagination, ApiRequest, ApiResponse, ApiDeleteResponse } from "../types/Api";
 import { ERRORS } from '../constants/MESSAGE';
 import DepartmentModel, { HydratedDepartment } from '../model/Department.model';

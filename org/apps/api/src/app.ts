@@ -14,6 +14,7 @@ import cookieParser from "cookie-parser";
 import { dbConnect, generateMongoUri } from "./utils/mongooseConnect";
 import { createClient, RedisClientType } from 'redis';
 import { REDIS_URI } from './env';
+import ManagerController from "./helpers/Controller";
 
 
 const redisUrl = REDIS_URI;
@@ -41,7 +42,7 @@ class Redis {
 class App {
     public app: Application;
     public redis: Redis;
-    private constructor(controllers: any[], public port: number) {
+    private constructor(controller: ManagerController, public port: number) {
         this.app = express();
         this.port = port;
 
@@ -55,7 +56,7 @@ class App {
         this.app.use(this.handlerInfoRoute);
         this.initMiddlewaresCache();
 
-        this.initControllers(controllers);
+        this.initControllers(controller);
 
         this.initErrorHandling();
     }
@@ -159,19 +160,33 @@ class App {
         this.app.use(this.handlerError);
         this.app.use(this.handlerNotFound);
     }
-    private initControllers(controllers: any[]) {
-        controllers.forEach((controller) => {
-            this.app.use('/', controller.router);
-        });
+    private initControllers(controller: ManagerController) {
+        this.app.use('/', controller.router);
     }
     public listen() {
         this.app.listen(this.port, () => {
             console.log(`App listening on the port ${this.port}`);
         });
     }
-    public static create(controllers: any[], port: number) {
-        return new App(controllers, port);
+    public static create(controller: ManagerController, port: number) {
+        return new App(controller, port);
     }
 }
 
 export default App;
+
+class A {
+    public hello(){
+        console.log('Hello from A');
+    }
+}
+
+class B extends A {
+
+}
+
+function giveMeB(para: A) {
+    para.hello();
+}
+
+giveMeB(new B());

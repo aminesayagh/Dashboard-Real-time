@@ -7,7 +7,8 @@
     "serve": "nx run-many --target=serve --all",
     "lint": "nx run-many --target=lint --all",
     "test": "nx run-many --target=test --all",
-    "format": "nx run-many --target=format --all"
+    "format": "nx run-many --target=format --all",
+    "build:api": "nx run api:build"
   },
   "private": true,
   "dependencies": {

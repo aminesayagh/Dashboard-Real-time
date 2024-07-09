@@ -1,7 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
   "files": [],
-  "composite": true,
+  "composite": true, // This is a composite project, that is, a project that is built from other projects.
   "include": [],
   "references": [
     {

@@ -1,5 +1,3 @@
-import express from 'express';
-const router = express.Router();
 
 import User from './user.route';
 import Resource from './resource.route';
@@ -13,7 +11,7 @@ import ManagerController from '../helpers/Controller';
 
 
 
-export class MainController extends ManagerController {
+export default class MainController extends ManagerController {
     constructor() {
         super('/api/v1');  
         this.initRoutes();
@@ -30,8 +28,5 @@ export class MainController extends ManagerController {
         this.mergeRoute(new Taxonomy);
         this.mergeRoute(new University_period);
         this.mergeRoute(new Resource);
-        // this.mergeRoute(email);
     }
 }
-
-export default router;

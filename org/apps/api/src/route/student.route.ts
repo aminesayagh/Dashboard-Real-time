@@ -1,4 +1,4 @@
-import express, { NextFunction } from 'express';
+import { NextFunction } from 'express';
 import { ERRORS } from '../constants/MESSAGE';
 import StudentModel, { HydratedStudent } from '../model/Student.model';
 import { Student } from '../types/Models';
