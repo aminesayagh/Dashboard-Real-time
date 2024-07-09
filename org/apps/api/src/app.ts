@@ -12,32 +12,10 @@ import cors from 'cors';
 import rateLimit from "express-rate-limit"; // rate limiting middleware
 import cookieParser from "cookie-parser";
 import { dbConnect, generateMongoUri } from "./utils/mongooseConnect";
-import { createClient, RedisClientType } from 'redis';
-import { REDIS_URI } from './env';
+import Redis from "./utils/Redis";
 import ManagerController from "./helpers/Controller";
 
 
-const redisUrl = REDIS_URI;
-class Redis {
-    public redisClient: RedisClientType;
-
-    private constructor() {
-        this.redisClient = createClient({ url: redisUrl });
-    };
-    public async connect() {
-        await this.redisClient.connect().then(() => {
-            console.log('Connected to Redis');
-        }).catch((err: Error) => {
-            console.error('Redis connection error:');
-            console.error(err);
-            throw err;
-        });
-    }
-    public static create() {
-        return new Redis();
-    }
-    // Add all the necessary redis methods here
-}
 
 class App {
     public app: Application;
