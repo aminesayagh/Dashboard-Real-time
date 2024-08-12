@@ -61,11 +61,13 @@ export function useSwitchLanguage() {
   return {
     switchLanguage: (lang: Lang) => {
       const actualLang = i18n.resolvedLanguage;
-      console.log('actualLang ', actualLang, 'lang ', lang);
       if (actualLang === lang) return
       const currentPath = window.location.pathname;
       const currentPathArr = currentPath.split('/');
-      const currentLang = currentPathArr[1];
+      let currentLang = currentPathArr[1];
+      if (!currentLang) {
+        currentLang = languages[0];
+      }
       const newPath = currentPath.replace(currentLang, lang);
       window.history.pushState({}, '', newPath);
       i18n.changeLanguage(lang);

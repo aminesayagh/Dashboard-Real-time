@@ -1,7 +1,7 @@
 "use client";
 import React from 'react';
 import { Spinner } from "@nextui-org/react";
-import { Lang } from '../../../i18n/settings';
+import { Lang } from '@i18n/settings';
 
 
 export default function Loading({

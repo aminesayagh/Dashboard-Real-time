@@ -1,12 +1,12 @@
 "use client";
-
-import { Lang } from "../../../../i18n/settings";
-import Container from "../../ui/Container";
-import { Button } from "@nextui-org/react";
-import { title, text } from "../../ui/typography/Typography.style";
 import { twMerge as tw } from "tailwind-merge";
-import { useTranslation } from '../../../../i18n/client';
 import Link from "next/link";
+
+import { Lang } from "@i18n/settings";
+import Container from "@ui/Container";
+import { Button } from "@nextui-org/react";
+import { title, text } from "@ui/typography/Typography.style";
+import { useTranslation } from '@i18n/client';
 
 export default function Section({ lang }: { lang: Lang }) {
   const { t } = useTranslation(lang, "common");

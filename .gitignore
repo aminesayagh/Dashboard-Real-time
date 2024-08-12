@@ -136,3 +136,7 @@ dist
 # Ignore Mongodb volumes
 
 data/*
+
+.env
+*.env
+!.env.example

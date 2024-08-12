@@ -1,5 +1,5 @@
 "use client";
-import "@app/globals.css";
+import "@app/global.css";
 
 import { Card, CardBody } from "@nextui-org/react";
 import Container from "@ui/Container";

@@ -1,6 +1,6 @@
 
 import type { Metadata } from "next";
-import "@app/globals.css";
+import "@app/global.css";
 import { dir } from "i18next";
 
 

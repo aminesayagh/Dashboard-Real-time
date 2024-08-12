@@ -1,70 +1,110 @@
-version: '3.9'
+
 services:
-  frontend:
-    build: ./nx/apps/frontend
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./nx/apps/frontend:/app
-    depends_on:
-      - backend
-
-  backend:
-    build: ./nx/apps/api
-    ports:
-      - "3001:3001"
-    volumes:
-      - ./nx/apps/api:/app
-    environment:
-      - PORT=3001
-      - MONGO_DB=app_db
-      - MONGO_TEST_DB=app_db_test
-      - MONGO_URI=db:27017
-      - MONGO_ATLAS=${MONGO_ATLAS}
-      - MONGO_USER=user
-      - MONGO_PASSWORD=password
-      - USER_MAILER_USER=mail@gmail.com
-      - USER_MAILER_PASSWORD=password
-      - CLOUDINARY_CLOUD_NAME=cloud_name
-      - CLOUDINARY_API_KEY=api_key
-      - CLOUDINARY_API_SECRET=api_secret
-      - REDIS_URI=redis://redis:6379
-    depends_on:
-      - db
-      - redis
-      # - kafka
-
-  db:
+  mongo:
     image: mongo:7.0.3
-    ports:
-      - "27017:27017"
-    volumes:
-      - ./data/db:/data/db
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=user
-      - MONGO_INITDB_ROOT_PASSWORD=password
+    container_name: realtime_dash_mongo
+    restart: unless-stopped
+    volumes: 
+      - ./data/mongo_data:/data/db # Persist data across container restarts, mongo_data is the volume name on the host machine, /data/db is the path in the container
+      - ./scripts:${SCRIPT_INTERNAL_DIR} # Mount scripts directory to the container
+    networks:
+      - realtime_dash_network
+    env_file:
+      - ${NODE_ENV}.env
+    healthcheck:
+      test: ['CMD-SHELL', '${SCRIPT_INTERNAL_DIR}/healthcheck-mongo.sh']
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
 
   redis:
-    image: redis:latest
+    image: redis:7.0.0
+    container_name: realtime_dash_redis
+    restart: unless-stopped
     ports:
-      - "6379:6379"
-
-  # kafka:
-  #   image: landoop/fast-data-dev:latest
-  #   ports:
-  #     - "3030:3030" # Web UI
-  #     - "8081:8081" # Schema registry
-  #     - "8082:8082" # Kafka REST proxy
-  #     - "8083:8083" # Kafka connect distributed
-  #     - "9092:9092" # Kafka broker
-  #     - "2181:2181" # ZooKeeper
-  #   environment:
-  #     ADV_HOST: 127.0.0.1
-  #     RUNTESTS: 0
-  #     DEBUG: 1
-  #     SAMPLEDATA: 0
-
-  nginx:
-    build: ./nginx
+      - "6380:6379"
+    volumes:
+      - ./data/redis_data:/data
+      - ./scripts:${SCRIPT_INTERNAL_DIR}
+    networks:
+      - realtime_dash_network
+    env_file:
+      - ${NODE_ENV}.env
+    healthcheck:
+      test: ['CMD-SHELL', '${SCRIPT_INTERNAL_DIR}/healthcheck-redis.sh']
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+  api: 
+    build: ${APPLICATION_SERVICE_FOLDER}/api # Build the image from the Dockerfile in the api directory
+    container_name: realtime_dash_api
+    restart: unless-stopped
     ports:
-      - "80:80"
+      - "${API_PORT}:3001"
+    volumes:
+      - ${APPLICATION_SERVICE_FOLDER}/api:/usr/src/app # Mount application code
+      - ./scripts:${SCRIPT_INTERNAL_DIR}/scripts
+    networks:
+      - realtime_dash_network
+    env_file:
+      - ${NODE_ENV}.env
+    depends_on:
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD-SHELL', '${SCRIPT_INTERNAL_DIR}/healthcheck-api.sh']
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+  dash:
+    build: ${APPLICATION_SERVICE_FOLDER}/dash
+    container_name: realtime_dash_dash
+    restart: unless-stopped
+    ports:
+      - "${DASH_PORT}:3000"
+    volumes:
+      - ./apps/dash:/usr/src/app
+    networks:
+      - realtime_dash_network
+    env_file:
+      - ${NODE_ENV}.env
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD-SHELL', '${SCRIPT_INTERNAL_DIR}/healthcheck-dash.sh']
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+networks:
+  realtime_dash_network:
+    driver: bridge
+  
+volumes:
+  mongo_data:
+    driver: local
+  redis_data:
+    driver: local
