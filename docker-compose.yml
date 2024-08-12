@@ -1,16 +1,21 @@
-
+networks:
+  realtime_dash_network:
+    driver: bridge
+  
 services:
   mongo:
     image: mongo:7.0.3
     container_name: realtime_dash_mongo
     restart: unless-stopped
     volumes: 
-      - ./data/mongo_data:/data/db # Persist data across container restarts, mongo_data is the volume name on the host machine, /data/db is the path in the container
+      - mongo_data:/data/db # Persist data across container restarts, mongo_data is the volume name on the host machine, /data/db is the path in the container
       - ./scripts:${SCRIPT_INTERNAL_DIR} # Mount scripts directory to the container
     networks:
       - realtime_dash_network
     env_file:
       - ${NODE_ENV}.env
+    ports:
+      - "${MONGO_PORT}:27017"
     healthcheck:
       test: ['CMD-SHELL', '${SCRIPT_INTERNAL_DIR}/healthcheck-mongo.sh']
       interval: 30s
@@ -21,16 +26,22 @@ services:
         limits:
           cpus: '0.5'
           memory: 512M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   redis:
     image: redis:7.0.0
     container_name: realtime_dash_redis
     restart: unless-stopped
     ports:
-      - "6380:6379"
+      - "${REDIS_PORT}:6380"
     volumes:
-      - ./data/redis_data:/data
+      - redis_data:/data
       - ./scripts:${SCRIPT_INTERNAL_DIR}
+      
     networks:
       - realtime_dash_network
     env_file:
@@ -45,6 +56,11 @@ services:
         limits:
           cpus: '0.5'
           memory: 512M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
   api: 
     build: ${APPLICATION_SERVICE_FOLDER}/api # Build the image from the Dockerfile in the api directory
     container_name: realtime_dash_api
@@ -73,6 +89,11 @@ services:
         limits:
           cpus: '0.5'
           memory: 512M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
   dash:
     build: ${APPLICATION_SERVICE_FOLDER}/dash
     container_name: realtime_dash_dash
@@ -80,7 +101,8 @@ services:
     ports:
       - "${DASH_PORT}:3000"
     volumes:
-      - ./apps/dash:/usr/src/app
+      - ${APPLICATION_SERVICE_FOLDER}/dash:/usr/src/app
+      - ./scripts:${SCRIPT_INTERNAL_DIR}/scripts
     networks:
       - realtime_dash_network
     env_file:
@@ -98,11 +120,12 @@ services:
         limits:
           cpus: '0.5'
           memory: 512M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
-networks:
-  realtime_dash_network:
-    driver: bridge
-  
 volumes:
   mongo_data:
     driver: local
