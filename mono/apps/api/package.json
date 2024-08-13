@@ -1,17 +1,14 @@
 {
-  "name": "dash",
+  "name": "api",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint 'src/**/*.{js,ts,tsx}' --quiet",
     "lint:fix": "eslint 'src/**/*.{js,ts,tsx}' --fix --quiet",
-    "format": "prettier --write 'src/**/*.{js,ts,json,md}'",
     "dev": "concurrently \"npx webpack --mode development --watch\" \"nodemon dist/main.js\"",
     "start": "node dist/main.js",
-    "build": "npx webpack --mode production",
-    "pretty": "prettier --write 'src/**/*.{js,ts,json,md}' && prettier --write 'webpack.config.js' && prettier --write 'tsconfig.json' && prettier --write 'eslint.config.mjs'"
+    "build": "npx webpack --mode production"
   },
   "keywords": [],
   "author": "",

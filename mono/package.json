@@ -1,0 +1,22 @@
+{
+  "name": "mono",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "format": "prettier --write .",
+    "lint": "pnpm eslint --ext .ts,.tsx,.js,.jsx ./apps ./libs",
+    "lint:shared-ts": "pnpm --filter shared-ts lint",
+    "lint:api": "pnpm --filter api lint",
+    "lint:dash": "pnpm --filter dash lint",
+    "shared-ts": "pnpm --filter shared-ts",
+    "api": "pnpm --filter api",
+    "dash": "pnpm --filter dash"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "prettier": "^3.3.3"
+  }
+}

@@ -10,7 +10,10 @@ export default defineFlatConfig([
       },
     },
     rules: {
-      'no-console': 'error', // Example of a project-specific rule
+      'react/react-in-jsx-scope': 'off', // React is always in scope with Next.js
+      'react/prop-types': 'off', // TypeScript types are sufficient for prop types
+      '@typescript-eslint/explicit-module-boundary-types': 'off',
+      '@typescript-eslint/no-explicit-any': 'warn',
     },
   },
 ]);
