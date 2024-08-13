@@ -138,5 +138,5 @@ dist
 data/*
 
 .env
-*.env
+.env.*
 !.env.example
