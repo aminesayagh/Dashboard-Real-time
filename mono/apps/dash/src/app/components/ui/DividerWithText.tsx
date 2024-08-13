@@ -1,7 +1,8 @@
 'use client';
 import { Divider } from "@nextui-org/react";
 import { twMerge as tw } from "tailwind-merge";
-import { text } from "./typography/Typography.style";
+import { text } from "./typography/Typo";
+
 export default function DividerWithText({
   children,
 }: {

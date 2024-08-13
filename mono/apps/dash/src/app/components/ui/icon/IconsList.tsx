@@ -1,8 +1,7 @@
 import React, { SVGAttributes } from "react";
 
-// import * as LocalIcons from '@public/icons/IconsList';
 import * as LocalIcons from '@public/icons/IconsList';
-import { objectKeys } from "@shared/src";
+import { objectKeys } from "@rtd/shared-ts";
 
 export interface IconProps extends SVGAttributes<SVGElement> {
   color?: string;

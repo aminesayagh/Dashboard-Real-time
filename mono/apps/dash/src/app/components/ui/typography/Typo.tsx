@@ -1,9 +1,7 @@
 
-import { cva } from 'class-variance-authority';
-// import { cx } from 'class-variance-authority';
+import { VariantProps,cva } from 'class-variance-authority';
 import { twMerge as tw } from 'tailwind-merge';
-import Style from './Typography.module.scss';
-import { VariantProps } from 'class-variance-authority';
+// import Style from './Typography.module.scss';
 
 const textDefault = 'inline-block align-middle';
 const fontFamilyTitle = 'font-sans';
@@ -87,7 +85,7 @@ export const displayStyle = cva([textDefault, fontFamilyTitle], {
 
 export type DisplayPropsExtended = VariantProps<typeof displayStyle> & TypographyColorDegreeProps;
 
-export const titleStyle = cva([textDefault, fontFamilyTitle, Style['title']], {
+export const titleStyle = cva([textDefault, fontFamilyTitle, 'title'], {
     variants: {
         weight: {
             bold: 'font-black',
@@ -95,23 +93,23 @@ export const titleStyle = cva([textDefault, fontFamilyTitle, Style['title']], {
             regular: 'font-regular',
         },
         size: {
-            h1: Style['title_h1'],
-            h2: Style['title_h2'],
-            h3: Style['title_h3'],
-            h4: Style['title_h4'],
-            h5: Style['title_h5'],
-            h6: Style['title_h6'],
+            h1: 'title_h1',
+            h2: 'title_h2',
+            h3: 'title_h3',
+            h4: 'title_h4',
+            h5: 'title_h5',
+            h6: 'title_h6',
         }
     },
     defaultVariants: {
         weight: 'semibold',
-        size: 'h1'
+        size: 'h2'
     }
 });
 
 export type TitlePropsExtended = VariantProps<typeof titleStyle> & TypographyColorDegreeProps;
 
-export const textStyle = cva([textDefault, fontFamilyText, Style['text']], {
+export const textStyle = cva([textDefault, fontFamilyText, 'text'], {
     variants: {
         weight: {
             bold: 'font-bold',
@@ -119,10 +117,10 @@ export const textStyle = cva([textDefault, fontFamilyText, Style['text']], {
             regular: 'font-regular',
         },
         size: {
-            lg: Style['text_lg'],
-            md: Style['text_md'],
-            sm: Style['text_sm'],
-            xs: Style['text_xs'],
+            lg: 'text_lg',
+            md: 'text_md',
+            sm: 'text_sm',
+            xs: 'text_xs',
         }
     },
     defaultVariants: {
@@ -149,7 +147,6 @@ export const text = ({ mode, degree = 'faded', weight, size }: TextPropsExtended
 );
 
 export const link = ({ mode, degree = 'faded', weight, size }: TextPropsExtended) => tw(
-    textStyle({ weight, size }),
-    typographyColorDegree({ mode, degree }),
+    text({ mode, degree, weight, size }),
     'cursor-pointer text-primary',
 );

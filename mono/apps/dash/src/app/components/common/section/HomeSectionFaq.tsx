@@ -3,7 +3,7 @@
 import { Lang } from "@i18n/settings";
 import Container from "@ui/Container";
 import { useTranslation } from "@i18n/client";
-import { title, text } from "@ui/typography/Typography.style";
+import { title, text } from "@components/ui/typography/Typo";
 import { Accordion, AccordionItem } from "@nextui-org/react";
 import { twMerge as tw } from "tailwind-merge";
 

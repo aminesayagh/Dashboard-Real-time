@@ -2,7 +2,7 @@
 import React from "react";
 import { useTranslation } from "@i18n/client";
 import { Lang } from "@i18n/settings";
-import { text } from "@ui/typography/Typography.style";
+import { text } from "@components/ui/typography/Typo";
 
 export default function AuthFooter({ lng }: { lng: Lang }) {
   const { t } = useTranslation(lng, "common");

@@ -1,6 +1,6 @@
 "use client";
 import React, { useCallback, Key } from "react";
-import { title, text } from "@ui/typography/Typography.style";
+import { title, text } from "@components/ui/typography/Typo";
 import { generatePageUrl, Lang, RouteSettingPath } from "@i18n/settings";
 import { useTranslation } from "@i18n/client";
 import { useRouter } from "next/navigation";

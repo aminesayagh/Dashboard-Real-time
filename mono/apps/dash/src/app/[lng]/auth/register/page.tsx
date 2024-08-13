@@ -8,7 +8,7 @@ import AuthProvider from "@components/common/AuthProvider";
 import DividerWithText from "@ui/DividerWithText";
 import { generatePageUrl, useTranslation } from "@i18n/client";
 import { twMerge as tw } from "tailwind-merge";
-import { title, link, text } from "@ui/typography/Typography.style";
+import { title, link, text } from "@components/ui/typography/Typo";
 
 export default function Register({
   params: { lng },

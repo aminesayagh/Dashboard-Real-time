@@ -2,7 +2,7 @@
 import React from "react";
 import { Navbar, NavbarBrand, NavbarContent, Link, Button } from '@nextui-org/react';
 import Logo from "@components/ui/logo/Logo";
-import { text } from '@ui/typography/Typography.style'; 
+import { text } from '@components/ui/typography/Typo'; 
 import SwitchLanguage from "@components/ui/SwitchLanguage";
 import { useTranslation } from "@i18n/client";
 import { generatePageUrl, Lang } from "@i18n/settings";

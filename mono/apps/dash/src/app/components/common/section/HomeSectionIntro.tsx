@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Lang } from "@i18n/settings";
 import Container from "@ui/Container";
 import { Button } from "@nextui-org/react";
-import { title, text } from "@ui/typography/Typography.style";
+import { title, text } from "@components/ui/typography/Typo";
 import { useTranslation } from '@i18n/client';
 
 export default function Section({ lang }: { lang: Lang }) {

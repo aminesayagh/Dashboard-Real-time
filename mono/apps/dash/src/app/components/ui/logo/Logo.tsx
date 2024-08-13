@@ -3,7 +3,7 @@ import Link from "next/link";
 import { LinkProps } from "next/link";
 import SvgResizer from "react-svg-resizer";
 import { twMerge as tw } from "tailwind-merge";
-import LogoImage from "@public/logo.svg";
+import LogoImage from "@public/icons/google.png";
 
 
 type TLogoMode = "dark" | "light";
@@ -21,9 +21,10 @@ const Logo = ({ alt, mode, size, ...props }: LogoProps) => {
       }
       {...props}
     >
-      <SvgResizer size={size}>
-        <LogoImage className='' alt={alt} />
-      </SvgResizer>
+      {/* <SvgResizer size={size}>
+
+      </SvgResizer> */}
+      Logo Image
     </Link>
   );
 };

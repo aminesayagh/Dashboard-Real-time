@@ -7,8 +7,8 @@ import { Card, CardHeader, CardBody, CardFooter } from "@nextui-org/react";
 import { generatePageUrl, useTranslation } from "@i18n/client";
 
 import DividerWithText from "@ui/DividerWithText";
-import { link, text } from "@ui/typography/Typography.style";
-import { title } from "@ui/typography/Typography.style";
+import { link, text } from "@components/ui/typography/Typo";
+import { title } from "@components/ui/typography/Typo";
 import { twMerge as tw } from "tailwind-merge";
 import LoginForm from "@form/AuthEmailForm";
 import AuthProvider from "@common/AuthProvider";
