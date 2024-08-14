@@ -14,10 +14,16 @@
         "noUnusedParameters": true,
         "noImplicitReturns": true,
         "noFallthroughCasesInSwitch": true,
+        "declaration": true, // Ensure that declaration files are generated, and that the javascript files are not overwritten
         "noUncheckedIndexedAccess": true,
         "noImplicitOverride": true,
+        "experimentalDecorators": true,
         "noPropertyAccessFromIndexSignature": true,
         "exactOptionalPropertyTypes": false,
         "forceConsistentCasingInFileNames": true,
+        "target": "ESNext", 
+        "module": "ESNext",
+        "skipLibCheck": true, // This is optional, but it's a good idea to skip lib checks in a monorepo
+        "sourceMap": true, // This is optional, but it's a good idea to have source maps in a monorepo
     }
 }

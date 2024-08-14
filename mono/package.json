@@ -11,7 +11,17 @@
     "lint:dash": "pnpm --filter dash lint",
     "shared-ts": "pnpm --filter shared-ts",
     "api": "pnpm --filter api",
-    "dash": "pnpm --filter dash"
+    "dash": "pnpm --filter dash",
+    "dev": "pnpm -r --if-present --parallel dev",
+    "build": "pnpm -r --if-present --parallel build",
+    "start": "pnpm -r --if-present --parallel start",
+    "list-packages": "echo [$(pnpm -s m ls --depth -1 | tr \" \" \"\n\" | grep -o \"@.*@\" | rev | cut -c 2- | rev | sed -e 's/\\(.*\\)/\"\\1\"/' | paste -sd, - )]",
+    "preinstall": "scripts/preinstall",
+    "pnpm-context": "scripts/pnpm-context.mjs"
+  },
+  "engines": {
+    "node": ">=16.1.0",
+    "pnpm": ">=6.9.0"
   },
   "keywords": [],
   "author": "",
@@ -23,5 +33,6 @@
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-prettier": "^5.2.1",
     "prettier": "^3.3.3"
-  }
+  },
+  "private": true
 }
