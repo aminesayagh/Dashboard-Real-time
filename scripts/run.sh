@@ -54,6 +54,24 @@ check_file_exists "$COMPOSE_FILE" "Docker Compose file not found: $COMPOSE_FILE"
 check_port $MONGO_PORT "Port $MONGO_PORT is not available"
 check_port $REDIS_PORT "Port $REDIS_PORT is not available"
 
+# Check if the key file of MongoDB exists on ./mongodb/keyfile, if not, create it
+if [ ! -f ./mongodb/keyfile ]; then
+    message "Creating MongoDB keyfile..." "info"
+    mkdir -p ./mongodb
+    openssl rand -base64 756 > ./mongodb/keyfile
+    chmod 400 ./mongodb/keyfile
+    message "MongoDB keyfile created successfully" "success"
+fi
+
+# Check if the healthcheck files exist on scripts folder, and if yes, give execution permission
+for file in ./scripts/healthcheck-*.sh; do
+    if [ -f "$file" ]; then
+        message "Giving execution permission to $file..." "info"
+        chmod +x "$file"
+        message "Execution permission granted to $file" "success"
+    fi
+done
+
 message "Starting Docker Compose setup..." "info"
 
 docker compose -f "$COMPOSE_FILE" --env-file "$ENV_FILE" up --build

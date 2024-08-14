@@ -6,9 +6,12 @@ services:
   mongo:
     image: mongo:7.0.3
     container_name: realtime_dash_mongo
-    restart: unless-stopped
+    restart: unless-stopped # Restart the container unless it is stopped by the user
     volumes: 
       - mongo_data:/data/db # Persist data across container restarts, mongo_data is the volume name on the host machine, /data/db is the path in the container
+      - ./mongo/mongod.conf:/etc/mongod.conf # Mount the mongod.conf file to the container
+      - ./mongo/keyfile:/data/keyfile # Mount the keyfile to the container
+      - ./mongo/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js # Mount the init-mongo.js file to the container
       - ./scripts:${SCRIPT_INTERNAL_DIR} # Mount scripts directory to the container
     networks:
       - realtime_dash_network
@@ -31,7 +34,7 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
-
+    
   redis:
     image: redis:7.0.0
     container_name: realtime_dash_redis
