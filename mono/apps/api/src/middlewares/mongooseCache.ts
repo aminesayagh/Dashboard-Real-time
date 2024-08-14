@@ -1,36 +1,9 @@
 import { NextFunction } from 'express';
 // /src/utils/mongooseCache.ts
-import { createClient, RedisClientType } from 'redis';
+// import { createClient, RedisClientType } from 'redis';
 import { ApiRequest, ApiResponse } from '../types/Api';
-import { REDIS_URI } from '../env';
+import Redis from '../utils/Redis';
 
-// Create Redis client
-const redisUrl = REDIS_URI || 'redis://localhost:6379';
-const redisClient: RedisClientType = createClient({ url: redisUrl });
-
-export const connectRedis = async () => {
-  // Connect to Redis
-  await redisClient
-    .connect()
-    .then(() => {
-      console.log('Connected to Redis');
-    })
-    .catch((err: Error) => {
-      console.error('Redis connection error:', err);
-    });
-};
-
-export const disconnectRedis = async () => {
-  // Disconnect from Redis
-  await redisClient
-    .quit()
-    .then(() => {
-      console.log('Disconnected from Redis');
-    })
-    .catch((err: Error) => {
-      console.error('Redis disconnection error:', err);
-    });
-};
 
 // Middleware to handle caching for GET requests
 export const cacheMiddleware = async (
@@ -41,7 +14,7 @@ export const cacheMiddleware = async (
   if (req.method === 'GET') {
     const key = req.originalUrl;
     try {
-      const data = await redisClient.get(key);
+      const data = await Redis.get(key);
       if (data) {
         console.log('I am cached');
         res.send(JSON.parse(data));
