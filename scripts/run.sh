@@ -11,7 +11,7 @@ if [ ! -z "$1" ]; then
 fi
 
 # Define the environment file and Docker Compose file
-ENV_FILE="$ENVIRONMENT.env"
+ENV_FILE=".env.$ENVIRONMENT"
 COMPOSE_FILE="docker-compose.yml"
 
 # Define PORTS
@@ -55,11 +55,11 @@ check_port $MONGO_PORT "Port $MONGO_PORT is not available"
 check_port $REDIS_PORT "Port $REDIS_PORT is not available"
 
 # Check if the key file of MongoDB exists on ./mongodb/keyfile, if not, create it
-if [ ! -f ./mongodb/keyfile ]; then
+if [ ! -f ./mongo/keyfile ]; then
     message "Creating MongoDB keyfile..." "info"
-    mkdir -p ./mongodb
+    mkdir -p ./mongo
     openssl rand -base64 756 > ./mongodb/keyfile
-    chmod 400 ./mongodb/keyfile
+    chmod 400 ./mongo/keyfile
     message "MongoDB keyfile created successfully" "success"
 fi
 

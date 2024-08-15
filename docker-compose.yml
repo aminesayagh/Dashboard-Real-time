@@ -34,7 +34,6 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
-    
   redis:
     image: redis:7.0.0
     container_name: realtime_dash_redis
@@ -49,6 +48,9 @@ services:
       - realtime_dash_network
     env_file:
       - .env.${NODE_ENV}
+    sysctls:
+      - net.core.somaxconn=511 # Increase the maximum number of connections
+      - vm.overcommit_memory=1 # Enable overcommit memory to avoid OOM killer issues
     healthcheck:
       test: ['CMD-SHELL', '${SCRIPT_INTERNAL_DIR}/healthcheck-redis.sh']
       interval: 30s
@@ -64,70 +66,70 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
-  api: 
-    build: ${APPLICATION_SERVICE_FOLDER}/api # Build the image from the Dockerfile in the api directory
-    container_name: realtime_dash_api
-    restart: unless-stopped
-    ports:
-      - "${API_PORT}:3001"
-    volumes:
-      - ${APPLICATION_SERVICE_FOLDER}/api:/usr/src/app # Mount application code
-      - ./scripts:${SCRIPT_INTERNAL_DIR}/scripts
-    networks:
-      - realtime_dash_network
-    env_file:
-      - .env.${NODE_ENV}
-    depends_on:
-      mongo:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    healthcheck:
-      test: ['CMD-SHELL', '${SCRIPT_INTERNAL_DIR}/healthcheck-api.sh']
-      interval: 30s
-      timeout: 10s
-      retries: 5
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 512M
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-  dash:
-    build: ${APPLICATION_SERVICE_FOLDER}/dash
-    container_name: realtime_dash_dash
-    restart: unless-stopped
-    ports:
-      - "${DASH_PORT}:3000"
-    volumes:
-      - ${APPLICATION_SERVICE_FOLDER}/dash:/usr/src/app
-      - ./scripts:${SCRIPT_INTERNAL_DIR}/scripts
-    networks:
-      - realtime_dash_network
-    env_file:
-      - .env.${NODE_ENV}
-    depends_on:
-      api:
-        condition: service_healthy
-    healthcheck:
-      test: ['CMD-SHELL', '${SCRIPT_INTERNAL_DIR}/healthcheck-dash.sh']
-      interval: 30s
-      timeout: 10s
-      retries: 5
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 512M
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
+  # api: 
+  #   build: ${APPLICATION_SERVICE_FOLDER}/api # Build the image from the Dockerfile in the api directory
+  #   container_name: realtime_dash_api
+  #   restart: unless-stopped
+  #   ports:
+  #     - "${API_PORT}:3001"
+  #   volumes:
+  #     - ${APPLICATION_SERVICE_FOLDER}/api:/usr/src/app # Mount application code
+  #     - ./scripts:${SCRIPT_INTERNAL_DIR}/scripts
+  #   networks:
+  #     - realtime_dash_network
+  #   env_file:
+  #     - .env.${NODE_ENV}
+  #   depends_on:
+  #     mongo:
+  #       condition: service_healthy
+  #     redis:
+  #       condition: service_healthy
+  #   healthcheck:
+  #     test: ['CMD-SHELL', '${SCRIPT_INTERNAL_DIR}/healthcheck-api.sh']
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 5
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         cpus: '0.5'
+  #         memory: 512M
+  #   logging:
+  #     driver: "json-file"
+  #     options:
+  #       max-size: "10m"
+  #       max-file: "3"
+  # dash:
+  #   build: ${APPLICATION_SERVICE_FOLDER}/dash
+  #   container_name: realtime_dash_dash
+  #   restart: unless-stopped
+  #   ports:
+  #     - "${DASH_PORT}:3000"
+  #   volumes:
+  #     - ${APPLICATION_SERVICE_FOLDER}/dash:/usr/src/app
+  #     - ./scripts:${SCRIPT_INTERNAL_DIR}/scripts
+  #   networks:
+  #     - realtime_dash_network
+  #   env_file:
+  #     - .env.${NODE_ENV}
+  #   depends_on:
+  #     api:
+  #       condition: service_healthy
+  #   healthcheck:
+  #     test: ['CMD-SHELL', '${SCRIPT_INTERNAL_DIR}/healthcheck-dash.sh']
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 5
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         cpus: '0.5'
+  #         memory: 512M
+  #   logging:
+  #     driver: "json-file"
+  #     options:
+  #       max-size: "10m"
+  #       max-file: "3"
 
 volumes:
   mongo_data:
