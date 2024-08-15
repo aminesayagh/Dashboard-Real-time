@@ -1,0 +1,45 @@
+{
+  "name": "mono",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "format": "prettier --write .",
+    "lint": "pnpm eslint --ext .ts,.tsx,.js,.jsx ./apps ./libs",
+    "lint:shared-ts": "pnpm --filter shared-ts lint",
+    "lint:api": "pnpm --filter api lint",
+    "lint:dash": "pnpm --filter dash lint",
+    "shared-ts": "pnpm --filter shared-ts",
+    "api": "pnpm --filter api",
+    "dash": "pnpm --filter dash",
+    "dev": "pnpm -r --if-present --parallel dev",
+    "build": "pnpm -r --if-present --parallel build",
+    "start": "pnpm -r --if-present --parallel start",
+    "list-packages": "echo [$(pnpm -s m ls --depth -1 | tr \" \" \"\n\" | grep -o \"@.*@\" | rev | cut -c 2- | rev | sed -e 's/\\(.*\\)/\"\\1\"/' | paste -sd, - )]",
+    "preinstall": "scripts/preinstall",
+    "pnpm-context": "scripts/pnpm-context.mjs"
+  },
+  "engines": {
+    "node": ">=16.1.0",
+    "pnpm": ">=6.9.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@pnpm/filter-workspace-packages": "^10.0.6",
+    "@pnpm/logger": "^5.2.0",
+    "@typescript-eslint/eslint-plugin": "^8.1.0",
+    "@typescript-eslint/parser": "^8.1.0",
+    "eslint": "^9.9.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-prettier": "^5.2.1",
+    "globby": "^14.0.2",
+    "meow": "^13.2.0",
+    "mississippi": "^4.0.0",
+    "prettier": "^3.3.3",
+    "tar": "^7.4.3",
+    "typescript": "^5.5.4"
+  },
+  "private": true
+}

@@ -1,70 +1,138 @@
-version: '3.9'
+networks:
+  realtime_dash_network:
+    driver: bridge
+  
 services:
-  frontend:
-    build: ./nx/apps/frontend
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./nx/apps/frontend:/app
-    depends_on:
-      - backend
-
-  backend:
-    build: ./nx/apps/api
-    ports:
-      - "3001:3001"
-    volumes:
-      - ./nx/apps/api:/app
-    environment:
-      - PORT=3001
-      - MONGO_DB=app_db
-      - MONGO_TEST_DB=app_db_test
-      - MONGO_URI=db:27017
-      - MONGO_ATLAS=${MONGO_ATLAS}
-      - MONGO_USER=user
-      - MONGO_PASSWORD=password
-      - USER_MAILER_USER=mail@gmail.com
-      - USER_MAILER_PASSWORD=password
-      - CLOUDINARY_CLOUD_NAME=cloud_name
-      - CLOUDINARY_API_KEY=api_key
-      - CLOUDINARY_API_SECRET=api_secret
-      - REDIS_URI=redis://redis:6379
-    depends_on:
-      - db
-      - redis
-      # - kafka
-
-  db:
+  mongo:
     image: mongo:7.0.3
+    container_name: realtime_dash_mongo
+    restart: unless-stopped # Restart the container unless it is stopped by the user
+    volumes: 
+      - mongo_data:/data/db # Persist data across container restarts, mongo_data is the volume name on the host machine, /data/db is the path in the container
+      - ./mongo/mongod.conf:/etc/mongod.conf # Mount the mongod.conf file to the container
+      - ./mongo/keyfile:/data/keyfile # Mount the keyfile to the container
+      - ./mongo/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js # Mount the init-mongo.js file to the container
+      - ./scripts:${SCRIPT_INTERNAL_DIR} # Mount scripts directory to the container
+    networks:
+      - realtime_dash_network
+    env_file:
+      - .env.${NODE_ENV}
     ports:
-      - "27017:27017"
-    volumes:
-      - ./data/db:/data/db
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=user
-      - MONGO_INITDB_ROOT_PASSWORD=password
-
+      - "${MONGO_PORT}:27017"
+    healthcheck:
+      test: ['CMD-SHELL', '${SCRIPT_INTERNAL_DIR}/healthcheck-mongo.sh']
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
   redis:
-    image: redis:latest
+    image: redis:7.0.0
+    container_name: realtime_dash_redis
+    restart: unless-stopped
     ports:
-      - "6379:6379"
-
-  # kafka:
-  #   image: landoop/fast-data-dev:latest
+      - "${REDIS_PORT}:6380"
+    volumes:
+      - redis_data:/data
+      - ./scripts:${SCRIPT_INTERNAL_DIR}
+      
+    networks:
+      - realtime_dash_network
+    env_file:
+      - .env.${NODE_ENV}
+    sysctls:
+      - net.core.somaxconn=511 # Increase the maximum number of connections
+      - vm.overcommit_memory=1 # Enable overcommit memory to avoid OOM killer issues
+    healthcheck:
+      test: ['CMD-SHELL', '${SCRIPT_INTERNAL_DIR}/healthcheck-redis.sh']
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+  # api: 
+  #   build: ${APPLICATION_SERVICE_FOLDER}/api # Build the image from the Dockerfile in the api directory
+  #   container_name: realtime_dash_api
+  #   restart: unless-stopped
   #   ports:
-  #     - "3030:3030" # Web UI
-  #     - "8081:8081" # Schema registry
-  #     - "8082:8082" # Kafka REST proxy
-  #     - "8083:8083" # Kafka connect distributed
-  #     - "9092:9092" # Kafka broker
-  #     - "2181:2181" # ZooKeeper
-  #   environment:
-  #     ADV_HOST: 127.0.0.1
-  #     RUNTESTS: 0
-  #     DEBUG: 1
-  #     SAMPLEDATA: 0
+  #     - "${API_PORT}:3001"
+  #   volumes:
+  #     - ${APPLICATION_SERVICE_FOLDER}/api:/usr/src/app # Mount application code
+  #     - ./scripts:${SCRIPT_INTERNAL_DIR}/scripts
+  #   networks:
+  #     - realtime_dash_network
+  #   env_file:
+  #     - .env.${NODE_ENV}
+  #   depends_on:
+  #     mongo:
+  #       condition: service_healthy
+  #     redis:
+  #       condition: service_healthy
+  #   healthcheck:
+  #     test: ['CMD-SHELL', '${SCRIPT_INTERNAL_DIR}/healthcheck-api.sh']
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 5
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         cpus: '0.5'
+  #         memory: 512M
+  #   logging:
+  #     driver: "json-file"
+  #     options:
+  #       max-size: "10m"
+  #       max-file: "3"
+  # dash:
+  #   build: ${APPLICATION_SERVICE_FOLDER}/dash
+  #   container_name: realtime_dash_dash
+  #   restart: unless-stopped
+  #   ports:
+  #     - "${DASH_PORT}:3000"
+  #   volumes:
+  #     - ${APPLICATION_SERVICE_FOLDER}/dash:/usr/src/app
+  #     - ./scripts:${SCRIPT_INTERNAL_DIR}/scripts
+  #   networks:
+  #     - realtime_dash_network
+  #   env_file:
+  #     - .env.${NODE_ENV}
+  #   depends_on:
+  #     api:
+  #       condition: service_healthy
+  #   healthcheck:
+  #     test: ['CMD-SHELL', '${SCRIPT_INTERNAL_DIR}/healthcheck-dash.sh']
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 5
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         cpus: '0.5'
+  #         memory: 512M
+  #   logging:
+  #     driver: "json-file"
+  #     options:
+  #       max-size: "10m"
+  #       max-file: "3"
 
-  nginx:
-    build: ./nginx
-    ports:
-      - "80:80"
+volumes:
+  mongo_data:
+    driver: local
+  redis_data:
+    driver: local
