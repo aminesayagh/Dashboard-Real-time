@@ -13,9 +13,9 @@ check_mongo_keyfile() {
         message "Creating MongoDB keyfile..." "info"
         mkdir -p ./mongo
         openssl rand -base64 756 > ./mongo/keyfile
-        chmod 400 ./mongo/keyfile
-        message "MongoDB keyfile created successfully" "success"
     fi
+    chmod 400 ./mongo/keyfile
+    message "MongoDB keyfile created successfully" "success"
 }
 
 # Execution permission to healthcheck files

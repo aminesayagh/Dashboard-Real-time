@@ -19,11 +19,6 @@ COMPOSE_FILE="docker-compose.yml"
 LOG_DIR="./logs"
 LOG_FILE="$LOG_DIR/docker-compose-setup.log"
 
-# check if the log directory exists
-if [ ! -d "$LOG_DIR" ]; then
-    mkdir -p "$LOG_DIR"
-fi
-
 source ./scripts/lib.sh
 source ./scripts/utils.sh
 

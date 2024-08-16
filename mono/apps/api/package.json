@@ -2,13 +2,16 @@
   "name": "api",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/index.js",
+  "main": "dist/main.js",
   "scripts": {
     "lint": "eslint 'src/**/*.{js,ts,tsx}' --quiet",
     "lint:fix": "eslint 'src/**/*.{js,ts,tsx}' --fix --quiet",
     "dev": "concurrently \"npx webpack --mode development --watch\" \"nodemon dist/main.js\"",
     "start": "node dist/main.js",
-    "build": "npx webpack --mode production"
+    "build": "npx webpack --mode production",
+    "build:start": "node dist/main.js",
+    "docker:build": "pnpm --silent --workspace-root pnpm-context -- -p 'tsconfig.json' -p 'bin/' -p '!**/*.iml' apps/api/Dockerfile | docker build --build-arg PACKAGE_PATH=apps/api - -t mono-api"
+
   },
   "keywords": [],
   "author": "",

@@ -1,50 +1,65 @@
-# Dockerfile for the API service
+# ----- STAGE 1: Install PNPM ----- #
 
-# Stage 1: Build the shared library and the API service
-FROM node:18-alpine AS build
+# Use the official Node.js 16 image
+FROM node:16-alpine AS base
 
-# Install pnpm
-RUN npm install -g pnpm
+# Arguments for PNPM version, default is 6.9.0
+ARG PNPM_VERSION=6.9.0
 
-# Set working directory
-WORKDIR /app
+# Install PNPM
+RUN npm --no-update-notifier --no-fund --global install pnpm@${PNPM_VERSION}
 
-# Copy  package.json and pnpm-lock.yaml
-COPY package.json pnpm-lock.yaml ./
+# Workdir
+WORKDIR /root/mono
 
-# Copy the shared library
-COPY apps/libs/shared-ts ./apps/libs/shared-ts 
+# ----- STAGE 2: Install dependencies, build ----- #
+FROM base AS dev
 
-# Copy the API application
-COPY apps/api ./apps/api
+# Arguments for the package path to install dependencies
+ARG PACKAGE_PATH 
 
-# Install dependencies, --frozen-lockfile ensures that the lockfile is not updated
-RUN pnpm install --recursive --frozen-lockfile
+# Set the environment variable to avoid installing dev dependencies in production
+ENV CI=true
+COPY ./meta .
 
-# Copy the rest of the application code
-COPY . .
+RUN --mount=type=cache,id=pnpm-store,target=/root/.pnpm-store\
+    # By caching the content-addressable store, we can avoid re-installing dependencies
+    pnpm install --filter "{${PACKAGE_PATH}}..."\
+    # Install dev dependencies for the API in the mono repo
+    # ... and any other dependencies that are not in the mono repo
+    --frozen-lockfile\
+    # Ensure the lockfile is up-to-date
+    --unsafe-perm\
+    # ↑ Docker runs pnpm as root and then pnpm won't run package scripts unless we pass this arg \
+    | grep -v "cross-device link not permitted\|Falling back to copying packages from store" 
+    # Docker's 'cache' mount type causes Docker to place the pnpm content-addressable store \
+    # on a different virtual drive, which prohibits pnpm from symlinking its content to its virtual store \
+    # (in node_modules/.pnpm), and that causes pnpm to fall back on copying the files. \
+    # And that's fine!, except pnpm emits many warnings of this, so here we filter those out.
 
-# Build the shared library
-RUN pnpm --filter shared-ts build
+COPY ./deps .
+RUN pnpm build --if-present --filter "{${PACKAGE_PATH}}..."
+# ↑ Build dependencies separately, because they often change less often than the package itself
 
-# Build the API (if necessary)
-RUN pnpm --filter api build
+# ----- STAGE 3: Copy assets, remove source code ----- #
+FROM dev AS assets
+RUN rm -rf node_modules && pnpm recursive exec -- rm -rf ./src ./node_modules
 
-# Stage 2: Create the production image
-FROM node:18-alpine
+# ----- STAGE 4: Production image ----- #
+FROM base AS prod
+ARG PACKAGE_PATH
+ENV CI=true
+COPY ./meta .
+RUN --mount=type=cache,id=pnpm-store,target=/root/.pnpm-store\
+    pnpm install --filter "{${PACKAGE_PATH}}..."\
+    --frozen-lockfile\
+    --production\
+    --unsafe-perm\
+    | grep -v  "cross-device link not permitted\|Falling back to copying packages from store"
 
-WORKDIR /app
+COPY --from=assets /root/mono .
 
-# Copy built artifacts and package.json files
-COPY --from=builder /app/package.json /app/pnpm-lock.yaml ./
-COPY --from=builder /app/apps/libs/shared-ts ./apps/libs/shared-ts
-COPY --from=builder /app/apps/api ./apps/api
-
-# Install production dependencies only
-RUN npm install -g pnpm && pnpm install --recursive --prod --frozen-lockfile
-
-# Expose the port the API runs on
-EXPOSE 3001
-
-# Command to run the API
-CMD ["pnpm", "--filter", "api", "start"]
+WORKDIR /root/mono/${PACKAGE_PATH}
+EXPOSE ${API_PORT}
+ENV NODE_ENV=${NODE_ENV}
+ENTRYPOINT ["pnpm", "build:start"]

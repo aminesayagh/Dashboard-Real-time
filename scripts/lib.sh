@@ -77,3 +77,21 @@ check_port() {
         message "Port $port is available" "success"
     fi
 }
+
+# Function to give execution permission to a file
+give_execution_permission() {
+    local file_path="$1"
+    local error_message="${2:-File not found: $file_path}"
+    local continue_on_failure="$3"
+
+    if [ ! -f "$file_path" ]; then
+        message "$error_message" "error"
+        if [ "$continue_on_failure" != "continue" ]; then
+          exit 1
+        fi
+    else
+        message "Giving execution permission to $file_path..." "info"
+        chmod +x "$file_path"
+        message "Execution permission granted to $file_path" "success"
+    fi
+}

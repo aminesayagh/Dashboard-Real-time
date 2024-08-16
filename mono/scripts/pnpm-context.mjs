@@ -10,7 +10,8 @@ import os from 'os'
 import { basename, dirname, join, relative, resolve } from 'path'
 import { create as createTar } from 'tar'
 import { globby } from 'globby'
-import { parsePackageSelector, readProjects } from '@pnpm/filter-workspace-packages'
+import pkg from '@pnpm/filter-workspace-packages';
+const { parsePackageSelector, readProjects } = pkg;
 import { pipe as rawPipe } from 'mississippi'
 import { promises as fs } from 'fs'
 import { promisify } from 'util'
