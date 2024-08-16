@@ -12,15 +12,16 @@ services:
       - ./mongo/mongod.conf:/etc/mongod.conf # Mount the mongod.conf file to the container
       - ./mongo/keyfile:/data/keyfile # Mount the keyfile to the container
       - ./mongo/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js # Mount the init-mongo.js file to the container
-      - ./scripts:${SCRIPT_INTERNAL_DIR} # Mount scripts directory to the container
+      - ./${SCRIPT_INTERNAL_DIR}:scripts # Mount scripts directory to the container
     networks:
       - realtime_dash_network
     env_file:
-      - .env.${NODE_ENV}
+      - .${NODE_ENV}.env
     ports:
       - "${MONGO_PORT}:27017"
+    command: ["mongod", "--config", "/etc/mongod.conf", "--auth"] # Start the mongod process with the configuration file and enable authentication
     healthcheck:
-      test: ['CMD-SHELL', '${SCRIPT_INTERNAL_DIR}/healthcheck-mongo.sh']
+      test: ['CMD-SHELL', 'scripts/healthcheck-mongo.sh']
       interval: 30s
       timeout: 10s
       retries: 5
@@ -42,17 +43,16 @@ services:
       - "${REDIS_PORT}:6380"
     volumes:
       - redis_data:/data
-      - ./scripts:${SCRIPT_INTERNAL_DIR}
-      
+      - ./${SCRIPT_INTERNAL_DIR}:scripts
     networks:
       - realtime_dash_network
     env_file:
-      - .env.${NODE_ENV}
+      - .${NODE_ENV}.env
     sysctls:
       - net.core.somaxconn=511 # Increase the maximum number of connections
       - vm.overcommit_memory=1 # Enable overcommit memory to avoid OOM killer issues
     healthcheck:
-      test: ['CMD-SHELL', '${SCRIPT_INTERNAL_DIR}/healthcheck-redis.sh']
+      test: ['CMD-SHELL', 'scripts/healthcheck-redis.sh']
       interval: 30s
       timeout: 10s
       retries: 5
@@ -66,70 +66,70 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
-  # api: 
-  #   build: ${APPLICATION_SERVICE_FOLDER}/api # Build the image from the Dockerfile in the api directory
-  #   container_name: realtime_dash_api
-  #   restart: unless-stopped
-  #   ports:
-  #     - "${API_PORT}:3001"
-  #   volumes:
-  #     - ${APPLICATION_SERVICE_FOLDER}/api:/usr/src/app # Mount application code
-  #     - ./scripts:${SCRIPT_INTERNAL_DIR}/scripts
-  #   networks:
-  #     - realtime_dash_network
-  #   env_file:
-  #     - .env.${NODE_ENV}
-  #   depends_on:
-  #     mongo:
-  #       condition: service_healthy
-  #     redis:
-  #       condition: service_healthy
-  #   healthcheck:
-  #     test: ['CMD-SHELL', '${SCRIPT_INTERNAL_DIR}/healthcheck-api.sh']
-  #     interval: 30s
-  #     timeout: 10s
-  #     retries: 5
-  #   deploy:
-  #     resources:
-  #       limits:
-  #         cpus: '0.5'
-  #         memory: 512M
-  #   logging:
-  #     driver: "json-file"
-  #     options:
-  #       max-size: "10m"
-  #       max-file: "3"
-  # dash:
-  #   build: ${APPLICATION_SERVICE_FOLDER}/dash
-  #   container_name: realtime_dash_dash
-  #   restart: unless-stopped
-  #   ports:
-  #     - "${DASH_PORT}:3000"
-  #   volumes:
-  #     - ${APPLICATION_SERVICE_FOLDER}/dash:/usr/src/app
-  #     - ./scripts:${SCRIPT_INTERNAL_DIR}/scripts
-  #   networks:
-  #     - realtime_dash_network
-  #   env_file:
-  #     - .env.${NODE_ENV}
-  #   depends_on:
-  #     api:
-  #       condition: service_healthy
-  #   healthcheck:
-  #     test: ['CMD-SHELL', '${SCRIPT_INTERNAL_DIR}/healthcheck-dash.sh']
-  #     interval: 30s
-  #     timeout: 10s
-  #     retries: 5
-  #   deploy:
-  #     resources:
-  #       limits:
-  #         cpus: '0.5'
-  #         memory: 512M
-  #   logging:
-  #     driver: "json-file"
-  #     options:
-  #       max-size: "10m"
-  #       max-file: "3"
+  api: 
+    build: ${APPLICATION_SERVICE_FOLDER}/api # Build the image from the Dockerfile in the api directory
+    container_name: realtime_dash_api
+    restart: unless-stopped
+    ports:
+      - "${API_PORT}:3001"
+    volumes:
+      - ${APPLICATION_SERVICE_FOLDER}/api:/usr/src/app # Mount application code
+      - .${SCRIPT_INTERNAL_DIR}:/scripts
+    networks:
+      - realtime_dash_network
+    env_file:
+      - .${NODE_ENV}.env
+    depends_on:
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD-SHELL', 'scripts/healthcheck-api.sh']
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+  dash:
+    build: ${APPLICATION_SERVICE_FOLDER}/dash
+    container_name: realtime_dash_dash
+    restart: unless-stopped
+    ports:
+      - "${DASH_PORT}:3000"
+    volumes:
+      - ${APPLICATION_SERVICE_FOLDER}/dash:/usr/src/app
+      - ./${SCRIPT_INTERNAL_DIR}:/scripts
+    networks:
+      - realtime_dash_network
+    env_file:
+      - .${NODE_ENV}.env
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD-SHELL', 'scripts/healthcheck-dash.sh']
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
 volumes:
   mongo_data:
