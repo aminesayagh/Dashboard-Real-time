@@ -12,9 +12,9 @@
     "shared-ts": "pnpm --filter shared-ts",
     "api": "pnpm --filter api",
     "dash": "pnpm --filter dash",
-    "dev": "pnpm -r --if-present --parallel dev",
-    "build": "pnpm -r --if-present --parallel build",
-    "start": "pnpm -r --if-present --parallel start",
+    "dev": "node scripts/load-env.mjs pnpm -r --if-present --parallel dev",
+    "build": "node scripts/load-env.mjs pnpm -r --if-present --parallel build",
+    "start": "node scripts/load-env.mjs pnpm -r --if-present --parallel start",
     "list-packages": "echo [$(pnpm -s m ls --depth -1 | tr \" \" \"\n\" | grep -o \"@.*@\" | rev | cut -c 2- | rev | sed -e 's/\\(.*\\)/\"\\1\"/' | paste -sd, - )]",
     "preinstall": "scripts/preinstall",
     "pnpm-context": "scripts/pnpm-context.mjs"
@@ -41,5 +41,8 @@
     "tar": "^7.4.3",
     "typescript": "^5.5.4"
   },
-  "private": true
+  "private": true,
+  "dependencies": {
+    "dotenv": "^16.4.5"
+  }
 }
