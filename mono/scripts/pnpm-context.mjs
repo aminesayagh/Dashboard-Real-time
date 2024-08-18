@@ -1,7 +1,4 @@
 #!/usr/bin/env node
-// Beware this script fails when run directly from shell, it must be run via package.json.
-// see https://github.com/pnpm/pnpm/issues/3726 for details.
-
 // TASK: Takes a Dockerfile and finds just the right files needed for that package, and outputs it all as a tarball.
 
 
@@ -63,12 +60,15 @@ async function main (cli) {
   const projectPath = dirname(cli.dockerFile)
 
   const [dependencyFiles, packageFiles, metaFiles] = await Promise.all([
+    // Get files from the project and its dependencies, /mono/api^... to include all dependencies of the project
     getFilesFromPnpmSelector(`{${projectPath}}^...`, cli.root, {
       extraPatterns: cli.extraPatterns
     }),
+    // 
     getFilesFromPnpmSelector(`{${projectPath}}`, cli.root, {
       extraPatterns: cli.extraPatterns.concat([`!${cli.dockerFile}`])
     }),
+    // Get metafiles from the project and its dependencies
     getMetafilesFromPnpmSelector(`{${projectPath}}...`, cli.root, {
       extraPatterns: cli.extraPatterns
     })
@@ -77,7 +77,6 @@ async function main (cli) {
   await withTmpdir(async (tmpdir) => {
     await Promise.all([
       fs.copyFile(cli.dockerFile, join(tmpdir, 'Dockerfile')),
-      // ↑ Copy target-Dockerfile to context root so Docker can find it by default
       copyFiles(dependencyFiles, join(tmpdir, 'deps')),
       copyFiles(metaFiles, join(tmpdir, 'meta')),
       copyFiles(packageFiles, join(tmpdir, 'pkg'))
@@ -136,7 +135,7 @@ async function getMetafilesFromPnpmSelector (selector, cwd, options = {}) {
     globby(['package.json', 'pnpm-lock.yaml', 'pnpm-workspace.yaml'], { cwd, dot: true, gitignore: true }),
     getPackagePathsFromPnpmSelector(selector, cwd)
       .then(paths => {
-        const patterns = paths.map(p => `${p}/**/package.json`).concat(options.extraPatterns || [])
+        const patterns = paths.map(p => `${p}/**/package.json`).concat(options.extraPatterns || []) 
         return globby(patterns, { cwd, dot: true, gitignore: true })
       })
   ])

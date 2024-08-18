@@ -49,7 +49,11 @@ RUN rm -rf node_modules && pnpm recursive exec -- rm -rf ./src ./node_modules
 FROM base AS prod
 ARG PACKAGE_PATH
 ENV CI=true
+
+# Copy the meta file to the image
 COPY ./meta .
+
+# Install production dependencies
 RUN --mount=type=cache,id=pnpm-store,target=/root/.pnpm-store\
     pnpm install --filter "{${PACKAGE_PATH}}..."\
     --frozen-lockfile\
