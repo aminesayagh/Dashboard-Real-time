@@ -8,7 +8,9 @@ module.exports = (env, argv) => {
   return {
     entry: './src/main.ts',
     target: 'node',
-    externals: [nodeExternals()],
+    externals: [nodeExternals({
+      allowlist: [/@rtd\/shared-ts/],
+    })],
     mode: isProduction ? 'production' : 'development',
     module: {
       rules: [
@@ -20,14 +22,19 @@ module.exports = (env, argv) => {
       ],
     },
     resolve: {
-      extensions: ['.tsx', '.ts', '.js'],
+      extensions: ['.tsx', '.ts', '.js', '.mjs', '.d.ts'],
       alias: {
-        '@shared': path.resolve(__dirname, '../shared/src'),
+        '@ts-shared': path.resolve(__dirname, '../../libs/shared-ts/dist'),
       },
     },
     output: {
       filename: 'main.js',
       path: path.resolve(__dirname, 'dist'),
+      libraryTarget: 'module', 
+      chunkFormat: 'module', 
+    },
+    experiments: {
+      outputModule: true,
     },
     plugins: [new CleanWebpackPlugin()],
     devtool: isProduction ? 'source-map' : 'inline-source-map',

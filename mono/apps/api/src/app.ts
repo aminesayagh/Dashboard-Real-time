@@ -12,12 +12,12 @@ import { ApiResponse, ApiRequest } from './types/Api';
 import { ERRORS } from './constants/MESSAGE';
 import { CustomError, usedCodesErrors } from './helpers/error/CustomError';
 import { dbConnect, generateMongoUri } from './utils/mongooseConnect';
-import Redis from './utils/Redis';
+import redisInstance from './utils/Redis';
 import ManagerController from './helpers/Controller';
 
 class App {
   public app: Application;
-  public redis: Redis;
+  public redis: typeof redisInstance = redisInstance;
   private constructor(
     controller: ManagerController,
     public port: number,
@@ -26,7 +26,6 @@ class App {
     this.port = port;
 
     this.connectDatabase();
-    this.redis = Redis.create();
 
     this.initMiddlewares();
     this.initRateLimit();

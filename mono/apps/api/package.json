@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "eslint 'src/**/*.{js,ts,tsx}' --quiet",
     "lint:fix": "eslint 'src/**/*.{js,ts,tsx}' --fix --quiet",
-    "dev": "concurrently \"npx webpack --mode development --watch\" \"nodemon dist/main.js\"",
+    "dev": "concurrently -k \"npx webpack --mode development --watch --stats-error-details\" \"wait-on dist/main.js && nodemon --watch dist/main.js\"",
     "start": "node dist/main.js",
     "build": "npx webpack --mode production",
     "build:start": "node dist/main.js",
@@ -16,6 +16,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@rtd/shared-ts": "workspace:*",
     "@types/qs": "^6.9.15",
     "cloudinary": "^2.4.0",
     "compression": "^1.7.4",
@@ -34,8 +35,8 @@
     "qs": "^6.13.0",
     "redis": "^4.7.0",
     "ts-loader": "^9.5.1",
-    "zod": "^3.23.8",
-    "@rtd/shared-ts": "workspace:*"
+    "wait-on": "^7.2.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@babel/cli": "^7.24.8",
@@ -43,7 +44,6 @@
     "@babel/plugin-transform-modules-commonjs": "^7.24.8",
     "@babel/preset-env": "^7.25.3",
     "@babel/preset-typescript": "^7.24.7",
-    "concurrently": "^8.2.2",
     "@eslint/compat": "^1.1.1",
     "@eslint/eslintrc": "^3.1.0",
     "@eslint/js": "^9.8.0",
@@ -58,6 +58,7 @@
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^8.0.0",
     "clean-webpack-plugin": "^4.0.0",
+    "concurrently": "^8.2.2",
     "eslint": "^9.8.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.29.1",

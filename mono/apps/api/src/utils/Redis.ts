@@ -1,12 +1,18 @@
 import { createClient, RedisClientType } from 'redis';
-import { REDIS_URI } from '../env';
+import { 
+  REDIS_HOST,
+  REDIS_PORT,
+  REDIS_PASSWORD,
+} from '../env';
+
+
 
 class Redis {
   public redisClient: RedisClientType;
   public static instance: Redis;
-
+  private static REDIS_URI = `redis://${REDIS_HOST}:${REDIS_PORT}`;
   private constructor() {
-    this.redisClient = createClient({ url: REDIS_URI });
+    this.redisClient = createClient({ url: Redis.REDIS_URI, password: REDIS_PASSWORD });
     this.redisClient.on('error', (err) => {
       console.error('Redis error:', err);
     });
